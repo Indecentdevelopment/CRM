@@ -5,7 +5,14 @@
 </template>
 
 <script>
+import '@/assets/sass/common.sass'
 export default {
   name: 'App'
 }
 </script>
+<style>
+    #app{
+        height: 100%;
+    }
+</style>
+
