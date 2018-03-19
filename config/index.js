@@ -11,7 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-        '/Api/*': {
+        '/': {
         target: 'http://act.tirecool.net/',
         changeOrigin: true,
         secure: false

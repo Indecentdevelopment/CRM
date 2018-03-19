@@ -1,5 +1,47 @@
 .index
     height: 100%
+    .login
+        display: flex
+        flex-direction: column
+        align-items: center
+        width: 14rem
+        height: 23rem
+        top: 3.5rem
+        left: 3rem
+        background-image: url('../../assets/images/index/background.jpg')
+        background-size: cover
+        background-position: center
+        position: absolute
+        z-index: 1000
+        box-shadow: 0 0 10px #666
+        .user-img
+            width: 4rem
+            height: 4rem
+            border-radius: 50%
+            border: solid 5px #B5B3B3
+            margin-top: 2.3rem
+        .login-form
+            display: flex
+            flex-direction: column
+            align-items: center
+            margin-top: 2rem
+            .password
+                width: 8rem
+                height: 1.5rem
+                padding: 0 0.5rem
+                border: solid 1px #666666
+                border-radius: 100px
+                box-sizing: border-box
+                -webkit-box-shadow: 0 0 0px 1000px white inset;
+            .submit
+                width: 8rem
+                height: 1.5rem
+                line-height: 1.5rem
+                text-align: center
+                margin-top: 1.6rem
+                border-radius: 100px
+                background-color: #FFD900
+                font-size: 0.73rem
 .city
     width: 100%
     height: 1.6rem
@@ -8,13 +50,37 @@
     position: fixed
     top: 1.4rem
     left: 0px
-
-.city-btn
-    width: 40%
-    position: absolute
-    top: 0px
-    right: 0px
-    text-align: right
+    z-index: 1
+    &.switching
+        border-bottom: solid 3px #666
+    .city-btn
+        width: 40%
+        position: absolute
+        top: 0px
+        right: 0px
+        text-align: right
+    .city-list
+        position: absolute
+        top: 1.6rem
+        left: 0
+        width: 19.2rem
+        height: 17rem
+        margin-left: 0.35rem
+        display: flex
+        flex-wrap: wrap
+        justify-content: center
+        align-content: flex-start
+        border: solid 1px #666
+        background-color: #FDFAFA
+        .city-item
+            width: 4rem
+            height: 1.4rem
+            line-height: 1.4rem
+            text-align: center
+            border-radius: 3px
+            border: solid 1px #666666
+            margin: 1rem 0.5rem 0 0.5rem
+            
     
 .switch
     margin-right: 0.4rem
@@ -74,7 +140,7 @@
                 background-color: #D0CCCC
                 top: 4.2rem
                 left: 1.7rem
-                z-index: 1000
+                z-index: 1
                 transform: rotateZ(45deg)
         .shop-bg
             width: 100%
@@ -82,6 +148,8 @@
             flex-wrap: wrap
             background-color: #D0CCCC
             padding: 0.5rem 1rem
+            .staffInfosLoading
+                height: 3.6rem
             .item
                 display: flex
                 align-items: flex-end

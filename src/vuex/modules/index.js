@@ -2,9 +2,9 @@ import * as type from '../type'
 import api from '@/vuex/api'
 const state = {
     shopNameList: [],
-    ShopStaffInfos: [],
-    isLoadGetShopName: false,
-    isLoadGetStaffInfos: false
+    shopStaffInfos: [],
+    shopNameLoading: false,
+    staffInfosLoading: false
 }
 const actions = {
     getShopName: ({commit}, data) => {
@@ -15,7 +15,14 @@ const actions = {
     getShopStaffInfos: ({commit}, data) => {
         api.getShopStaffInfos(data).then(res => {
             commit(type.GET_SHOPSTAFFINFOS, res.data.data)
+            commit(type.SET_STAFFINFOSLOADING, false)
         })
+    },
+    setShopnameloading: ({commit}, bool) => {
+        commit(type.SET_SHOPNAMELOADING, bool)
+    },
+    setStaffInfosLoading: ({commit}, bool) => {
+        commit(type.SET_STAFFINFOSLOADING, bool)
     }
 }
 const getters = {
@@ -35,15 +42,22 @@ const getters = {
         })
         return arr
     },
-    ShopStaffInfos: (state) => state.ShopStaffInfos
+    shopStaffInfos: state => state.shopStaffInfos,
+    shopNameLoading: state => state.shopNameLoading,
+    staffInfosLoading: state => state.staffInfosLoading
 }
 const mutations = {
     [type.GET_SHOPNAMELIST] (state, data) {
         state.shopNameList = data
     },
     [type.GET_SHOPSTAFFINFOS] (state, data) {
-        state.ShopStaffInfos = data
-        console.log(data)
+        state.shopStaffInfos = data
+    },
+    [type.SET_SHOPNAMELOADING] (state, bool) {
+        state.shopNameLoading = bool
+    },
+    [type.SET_STAFFINFOSLOADING] (state, bool) {
+        state.staffInfosLoading = bool
     }
 }
 export default {
