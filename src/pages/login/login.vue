@@ -5,12 +5,12 @@
         <my-header></my-header>
 
         <!-- 登录弹窗 -->
-        <div class="login">
+        <div class="login" v-show="openLogin">
             <img src="../../assets/images/index/user-img.png" class="user-img">
             <div class="login-form">
                 <input name="ClientId" hidden>
                 <input name="userName" value="crm189" hidden>
-                <input class="password" type="password" name="password">
+                <input class="password" type="password" v-model="password">
                 <input name="grant_type" value="password" hidden>
                 <div class="submit" @click="toLogin">登录</div>
             </div>
@@ -70,14 +70,16 @@ export default {
         return {
             currentCity: '青岛市',  // 当前城市名字
             isSwitchCity: false, // 是否正在选择城市
-            isLogin: false,      // 是否正在登录
+            openLogin: false,      // 是否正在登录
             userName: '',         // 登录时 用户名
+            password: '',         // 登录时 密码
             activeGroup: new Number(), // 当前活动的shopName组
             activeItem: new Number()   // 当前活动的元素
         }
     },
     computed: {
         ...mapGetters({
+            isLogin: 'isLogin',           // 是否登录 登录状态
             shopNameList: 'shopNameList', // shopName 数据列表
             shopStaffInfos: 'shopStaffInfos', // shopStaffInfo 数据列表
             shopNameLoading: 'shopNameLoading', // 是否正在获取shopName loading
@@ -105,11 +107,15 @@ export default {
             this.getShopName()
         },
         login (event, userName) {
-            this.isLogin = true
+            this.openLogin = true
             this.userName = userName
         },
         toLogin () {
-            this.$store.dispatch('toLogin')
+            this.openLogin = false
+            this.$store.dispatch('toLogin', {
+                userName: this.userName,
+                password: this.password
+            })
         },
         getShopName () {
             this.$store.dispatch('getShopName', this.currentCity)

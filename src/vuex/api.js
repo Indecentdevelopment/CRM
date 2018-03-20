@@ -25,11 +25,11 @@ export default {
     /***************************登录**********************************/
 
     // 登录
-    toLogin: () => {
+    toLogin: (data) => {
         return axios.post('/Token',querystring.stringify({
             ClientId: '',
-            userName: 'crm189',
-            password: '123456',
+            userName: data.userName,
+            password: data.password,
             grant_type: 'password'
         }))
     }
