@@ -64,7 +64,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Header from '@/components/header'
-import "./index.sass"
+import "./login.sass"
 export default {
     data: function () {
         return {
