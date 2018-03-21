@@ -74,7 +74,10 @@ export default {
             userName: '',         // 登录时 用户名
             password: '',         // 登录时 密码
             activeGroup: new Number(), // 当前活动的shopName组
-            activeItem: new Number()   // 当前活动的元素
+            activeItem: new Number(),   // 当前活动的元素
+            shopData: {                 // 登录之后 需要保存到vuex中的shop信息
+                id: ''
+            }
         }
     },
     computed: {
@@ -114,7 +117,8 @@ export default {
             this.openLogin = false
             this.$store.dispatch('toLogin', {
                 userName: this.userName,
-                password: this.password
+                password: this.password,
+                shopData: this.shopData  // 如果登录成功  就把shopData信息保存至vuex login
             })
         },
         getShopName () {
@@ -126,6 +130,7 @@ export default {
             this.activeGroup = index
             this.$store.dispatch('getShopStaffInfos', shopId)
             this.$store.dispatch('setStaffInfosLoading', true)
+            this.shopData.id = shopId
         }
     },
     components:{

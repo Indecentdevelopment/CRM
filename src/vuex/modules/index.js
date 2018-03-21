@@ -2,9 +2,7 @@ import * as type from '../type'
 import api from '@/vuex/api'
 const state = {
     shopNameList: [],
-    shopStaffInfos: [],
-    shopNameLoading: false,
-    staffInfosLoading: false
+    shopStaffInfos: []
 }
 const actions = {
     getShopName: ({commit}, data) => {
@@ -15,14 +13,7 @@ const actions = {
     getShopStaffInfos: ({commit}, data) => {
         api.getShopStaffInfos(data).then(res => {
             commit(type.GET_SHOPSTAFFINFOS, res.data.data)
-            commit(type.SET_STAFFINFOSLOADING, false)
         })
-    },
-    setShopnameloading: ({commit}, bool) => {
-        commit(type.SET_SHOPNAMELOADING, bool)
-    },
-    setStaffInfosLoading: ({commit}, bool) => {
-        commit(type.SET_STAFFINFOSLOADING, bool)
     }
 }
 const getters = {
@@ -42,9 +33,7 @@ const getters = {
         })
         return arr
     },
-    shopStaffInfos: state => state.shopStaffInfos,
-    shopNameLoading: state => state.shopNameLoading,
-    staffInfosLoading: state => state.staffInfosLoading
+    shopStaffInfos: state => state.shopStaffInfos
 }
 const mutations = {
     [type.GET_SHOPNAMELIST] (state, data) {
@@ -52,12 +41,6 @@ const mutations = {
     },
     [type.GET_SHOPSTAFFINFOS] (state, data) {
         state.shopStaffInfos = data
-    },
-    [type.SET_SHOPNAMELOADING] (state, bool) {
-        state.shopNameLoading = bool
-    },
-    [type.SET_STAFFINFOSLOADING] (state, bool) {
-        state.staffInfosLoading = bool
     }
 }
 export default {

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import App from '@/App'
 import Login from '@/pages/login/login'
 import Home from '@/pages/home/home'
+import ServerList from '@/pages/serverList/serverList'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ export default new Router({
                 {
                     path: 'home',
                     component: Home
+                },
+                {
+                    path: 'serverlist',
+                    component: ServerList
                 }
             ]
         }

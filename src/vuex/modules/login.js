@@ -2,7 +2,10 @@ import * as type from '../type'
 import api from '@/vuex/api'
 import router from '@/router/index'
 const state = {
-    isLogin: false
+    isLogin: false,
+    shopData: { // 登录之后的 需要保存的shop信息
+        id: JSON.parse(localStorage.getItem('shopId'))
+    }
 }
 const actions = {
     setCookie: function (name,value,expires) {
@@ -20,17 +23,23 @@ const actions = {
                 dispatch('setCookie', 'shopName', res.data['shopName'], res.data['.expires'])
                 dispatch('setCookie', 'isStaff', res.data['isStaff'], res.data['.expires'])
                 commit(type.SET_ISLOGIN, true)
+                commit(type.SET_SHOPDATA, data.shopData)
                 router.push('/home')
             }
         })
     }
 }
 const getters = {
-    isLogin: state => state.isLogin
+    isLogin: state => state.isLogin,
+    shopData: state => state.shopData
 }
 const mutations = {
     [type.SET_ISLOGIN] (state, bool) {
         state.isLogin = bool
+    },
+    [type.SET_SHOPDATA] (state, data) {
+        state.shopData.id = data.id
+        localStorage.setItem('shopId', JSON.stringify(data.id))
     }
 }
 export default {

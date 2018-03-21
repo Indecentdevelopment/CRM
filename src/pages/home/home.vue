@@ -12,7 +12,7 @@
 			</div>
 			<div class="inputarr">
 				<!--手机号输入框-->
-				<input type="text" placeholder=" 请输入手机号码" class="inp-phone" @click="phoneLoad"/>
+				<input type="text" placeholder=" 请输入手机号码" class="inp-phone" v-model="Phone"/>
 				<!--卡券选择框-->
 				<select class="inp-choiceCard">
 					<option value ="储值卡">储值卡</option>
@@ -64,12 +64,12 @@
 		
 		<!--服务功能-->
 		<div class="service">
-			<div class="service-conten">
+			<router-link class="service-conten" to="serverlist">
 				<div class="service-btn">
 					<img src="../../assets/images/home/hc-service.png" class="service-img"/>
 				</div>
 				<p class="service-p">服务列表</p>
-			</div>
+			</router-link>
 			<div class="service-conten">
 				<div class="service-btn">
 					<img src="../../assets/images/home/hc-administration.png" class="service-img"/>
@@ -112,14 +112,14 @@
         		<p class="ins-txt">服务中</p>
         	</div>
         	<ul class="ins-ul">
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></a></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
         	</ul>
         </div>
         
@@ -131,8 +131,26 @@
 	import "./home.sass"
 	export default {
 		data() {
-			return {}
-		},
+			return {
+                CarNo: '', // 省 简称
+                Phone: '', // 电话
+                cardName: '' // 储值卡
+            }
+        },
+        computed: {
+            ...mapGetters({
+                shopData: 'shopData'
+            })
+        },
+        created () {
+            axios.get('/Api/Car/GetShopProv', {
+                params: {
+                    shopId: this.shopData.id
+                }
+            }).then(res => {
+                console.log(res)
+            })
+        },
 		components: {
 			myHeader: Header
 		}
