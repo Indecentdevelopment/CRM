@@ -7,6 +7,7 @@
         <!-- 登录弹窗 -->
         <div class="login" v-show="openLogin">
             <img src="../../assets/images/index/user-img.png" class="user-img">
+            <div class="login-close" @click="toClose">×</div>
             <div class="login-form">
                 <input name="ClientId" hidden>
                 <input name="userName" value="crm189" hidden>
@@ -112,6 +113,9 @@ export default {
         login (event, userName) {
             this.openLogin = true
             this.userName = userName
+        },
+        toClose(){
+        	this.openLogin = false
         },
         toLogin () {
             this.openLogin = false
