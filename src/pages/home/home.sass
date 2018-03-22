@@ -3,8 +3,9 @@
     background: #696666
     .inputbox
         width: 100%
+        display: flex
+        flex-direction: column
         background: #696666
-        overflow: hidden
         position: relative
         top: 1.4rem
         margin-bottom: 2.5rem
@@ -82,6 +83,47 @@
                 margin-top: 2rem
                 margin-bottom: 0.5rem
                 float: left
+        .carInfo
+            position: absolute
+            width: 90%
+            height: 20rem
+            overflow: auto
+            top: 1.5rem
+            left: 5%
+            background-color: #fff
+            box-shadow: 0 0 1px #bbb
+            z-index: 10
+            .item
+                width: 98%
+                height: 3.8rem
+                display: flex
+                align-items: center
+                justify-content: space-between
+                margin-left: 1%
+                padding: 0.3rem 0.5rem
+                border-bottom: solid 1px #ddd
+                box-sizing: border-box
+                .left
+                    display: flex
+                    align-items: center
+                    .img img
+                        width: 1.8rem
+                        height: 1.8rem
+                        border: solid 1px #aaaaaa
+                        border-radius: 50%
+                    .info
+                        width: 4.1rem
+                        margin-left: 0.6rem
+                .carNo
+                    border: solid 1px #ccc
+                    border-radius: 3px
+                    box-sizing: border-box
+                    padding: 2px
+                    div
+                        background: #336EBD
+                        color: #ffffff
+                        padding: 0 5px
+                        font-size: 0.8rem
     .service
         width: 84%
         margin: 0 8%
