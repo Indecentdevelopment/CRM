@@ -7,7 +7,10 @@
 <script>
 import '@/assets/sass/common.sass'
 export default {
-  name: 'App'
+    name: 'App',
+    created () {
+        // this.$router.push('/home')
+    }
 }
 </script>
 <style>

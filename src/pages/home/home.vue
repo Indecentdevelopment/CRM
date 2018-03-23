@@ -140,7 +140,8 @@
 </template>
 <script>
 	import { mapGetters } from 'vuex'
-	import Header from '@/components/header'
+    import Header from '@/components/header'
+    import api from '@/vuex/api'
 	import "./home.sass"
 	export default {
 		data() {
@@ -174,42 +175,60 @@
         methods: {
             // 获取省 简称
             getShopProv () {
-                axios.get('/Api/Car/GetShopProv', {
-                    params: {
-                        shopId: this.shopData.id
-                    }
-                }).then(res => {
+                api.getShopProv(this.shopData.id).then( res => {
                     this.shopProv = res.data
                 })
+                // axios.get('/Api/Car/GetShopProv', {
+                //     params: {
+                //         shopId: this.shopData.id
+                //     }
+                // }).then(res => {
+                //     this.shopProv = res.data
+                // })
             },
             // 根据输入 查询车辆信息列表
             getCarInfo () {
                 clearTimeout(this.inputTimer)
                 this.inputTimer = setTimeout(() => {
-                    axios.get('/Api/Car/GetCarInfo', {
-                        params: {
-                            CarNo: this.shopProv + this.carNo,
-                            Phone: this.phone,
-                            cardName: this.cardName + '_储值卡',
-                            shopId: this.shopData.id
-                        }
-                    }).then(res => {
+                    api.getCarInfo({
+                        CarNo: this.shopProv + this.carNo,
+                        Phone: this.phone,
+                        cardName: this.cardName + '_储值卡',
+                        shopId: this.shopData.id
+                    }).then( res => {
                         this.isOpencarInfo = true
                         this.carInfoList = res.data
                     })
+                    // axios.get('/Api/Car/GetCarInfo', {
+                    //     params: {
+                    //         CarNo: this.shopProv + this.carNo,
+                    //         Phone: this.phone,
+                    //         cardName: this.cardName + '_储值卡',
+                    //         shopId: this.shopData.id
+                    //     }
+                    // }).then(res => {
+                    //     this.isOpencarInfo = true
+                    //     this.carInfoList = res.data
+                    // })
                 }, 500)
             },
             // 获取最下方 服务列表
             getTheService () {
-                axios.get('/api/order/InTheService').then(res => {
+                api.getTheService().then(res => {
                     this.serverList = res.data.repairsModel
                 })
+                // axios.get('/api/order/InTheService').then(res => {
+                //     this.serverList = res.data.repairsModel
+                // })
             },
             // 获取他仓求助 消息个数
             getMyApplyRequireCount () {
-                axios.get('/api/ApplyRequire/GetMyApplyRequireCount').then(res => {
+                api.getMyApplyRequireCount().then(res => {
                     this.myApplyRequireCount = res.data
                 })
+                // axios.get('/api/ApplyRequire/GetMyApplyRequireCount').then(res => {
+                //     this.myApplyRequireCount = res.data
+                // })
             }
         },
 		components: {

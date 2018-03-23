@@ -1,6 +1,6 @@
 const querystring = require('querystring')
 
-let url = process.env.NODE_ENV !== 'production' ? '/Api/' : 'http://act.tirecool.net/Api/'
+let url = process.env.NODE_ENV !== 'production' ? '/' : 'http://act.tirecool.net/'
 
 // http 请求request 拦截器
 axios.interceptors.request.use(
@@ -24,7 +24,7 @@ export default {
 
     // 获取shopName
     getShopName: (data) => {
-        return axios.get(url + 'Car/GetShopName', {
+        return axios.get(url + 'Api/Car/GetShopName', {
             params: {
                 RegionsName: data
             }
@@ -32,7 +32,7 @@ export default {
     },
     // 获取shopStateInfo
     getShopStaffInfos: (shopId) => {
-        return axios.get(url + 'Car/GetShopStaffInfos', {
+        return axios.get(url + 'Api/Car/GetShopStaffInfos', {
             params: {
                 ShopId: shopId
             }
@@ -43,11 +43,40 @@ export default {
 
     // 登录
     toLogin: (data) => {
-        return axios.post('/Token',querystring.stringify({
+        return axios.post(url + 'Token',querystring.stringify({
             ClientId: '',
             userName: data.userName,
             password: data.password,
             grant_type: 'password'
         }))
+    },
+
+    /***************************home**********************************/
+    // 获取省 简称
+    getShopProv (shopId) {
+        return axios.get(url + 'Api/Car/GetShopProv', {
+            params: {
+                shopId: shopId
+            }
+        })
+    },
+    // 获取最下方 服务列表
+    getTheService () {
+        return axios.get(url + 'api/order/InTheService')
+    },
+    // 获取他仓求助 消息个数
+    getMyApplyRequireCount () {
+        return axios.get(url + 'api/ApplyRequire/GetMyApplyRequireCount')
+    },
+    // 根据输入 查询车辆信息列表
+    getCarInfo (data) {
+        return axios.get(url + 'Api/Car/GetCarInfo', {
+            params: {
+                CarNo: data.shopProv + data.carNo,
+                Phone: data.Phone,
+                cardName: data.cardName,
+                shopId: data.shopId
+            }
+        })
     }
 }
