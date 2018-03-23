@@ -61,7 +61,7 @@
 				<div class="inp-search">搜索</div>
 
                 <div class="carInfo" v-show="isOpencarInfo">
-                    <div class="item" v-for="item in carInfoList" :key="item.id">
+                    <router-link to='personalPage' class="item" v-for="item in carInfoList" :key="item.id">
                         <div class="left">
                             <div class="img">
                                 <img src="../../assets/images/index/user-img.png" alt="" srcset="">
@@ -75,7 +75,7 @@
                         <div class="carNo">
                             <div>{{item.carNumber}}</div>
                         </div>
-                    </div>
+                    </router-link>
                 </div>
 			</div>
 		</div>
