@@ -1,6 +1,7 @@
 <template>
     <div class="header">
-    	<img src="../assets/images/header/back.png" class="h-back"/>
+    	<img src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"
+/>
     	<img src="../assets/images/header/home-btn.png" class="h-home"/>
     	<img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
     	<img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
