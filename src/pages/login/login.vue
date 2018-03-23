@@ -133,7 +133,6 @@ export default {
             this.activeItem = shopId
             this.activeGroup = index
             this.$store.dispatch('getShopStaffInfos', shopId)
-            this.$store.dispatch('setStaffInfosLoading', true)
             this.shopData.id = shopId
         }
     },

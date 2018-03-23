@@ -12,16 +12,16 @@
 			</div>
 			<div class="inputarr">
 				<!--手机号输入框-->
-				<input type="text" placeholder=" 请输入手机号码" class="inp-phone" v-model="Phone"/>
+				<input type="text" placeholder=" 请输入手机号码" class="inp-phone" v-model="phone" @input="getCarInfo()"/>
 				<!--卡券选择框-->
 				<select class="inp-choiceCard">
 					<option value ="储值卡">储值卡</option>
 					<option value ="买三送一机油卡">买三送一机油卡</option>
 				</select>
 				<!--卡券输入框-->
-				<input type="text" placeholder=" 请输入卡券号" class="inp-inputCard" />
+				<input type="text" placeholder=" 请输入卡券号" class="inp-inputCard" v-model="cardName" @input="getCarInfo()" />
 				<!--车牌选择框-->
-				<select class="inp-brand">
+				<select class="inp-brand" v-model="shopProv">
 						<option value="京">京</option>
 	                    <option value="津">津</option>
 	                    <option value="沪">沪</option>
@@ -56,9 +56,27 @@
 	                    <option value="其他">其他</option>
 					</select>
 				<!--车牌输入框-->
-				<input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" />
+				<input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" />
 				<!--搜索按钮-->
 				<div class="inp-search">搜索</div>
+
+                <div class="carInfo" v-show="isOpencarInfo">
+                    <div class="item" v-for="item in carInfoList" :key="item.id">
+                        <div class="left">
+                            <div class="img">
+                                <img src="../../assets/images/index/user-img.png" alt="" srcset="">
+                            </div>
+                            <div class="info">
+                                <div class="name">{{item.firstName}}</div>
+                                <div class="phone">{{item.phone}}</div>
+                                <div class="car-type">{{item.carTypeName}}</div>
+                            </div>
+                        </div>
+                        <div class="carNo">
+                            <div>{{item.carNumber}}</div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 		
@@ -101,7 +119,7 @@
 					<img src="../../assets/images/home/hc-seekhelp.png" class="service-img"/>
 				</div>
 				<p class="service-p">他仓求助</p>
-				<div class="prompt">4</div>
+				<div class="prompt">{{myApplyRequireCount}}</div>
 			</div>
 		</div>
 		
@@ -112,14 +130,9 @@
         		<p class="ins-txt">服务中</p>
         	</div>
         	<ul class="ins-ul">
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
-        		<li class="ins-li"><span class="ins-span">京L12376</span></li>
+                <li class="ins-li" v-for="item in serverList" :key="item.orderId">
+                    <span class="ins-span">{{item.carNo}}</span>
+                </li>
         	</ul>
         </div>
         
@@ -127,14 +140,21 @@
 </template>
 <script>
 	import { mapGetters } from 'vuex'
-	import Header from '@/components/header'
+    import Header from '@/components/header'
+    import api from '@/vuex/api'
 	import "./home.sass"
 	export default {
 		data() {
 			return {
-                CarNo: '', // 省 简称
-                Phone: '', // 电话
-                cardName: '' // 储值卡
+                shopProv: '', // 省 简称
+                carNo: '', // 车牌号
+                phone: '', // 电话
+                cardName: '', // 储值卡
+                myApplyRequireCount: '', // 他仓求助消息数量
+                carInfoList: [],  // 根据输入的电话  查询出车辆信息列表
+                isOpencarInfo: false, // 是否显示查询出的车辆信息列表
+                serverList: [],  // 最下方 服务列表
+                inputTimer: ''   // 输入电话号码 事件节流定时器
             }
         },
         computed: {
@@ -143,13 +163,73 @@
             })
         },
         created () {
-            axios.get('/Api/Car/GetShopProv', {
-                params: {
-                    shopId: this.shopData.id
-                }
-            }).then(res => {
-                console.log(res)
+            this.getShopProv()
+            this.getTheService()
+            this.getMyApplyRequireCount()
+        },
+        mounted () {
+            document.addEventListener('click', (event) => {
+                this.isOpencarInfo = false
             })
+        },
+        methods: {
+            // 获取省 简称
+            getShopProv () {
+                api.getShopProv(this.shopData.id).then( res => {
+                    this.shopProv = res.data
+                })
+                // axios.get('/Api/Car/GetShopProv', {
+                //     params: {
+                //         shopId: this.shopData.id
+                //     }
+                // }).then(res => {
+                //     this.shopProv = res.data
+                // })
+            },
+            // 根据输入 查询车辆信息列表
+            getCarInfo () {
+                clearTimeout(this.inputTimer)
+                this.inputTimer = setTimeout(() => {
+                    api.getCarInfo({
+                        CarNo: this.shopProv + this.carNo,
+                        Phone: this.phone,
+                        cardName: this.cardName + '_储值卡',
+                        shopId: this.shopData.id
+                    }).then( res => {
+                        this.isOpencarInfo = true
+                        this.carInfoList = res.data
+                    })
+                    // axios.get('/Api/Car/GetCarInfo', {
+                    //     params: {
+                    //         CarNo: this.shopProv + this.carNo,
+                    //         Phone: this.phone,
+                    //         cardName: this.cardName + '_储值卡',
+                    //         shopId: this.shopData.id
+                    //     }
+                    // }).then(res => {
+                    //     this.isOpencarInfo = true
+                    //     this.carInfoList = res.data
+                    // })
+                }, 500)
+            },
+            // 获取最下方 服务列表
+            getTheService () {
+                api.getTheService().then(res => {
+                    this.serverList = res.data.repairsModel
+                })
+                // axios.get('/api/order/InTheService').then(res => {
+                //     this.serverList = res.data.repairsModel
+                // })
+            },
+            // 获取他仓求助 消息个数
+            getMyApplyRequireCount () {
+                api.getMyApplyRequireCount().then(res => {
+                    this.myApplyRequireCount = res.data
+                })
+                // axios.get('/api/ApplyRequire/GetMyApplyRequireCount').then(res => {
+                //     this.myApplyRequireCount = res.data
+                // })
+            }
         },
 		components: {
 			myHeader: Header
