@@ -56,7 +56,7 @@
 	                    <option value="其他">其他</option>
 					</select>
 				<!--车牌输入框-->
-				<input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" />
+				<input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" @focus="showKeyboard($event)" />
 				<!--搜索按钮-->
 				<div class="inp-search">搜索</div>
 
@@ -135,6 +135,33 @@
                 </li>
         	</ul>
         </div>
+
+        <div class="keyboard" v-show="isInputCarNo">
+            <div class="close">
+                <img src="../../assets/images/home/close_bg.png" alt="取消" @click="isInputCarNo = false">
+            </div>
+            <div class="zh-word">
+                <div class="zh-word-item" v-for="(item, index) in keyboaed.zhWord" :key="index" @click="inputCarNo(item)">
+                    {{item}}
+                </div>
+            </div>
+            <div class="num-word">
+                <div class="num-word-item" v-for="(item, index) in keyboaed.numWord" :key="index" @click="inputCarNo(item)">
+                    {{item}}
+                </div>
+            </div>
+            <div class="en-word">
+                <div class="en-word-item" v-for="(item, index) in keyboaed.enWord" :key="index" @click="inputCarNo(item)">
+                    {{item}}
+                </div>
+            </div>
+            <div class="btn-group">
+                <div class="sure" @click="isInputCarNo = false">确定</div>
+                <div class="cancel" @click="backSpace()">
+                    <img src="../../assets/images/home/del.png" alt="取消">
+                </div>
+            </div>
+        </div>
         
 	</div>
 </template>
@@ -154,7 +181,14 @@
                 carInfoList: [],  // 根据输入的电话  查询出车辆信息列表
                 isOpencarInfo: false, // 是否显示查询出的车辆信息列表
                 serverList: [],  // 最下方 服务列表
-                inputTimer: ''   // 输入电话号码 事件节流定时器
+                inputTimer: '',   // 输入电话号码 事件节流定时器
+                keyboaed: {       // 键盘数据
+                    zhWord: ['港', '澳', '学', '警', '领'],
+                    numWord: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+                    enWord: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A',
+                    'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+                },
+                isInputCarNo: false  // 是否显示自定义键盘
             }
         },
         computed: {
@@ -178,20 +212,13 @@
                 api.getShopProv(this.shopData.id).then( res => {
                     this.shopProv = res.data
                 })
-                // axios.get('/Api/Car/GetShopProv', {
-                //     params: {
-                //         shopId: this.shopData.id
-                //     }
-                // }).then(res => {
-                //     this.shopProv = res.data
-                // })
             },
             // 根据输入 查询车辆信息列表
             getCarInfo () {
                 clearTimeout(this.inputTimer)
                 this.inputTimer = setTimeout(() => {
                     api.getCarInfo({
-                        CarNo: this.shopProv + this.carNo,
+                        CarNo: this.shopProv + this.carNo + '',
                         Phone: this.phone,
                         cardName: this.cardName + '_储值卡',
                         shopId: this.shopData.id
@@ -199,17 +226,6 @@
                         this.isOpencarInfo = true
                         this.carInfoList = res.data
                     })
-                    // axios.get('/Api/Car/GetCarInfo', {
-                    //     params: {
-                    //         CarNo: this.shopProv + this.carNo,
-                    //         Phone: this.phone,
-                    //         cardName: this.cardName + '_储值卡',
-                    //         shopId: this.shopData.id
-                    //     }
-                    // }).then(res => {
-                    //     this.isOpencarInfo = true
-                    //     this.carInfoList = res.data
-                    // })
                 }, 500)
             },
             // 获取最下方 服务列表
@@ -217,18 +233,26 @@
                 api.getTheService().then(res => {
                     this.serverList = res.data.repairsModel
                 })
-                // axios.get('/api/order/InTheService').then(res => {
-                //     this.serverList = res.data.repairsModel
-                // })
             },
             // 获取他仓求助 消息个数
             getMyApplyRequireCount () {
                 api.getMyApplyRequireCount().then(res => {
                     this.myApplyRequireCount = res.data
                 })
-                // axios.get('/api/ApplyRequire/GetMyApplyRequireCount').then(res => {
-                //     this.myApplyRequireCount = res.data
-                // })
+            },
+            // 输入车牌号
+            showKeyboard (event) {
+                event.target.blur()
+                this.isInputCarNo = true
+            },
+            // 开始输入车牌号
+            inputCarNo (word) {
+                this.carNo += word
+            },
+            // 键盘 撤销
+            backSpace () {
+                let length = this.carNo.length
+                this.carNo = this.carNo.substring(0, length - 1)
             }
         },
 		components: {

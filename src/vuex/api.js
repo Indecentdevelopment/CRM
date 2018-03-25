@@ -1,3 +1,5 @@
+import router from '@/router/index'
+import store from '@/vuex/index'
 const querystring = require('querystring')
 
 let url = process.env.NODE_ENV !== 'production' ? '/' : 'http://act.tirecool.net/'
@@ -5,6 +7,7 @@ let url = process.env.NODE_ENV !== 'production' ? '/' : 'http://act.tirecool.net
 // http 请求request 拦截器
 axios.interceptors.request.use(
     config => {
+        // config.headers.Authorization = 'bearer G5uAPsLAd1_HNMfHMO8PquFBcvd7KaA1r3UO_OLtNN8J6pjdhtET7wtV8W8w1FGohtstIhxmSrQYr1_9-41h0WjQsYTZArHYcUI1C54aCkjQSp2v_f9rLv7_DFPElqiDfl67'
         if (localStorage.access_token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
             config.headers.Authorization = `${JSON.parse(localStorage.token_type)} ${JSON.parse(localStorage.access_token)}`
         } else {
@@ -17,7 +20,23 @@ axios.interceptors.request.use(
     }
 )
 // http 响应response 拦截器
-
+axios.interceptors.response.use(
+    res => {
+        if (res.data.code === 401) { // 验证失败
+            localStorage.removeItem('currentUser_token')
+            router.push('/')
+            // window.tip('请重新登录')
+            return
+        } else {
+            return res
+        }
+    },
+    err => {
+        store.dispatch('loginOut')
+        router.push('/login')
+        return Promise.reject(err)
+    }
+)
 
 export default {
    /***************************首页**********************************/
@@ -72,7 +91,7 @@ export default {
     getCarInfo (data) {
         return axios.get(url + 'Api/Car/GetCarInfo', {
             params: {
-                CarNo: data.shopProv + data.carNo,
+                CarNo: data.CarNo,
                 Phone: data.Phone,
                 cardName: data.cardName,
                 shopId: data.shopId

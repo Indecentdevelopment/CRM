@@ -10,6 +10,7 @@ export default {
     name: 'App',
     created () {
         // this.$router.push('/home')
+        this.$store.dispatch('checkToken')
     }
 }
 </script>

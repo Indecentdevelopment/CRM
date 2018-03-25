@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '@/vuex/index'
 
 import App from '@/App'
 import Login from '@/pages/login/login'
@@ -9,7 +10,7 @@ import PersonalPage from '@/pages/personalPage/personalPage'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -35,3 +36,15 @@ export default new Router({
         }
     ]
 })
+
+router.beforeEach((to, from, next) => {
+    console.log(store)
+    if (to.path.includes('login')) {
+        if (store.getters.isLogin) {
+            router.push('/home')
+            return
+        }
+    }
+    next()
+})
+export default router
