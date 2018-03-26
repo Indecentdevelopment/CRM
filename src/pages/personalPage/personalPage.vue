@@ -60,21 +60,16 @@
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">过度磨损：</span>
-				<el-checkbox-group v-model="checkedCities1" :min="0" :max="1">
-    				<el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-  				</el-checkbox-group>
+				<span class="inpRadio-judge">是</span>
+				<span class="inpRadio-frame"></span>
 			</div>
 			<div class="optional-inpRadio inpRadio-border">
 				<span class="inpRadio-style">老化开裂：</span>
-				<el-checkbox-group v-model="checkedCities1" :min="0" :max="1">
-    				<el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-  				</el-checkbox-group>
+				
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">胎侧损伤：</span>
-				<el-checkbox-group v-model="checkedCities1" :min="0" :max="1">
-    				<el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-  				</el-checkbox-group>
+				
 			</div>
 			<div class="optional-button">
 				<button @click="">继续</button>
@@ -87,16 +82,14 @@
 <script>
 	import Header from '@/components/header'
 	import "./personalPage.sass"
-	const cityOptions = ['是', '否'];
 	export default {
 	    data () {
 	        return {
-	        	checkedCities1: ['是', '否'],
-        		cities: cityOptions
+	        	
 	        }
 	    },
 	    methods: {
-			
+
 	    },
 	    components:{
 	        myHeader: Header
