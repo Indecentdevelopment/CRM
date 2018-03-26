@@ -1,7 +1,7 @@
 <template>
     <div class="header">
-    	<img src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
-    	<img src="../assets/images/header/home-btn.png" class="h-home"/>
+    	<img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
+    	<img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home"/>
     	<img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
     	<img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
         <span class="h-landingstate" v-show="isLogin">
@@ -15,13 +15,21 @@ import "@/assets/components/header.sass"
 import { mapGetters } from 'vuex'
 export default {
     data: function () {
-        return {}
+        return {
+            isShowGoBack: true
+        }
     },
     computed: {
 	    ...mapGetters({
             isLogin: 'isLogin',   // 是否登录 登录状态
             shopDataName: 'shopDataName'  // 登录之后 保存的shop信息
 	    })
+    },
+    created () {
+        let fullPath = this.$router.history.current.fullPath
+        if (fullPath === '/home' || fullPath === '/login') {
+            this.isShowGoBack = false
+        }
     },
     methods: {
         loginOut () {
