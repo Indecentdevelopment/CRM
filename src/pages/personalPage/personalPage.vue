@@ -13,7 +13,9 @@
 					</div>
 					<div class="personal-userName">
 						<p>王先生QD810175<br />17606318189</p>
-						<img src="../../assets/images/personalPage/edit.png" class="personal-userEdit"/>
+						<router-link to="uservip">
+							<img src="../../assets/images/personalPage/edit.png" class="personal-userEdit" />
+						</router-link>
 					</div>
 				</div>
 				<p class="personal-userInfo">会员卡：{{}}</p>
@@ -89,7 +91,9 @@
 	        }
 	    },
 	    methods: {
-
+			UserEdit(){
+				
+			}
 	    },
 	    components:{
 	        myHeader: Header
