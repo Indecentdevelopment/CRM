@@ -7,6 +7,9 @@ import Home from '@/pages/home/home'
 import ServerList from '@/pages/serverList/serverList'
 import PersonalPage from '@/pages/personalPage/personalPage'
 import Uservip from '@/pages/uservip/uservip'
+import OrderDetails from '@/pages/orderDetails/orderDetails'
+
+
 
 Vue.use(Router)
 
@@ -28,12 +31,18 @@ export default new Router({
                 {
                     path: 'serverlist',
                     component: ServerList
-                },{
+                },
+                {
                     path: 'personalPage',
                     component: PersonalPage
-                },{
+                },
+                {
                     path: 'uservip',
                     component: Uservip
+                },
+                {
+                    path: 'orderDetails',
+                    component: OrderDetails
                 }
             ]
         }

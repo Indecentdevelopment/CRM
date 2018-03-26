@@ -78,5 +78,13 @@ export default {
                 shopId: data.shopId
             }
         })
-    }
+    },
+    /***************************获取订单详情**********************************/
+	getOrderList(data){
+		return axios.get(url + 'api/order/OrderList', {
+			params: {
+				status: data.status
+			}
+		})
+	}
 }
