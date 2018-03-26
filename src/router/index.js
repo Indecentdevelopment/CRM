@@ -7,6 +7,7 @@ import Login from '@/pages/login/login'
 import Home from '@/pages/home/home'
 import ServerList from '@/pages/serverList/serverList'
 import PersonalPage from '@/pages/personalPage/personalPage'
+import Uservip from '@/pages/uservip/uservip'
 
 Vue.use(Router)
 
@@ -31,6 +32,9 @@ const router = new Router({
                 },{
                     path: 'personalPage',
                     component: PersonalPage
+                },{
+                    path: 'uservip',
+                    component: Uservip
                 }
             ]
         }
