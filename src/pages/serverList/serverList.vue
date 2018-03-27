@@ -28,9 +28,9 @@
 	    				下单时间：{{item.preDate}}
 		    		</div>
 		    		<div class="about-style">
-		    			<router-liek to='orderDetails'>
-		    				<button class="about-btn" @click="detailsPage(item.orderId)">详情</button>
-		    			</router-liek>
+		    			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
+		    				<button class="about-btn">详情</button>
+		    			</router-link>
 		    		</div>
 	    		</div>
 	    	</div>
@@ -67,9 +67,6 @@
 		        let state = tab.$options.propsData.label
 		        this.status = state
 		        this.getOrderList()
-			},
-			detailsPage(orderId){
-				console.log(orderId)
 			}
 	    },
 	    components:{
