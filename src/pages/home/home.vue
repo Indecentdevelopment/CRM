@@ -61,7 +61,7 @@
                     <div class="inp-search">搜索</div>
 
                     <div class="carInfo" v-show="isOpencarInfo">
-                        <router-link to='personalPage' class="item" v-for="item in carInfoList" :key="item.id">
+                        <router-link v-for="item in carInfoList" :to="{path: 'personalPage', query:{userCarBindId:item.id,uid:item.userId}}" class="item" :key="item.id">
                             <div class="left">
                                 <div class="img">
                                     <img src="../../assets/images/index/user-img.png" alt="" srcset="">

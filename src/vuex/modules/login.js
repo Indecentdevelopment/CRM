@@ -13,7 +13,6 @@ const actions = {
         api.getMyApplyRequireCount()
         .then(res => {
             commit(type.SET_ISLOGIN, true)
-            router.push('/home')
         })
         .catch(err => {
             commit(type.SET_ISLOGIN, false)

@@ -24,6 +24,7 @@ axios.interceptors.response.use(
     res => {
         if (res.data.code === 401) { // 验证失败
             localStorage.removeItem('currentUser_token')
+            console.log('here')
             router.push('/')
             // window.tip('请重新登录')
             return
@@ -97,5 +98,21 @@ export default {
                 shopId: data.shopId
             }
         })
+    },
+
+    /***************************personalPage**********************************/
+
+    // 获取用户信息
+    getUserInfo (data) {
+        return axios.get(url + 'api/car/GetUserInfo', {
+            params: {
+                userCarBindId: data.userCarBindId,
+                uid: data.uid
+            }
+        })
+    },
+    // 更新用户数据
+    UpadateUserInfo (data) {
+        return axios.post(url + 'api/car/UpadateUserInfo', querystring.stringify(data))
     }
 }

@@ -1,0 +1,131 @@
+.impcarinfo
+    height: 100%
+    background: #5f5d5d
+    overflow-y: auto
+    padding-top: 1.5rem
+    box-sizing: border-box
+    .type
+        display: flex
+        justify-content: center
+        margin-top: 1rem
+        .edit, .search
+            background: #EDEEEF
+            width: 5rem
+            padding: 0.2rem
+            text-align: center
+        .edit
+            border-top-left-radius: 5px
+            border-bottom-left-radius: 5px
+        .search
+            border-top-right-radius: 5px
+            border-bottom-right-radius: 5px
+        &>div.active
+            background: #FFD900
+    .content
+        display: flex
+        flex-direction: column
+        width: 19rem
+        margin-top: 1.6rem
+        margin-left: 0.5rem
+        &>div
+            width: 100%
+            display: flex
+            justify-content: space-between
+            margin-top: 0.6rem
+        select
+            width: 22%
+            border-radius: 0.3rem
+            padding: 0.35rem
+            font-size: 0.5rem
+            border: none
+        .message
+            border: 1px solid #FFD900
+            padding: 0px 0.1rem
+            color: #FFD900
+            line-height: 1.3rem
+            border-radius: 1rem
+            margin-bottom: 0.1rem
+            display: inherit
+            position: relative
+            font-size: 0.16rem
+            &:after
+                content: ""
+                width: 0.3rem
+                height: 0.3rem
+                border: #FFD900 1px solid
+                border-left: 0px
+                border-top: 0px
+                position: absolute
+                font-size: 0.16rem
+                left: 1rem
+                bottom: -0.15rem
+                background: #696666
+                transform: rotate(45deg)
+        .car-info
+            margin-top: 0.2rem
+        .carNum
+            position: relative
+            justify-content: flex-start
+            align-items: center
+            .carNo
+                width: 74%
+                heightt: 2rem
+                margin-left: 4%
+                border-radius: 0.3rem
+                padding: 0.25rem
+                font-size: 0.5rem
+            .fa-camera-retro
+                position: absolute
+                right: 0.6rem
+        .add-series
+            justify-content: flex-start
+            .checkbox
+                display: flex
+                align-items: center
+                justify-content: space-around
+                width: 22%
+                background: #dad6d6
+                box-sizing: border-box
+                line-height: 1.43rem
+                border-top: 1px #dad6d6 solid
+                border-bottom: 1px #dad6d6 solid
+                border-radius: 0.3rem
+                input
+                    color: #fff
+                    background: #fff
+            .info
+                width: 74%
+                box-sizing: border-box
+                margin-left: 4%
+                background: #dad6d6
+                border-radius: 0.3rem
+                padding: 0.25rem
+        .vinNo
+            width: 100%
+            input
+                width: 100%
+                background: #dad6d6
+                border-radius: 0.3rem
+                padding: 0.25rem
+                background: #fff
+                text-align: center
+        .btn
+            button
+                width: 100%
+                border-radius: 0.3rem
+                padding: 0.3rem
+                background: #fff
+                text-align: center
+                background: #FFD900
+                outline: none
+                border: none
+    .user-info
+        width: 100%
+        display: flex
+        justify-content: space-between
+        color: #FFDA01
+        font-size: 1rem
+        margin-top: 1rem
+        padding: 0.5rem
+        box-sizing: border-box
+        background-color: #000
