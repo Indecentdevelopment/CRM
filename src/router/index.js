@@ -8,6 +8,7 @@ import ServerList from '@/pages/serverList/serverList'
 import PersonalPage from '@/pages/personalPage/personalPage'
 import Uservip from '@/pages/uservip/uservip'
 import OrderDetails from '@/pages/orderDetails/orderDetails'
+import CleaningCall from '@/pages/cleaningCall/cleaningCall'
 
 
 
@@ -43,6 +44,10 @@ export default new Router({
                 {
                     path: 'orderDetails',
                     component: OrderDetails
+                },
+                {
+                    path: 'cleaningCall',
+                    component: CleaningCall
                 }
             ]
         }

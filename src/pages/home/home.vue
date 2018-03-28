@@ -89,10 +89,12 @@
 				<p class="service-p">服务列表</p>
 			</router-link>
 			<div class="service-conten">
-				<div class="service-btn">
-					<img src="../../assets/images/home/hc-administration.png" class="service-img"/>
-				</div>
-				<p class="service-p">洗车管理</p>
+				<router-link class="service-conten" to="cleaningCall">
+					<div class="service-btn">
+						<img src="../../assets/images/home/hc-administration.png" class="service-img"/>
+					</div>
+					<p class="service-p">洗车管理</p>
+				</router-link>
 			</div>
 			<div class="service-conten">
 				<div class="service-btn">
