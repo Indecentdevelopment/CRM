@@ -2,14 +2,85 @@
     height: 100%
     background: #5f5d5d
     overflow-y: auto
-    .userName
+    .content
+        display: flex
+        flex-direction: column
         width: 90%
         margin-left: 5%
-        margin-right: 5%
-        margin-top: 2.2rem
-        input
+        .userName
             width: 100%
-            height: 1.5rem
-            background: #fff
+            margin-top: 2.2rem
+            input
+                width: 100%
+                height: 1.5rem
+                background: #fff
+                border-radius: 6px
+                text-indent: 0.3rem
+        .sex
+            display: flex
+            margin-top: 1rem
+            color: #ddd
+            &>label
+                margin: 0 5rem 0 1rem
+        .level
+            display: flex
+            margin: 0.8rem 0
+            color: #FFD900
+            font-size: 0.7rem
+            .level-info
+                margin-left: 2rem
+        .upgrade
+            display: flex
+            justify-content: space-between
+            &>input
+                width: 30%
+                height: 2rem
+                border-radius: 6px
+                background-color: #FFD900
+        .mobile, .address
+            display: flex
+            margin-top: 0.8rem
+            input
+                width: 100%
+                height: 1.4rem
+                border-radius: 6px
+                padding: 0 0.5rem
+        .sign
+            width: 100%
+            display: flex
+            flex-wrap: wrap
+            margin: 0.6rem 0
+            .item
+                width: 46%
+                margin-left: 2%
+                margin-top: 0.5rem
+                height: 1.8rem
+                display: flex
+                justify-content: center
+                align-items: center
+                background-color: #FFD900
+                border-radius: 6px
+            .add-sign
+                background: none
+                border: dashed 1px #fff
+                color: #fff
+        .submit
+            background-color: #FFD900
+            border: none
+            height: 1.4rem
             border-radius: 6px
-            text-indent: 0.3rem
+            margin-top: 2rem
+        .qecode
+            display: flex
+            flex-direction: column
+            justify-content: center
+            align-items: center
+            margin-top: 2rem
+            img
+                width: 6rem
+                height: 6rem
+                border: solid 1px red
+            .info
+                margin-top: 0.5rem
+                color: #fff
+            

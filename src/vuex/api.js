@@ -128,6 +128,13 @@ export default {
         return axios.post(url + 'api/car/UpadateUserInfo', querystring.stringify(data))
     },
 
+    /***************************userExtendInfo**********************************/
+    GetUserExtendInfo (data) {
+        return axios.get(url + 'api/car/GetUserExtendInfo', {
+            params: data
+        })
+    },
+
     /***************************完善车辆信息**********************************/
 
     // 获取用户 车辆信息
