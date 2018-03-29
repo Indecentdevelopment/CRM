@@ -12,11 +12,26 @@
         </div>
         
         <!--预约列表-->
-        <div class="bookList">
-        	<p class="book"></p>
-        	<ul>
-        		<li></li>
-        	</ul>
+        <div class="aboutList clearfix">
+        	<div class="about clearfix fl">
+        		<p class="fl">预约列表<span>（当前车牌）</span></p>
+        		<span class="fr"><img src="../../assets/images/cleaningCall/zs.png"/></span>
+        	</div>
+        	
+        	<div class="aboutTimeList fl clearfix">
+        		<div class="aboutTime fl clearfix">
+        			<div class="aboutOption fl">15:15</div>
+        			<div class="fl">不可预约</div>
+        			<div class="fl"></div>
+        		</div>
+        	</div>
+        	<div class="aboutTimeList fl clearfix">
+        		<div class="aboutTime fl clearfix">
+        			<div class="aboutOption fl">15:15</div>
+        			<div class="fl">不可预约</div>
+        			<div class="fl"></div>
+        		</div>
+        	</div>
         </div>
 	</div>
 </template>
