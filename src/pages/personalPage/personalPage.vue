@@ -33,7 +33,7 @@
 				</div>
 				<p>{{item.brand}}<br />{{item.carNo}}</p>
 			</div>
-			<div class="personal-plusModels">
+			<div class="personal-plusModels" @click="addNewCar()">
 				<span>＋</span>添加车型
 			</div>
 			<div class="personal-modifyInfo">
@@ -45,8 +45,8 @@
                 <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
 				<p>
                     <button>查看保养履历</button>
-                    <button>修改车辆信息</button>
-                    <button>删除车辆信息</button>
+                    <button @click="CheckUserInfo">修改车辆信息</button>
+                    <button @click="isDelCar = true">删除车辆信息</button>
                 </p>
 				<div class="personal-mArrow"></div>
 			</div>
@@ -104,6 +104,17 @@
 				<button @click="UpadateUserInfo">继续</button>
 			</div>
 		</div>
+
+        <div class="surebox" v-show="isDelCar">
+            <div class="surefa">
+                <div class="info">您确定要删除该车辆吗？</div>
+                <div class="btn-group">
+                    <button class="cancel">取消</button>
+                    <button class="sure" @click="DeleteCarInfo">确定</button>
+                </div>
+            </div>
+        </div>
+        
 		
 	</div>
 </template>
@@ -130,7 +141,8 @@
                     // Aging: '',
                     // cracks: '',
                     // LastTime: ''
-                }
+                },
+                isDelCar: false      // 是否显示弹窗删除车辆
 	        }
         },
         created () {
@@ -159,6 +171,42 @@
             changeCar (data) {
                 this.carInfo = data
                 this.updateInfo = data
+            },
+            // 添加车型
+            addNewCar () {
+                this.$router.push({
+                    path: 'impCarInfo',
+                    query: {
+                        opera: 'add',
+                        id: this.carInfo.carId
+                    }
+                })
+            },
+            // 检车用户信息 跳转修改车辆信息
+            CheckUserInfo () {
+                api.CheckUserInfo({uid: this.userInfo.id}).then(res => {
+                    if (res.data) {
+                        this.$router.push({
+                            path: 'impCarInfo',
+                            query: {
+                                opera: 'update',
+                                id: this.carInfo.carId
+                            }
+                        })
+                    }
+                })
+            },
+            // 删除车辆
+            DeleteCarInfo () {
+                api.DeleteCarInfo({id: this.carInfo.carId, uid: this.userInfo.id}).then(res => {
+                    if (res.data) {
+                        alert('删除成功')
+                        this.getUserInfo()
+                    } else {
+                        alert('删除失败')
+                        this.getUserInfo()
+                    }
+                })
             },
             // 点击继续 
             UpadateUserInfo () {

@@ -46,7 +46,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    console.log(store)
     if (to.path.includes('login')) {
         if (localStorage.getItem('access_token')) {
             router.push('/home')
