@@ -78,90 +78,65 @@
                         </router-link>
                     </div>
                 </div>
-            </div>
-            
-            <!--服务功能-->
-            <div class="service">
-                <router-link class="service-conten" to="serverlist">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-service.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">服务列表</p>
-                </router-link>
-                <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-administration.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">洗车管理</p>
-                </div>
-                <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">快捷查价</p>
-                </div>
-            </div>
-            <div class="service">
-                <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-allocation.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">调拨列表</p>
-                </div>
-                <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-cardcoupons.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">卡券查询</p>
-                </div>
-                <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-seekhelp.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">他仓求助</p>
-                    <div class="prompt">{{myApplyRequireCount}}</div>
-                </div>
-            </div>
-            
-            <!--服务中车牌号-->
-            <div class="inService">
-                <div class="ins-btn">
-                    <p class="ins-border"></p>
-                    <p class="ins-txt">服务中</p>
-                </div>
-                <ul class="ins-ul">
-                    <li class="ins-li" v-for="item in serverList" :key="item.orderId">
-                        <span class="ins-span">{{item.carNo}}</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="keyboard" v-show="isInputCarNo">
-                <div class="close">
-                    <img src="../../assets/images/home/close_bg.png" alt="取消" @click="isInputCarNo = false">
-                </div>
-                <div class="zh-word">
-                    <div class="zh-word-item" v-for="(item, index) in keyboaed.zhWord" :key="index" @click="inputCarNo(item)">
-                        {{item}}
-                    </div>
-                </div>
-                <div class="num-word">
-                    <div class="num-word-item" v-for="(item, index) in keyboaed.numWord" :key="index" @click="inputCarNo(item)">
-                        {{item}}
-                    </div>
-                </div>
-                <div class="en-word">
-                    <div class="en-word-item" v-for="(item, index) in keyboaed.enWord" :key="index" @click="inputCarNo(item)">
-                        {{item}}
-                    </div>
-                </div>
-                <div class="btn-group">
-                    <div class="sure" @click="isInputCarNo = false">确定</div>
-                    <div class="cancel" @click="backSpace()">
-                        <img src="../../assets/images/home/del.png" alt="取消">
-                    </div>
-                </div>
-            </div>
+			</div>
+		</div>
+		
+		<!--服务功能-->
+		<div class="service">
+			<router-link class="service-conten" to="serverlist">
+				<div class="service-btn">
+					<img src="../../assets/images/home/hc-service.png" class="service-img"/>
+				</div>
+				<p class="service-p">服务列表</p>
+			</router-link>
+			<div class="service-conten">
+				<router-link class="service-conten" to="cleaningCall">
+					<div class="service-btn">
+						<img src="../../assets/images/home/hc-administration.png" class="service-img"/>
+					</div>
+					<p class="service-p">洗车管理</p>
+				</router-link>
+			</div>
+			<div class="service-conten">
+				<div class="service-btn">
+					<img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
+				</div>
+				<p class="service-p">快捷查价</p>
+			</div>
+		</div>
+		<div class="service">
+			<div class="service-conten">
+				<div class="service-btn">
+					<img src="../../assets/images/home/hc-allocation.png" class="service-img"/>
+				</div>
+				<p class="service-p">调拨列表</p>
+			</div>
+			<div class="service-conten">
+				<div class="service-btn">
+					<img src="../../assets/images/home/hc-cardcoupons.png" class="service-img"/>
+				</div>
+				<p class="service-p">卡券查询</p>
+			</div>
+			<div class="service-conten">
+				<div class="service-btn">
+					<img src="../../assets/images/home/hc-seekhelp.png" class="service-img"/>
+				</div>
+				<p class="service-p">他仓求助</p>
+				<div class="prompt">{{myApplyRequireCount}}</div>
+			</div>
+		</div>
+		
+		<!--服务中车牌号-->
+		<div class="inService">
+        	<div class="ins-btn">
+        		<p class="ins-border"></p>
+        		<p class="ins-txt">服务中</p>
+        	</div>
+        	<ul class="ins-ul">
+                <li class="ins-li" v-for="item in serverList" :key="item.orderId">
+                    <span class="ins-span">{{item.carNo}}</span>
+                </li>
+        	</ul>
         </div>
         
 	</div>
