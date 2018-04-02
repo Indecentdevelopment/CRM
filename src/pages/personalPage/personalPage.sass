@@ -55,7 +55,6 @@
         float: left
         margin-top: 0.6rem
         .personal-allCar
-            width: 27%
             box-shadow: 0px 0px 0px 1px rgba(105, 102, 102, 0)
             border-radius: 10px
             padding: 2%
@@ -67,18 +66,20 @@
             .personal-car
                 width: 1.5rem
                 height: 1.5rem
+                line-height: 1.5rem
                 padding: 0.05rem
                 border-radius: 100%
                 background: #fff
                 text-align: center
                 float: left
+                overflow: hidden
                 img
                     width: 90%
             p
                 color: #fac800
                 float: left
                 margin-left: 0.2rem
-        .personal-choose
+        .personal-choose.active
             box-shadow: 0px 0px 0px 1px rgb(255, 217, 0)
         .personal-plusModels
             width: 27%
@@ -193,7 +194,42 @@
                 border: none
                 font-size: 0.8rem
                 margin-bottom: 3rem
-                
+    .surebox
+        width: 100%
+        height: 100%
+        position: fixed
+        background-color: rgba(0,0,0,0.5)
+        z-index: 10000
+        .surefa
+            width: 70%
+            height: 6.6rem
+            display: flex
+            flex-direction: column
+            align-items: center
+            justify-content: space-between
+            margin-left: 15%
+            margin-top: 12rem
+            background-color: #fff   
+            border-radius: 10px
+            overflow: hidden
+            .info
+                margin-top: 0.8rem
+                font-size: 0.8rem
+            .btn-group
+                display: flex
+                width: 100%
+                justify-content: space-between
+                &>button
+                    width: 50%
+                    border: none
+                    height: 1.6rem
+                .cancel
+                    background-color: #000
+                    color: #ffffff
+                .sure
+                    background-color: #ffda01
+
+
                 
                 
                 

@@ -24,6 +24,7 @@ axios.interceptors.response.use(
     res => {
         if (res.data.code === 401) { // 验证失败
             localStorage.removeItem('currentUser_token')
+            console.log('here')
             router.push('/')
             // window.tip('请重新登录')
             return
@@ -105,6 +106,112 @@ export default {
 				status: data.status
 			}
 		})
-	}
+	},
 	/**************************获取订单详情*********************************/
+
+    /***************************personalPage**********************************/
+
+    // 获取用户信息
+    getUserInfo (data) {
+        return axios.get(url + 'api/car/GetUserInfo', {
+            params: {
+                userCarBindId: data.userCarBindId,
+                uid: data.uid
+            }
+        })
+    },
+    // 检车用户信息 然后跳转修改车辆信息
+    CheckUserInfo (data) {
+        return axios.get(url + 'api/car/CheckUserInfo', {
+            params: data
+        })
+    },
+    // 删除车辆信息
+    DeleteCarInfo (data) {
+        return axios.get(url + 'api/car/DeleteCarInfo', {
+            params: data
+        })
+    },
+    // 更新用户数据
+    UpadateUserInfo (data) {
+        return axios.post(url + 'api/car/UpadateUserInfo', querystring.stringify(data))
+    },
+
+    /***************************vip 用户升级**********************************/
+    GetUserExtendInfo (data) {
+        return axios.get(url + 'api/car/GetUserExtendInfo', {
+            params: data
+        })
+    },
+    // 升级 会员
+    ChooseLeve (data) {
+        return axios.post(url + 'api/car/UpdateUserLevel', querystring.stringify(data))
+    },
+    // 添加标签
+    SetUserSign (data) {
+        return axios.get(url + 'api/car/SetUserSign', {
+            params: data
+        })
+    },
+    // 点击确定 提交数据
+    UpdateUserExtendInfo (data) {
+        return axios.post(url + 'api/car/UpdateUserExtendInfo', querystring.stringify(data))
+    },
+
+    /***************************完善车辆信息**********************************/
+
+    // 获取用户 车辆信息
+    InitializeRegister(data) {
+        return axios.get(url + 'api/car/InitializeRegister', {
+            params: {
+                opera: 'update',
+                id: data.id
+            }
+        })
+    },
+    // 获取所有的车牌数据
+    getallbrand () {
+        return axios.get(url + 'api/car/getallbrand')
+    },
+    // 根据车牌获取所有的车系数据
+    GetAllSeriesByBrandName (data) {
+        return axios.get(url + 'api/car/GetAllSeriesByBrandName', {
+            params: data
+        })
+    },
+    // 根据车牌和车系 获取所有的排量数据
+    GetAllDispByBrandAndSeries (data) {
+        return axios.get(url + 'api/car/GetAllDispByBrandAndSeries', {
+            params: data
+        })
+    },
+    // 根据车牌、车系、排量 获取所有的年款
+    GetAllYearByBrandAndSeriesAndDisp (data) {
+        return axios.get(url + 'api/car/GetAllYearByBrandAndSeriesAndDisp', {
+            params: data
+        })
+    },
+    // 设为车主 、 删除车主
+    btnSetting (data) {
+        return axios.get(url + 'api/car/Setting', {
+            params: data
+        })
+    },
+    // 点击确认 注册信息
+    register (data) {
+        return axios.post(url + 'api/car/Register', querystring.stringify(data))
+    },
+    // 搜索车辆信息
+    getCar (data) {
+        return axios.get(url + 'Api/Car/GetCarType', {
+            params: data
+        })
+    },
+    // 根据搜索的车id  获取车辆类型、型号
+    GetCarTypeById (data) {
+        return axios.get(url + 'Api/Car/GetCarTypeById', {
+            params: data
+        })
+    },
+
 }

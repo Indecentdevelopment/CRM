@@ -12,36 +12,42 @@
 						<img src="../../assets/images/index/user-img.png"/>
 					</div>
 					<div class="personal-userName">
-						<p>王先生QD810175<br />17606318189</p>
-						<router-link to="uservip">
+						<p>{{userInfo.name}}<br />{{userInfo.mobile}}</p>
+						<router-link :to="{path: 'uservip', query: {uid: userInfo.id,cid: userCarBindId}}">
 							<img src="../../assets/images/personalPage/edit.png" class="personal-userEdit" />
 						</router-link>
 					</div>
 				</div>
-				<p class="personal-userInfo">会员卡：{{}}</p>
-				<p class="personal-userInfo">卡券：<span @click="">共0张 【查看】</span></p>
-				<p class="personal-userInfo">积分：<span @click="">剩余0 【查看】</span></p>
-				<p class="personal-userInfo">可开发票订单：<span @click="">【开票】</span></p>
+				<p v-if="userInfo.memberCard" class="personal-userInfo">会员卡：{{userInfo.memberCard.cardType.typeName}}({{userInfo.memberCard.cardType.discount}})折</p>
+				<p class="personal-userInfo">卡券：<span >共{{userInfo.cardCoupons.length}}张 【查看】</span></p>
+				<p class="personal-userInfo">积分：<span >剩余{{userInfo.integralCount}} 【查看】</span></p>
+				<p class="personal-userInfo">可开发票订单：<span >【开票】</span></p>
 			</div>
 		</div>
 		
 		<!--车辆信息-->
 		<div class="personalModels">
-			<div class="personal-allCar personal-choose">
+			<div v-for="item in userInfo.cars" :class="{active: item.carId === carInfo.carId}" class="personal-allCar personal-choose" :key="item.carId" @click="changeCar(item)">
 				<div class="personal-car">
-					<img src="http://crm.maxtire.com.cn/Content/img/CarImg/A - 安驰.png"/>
+					<img :src="item.carImg"/>
 				</div>
-				<p>宝骏<br />京888888</p>
+				<p>{{item.brand}}<br />{{item.carNo}}</p>
 			</div>
-			<div class="personal-plusModels">
+			<div class="personal-plusModels" @click="addNewCar()">
 				<span>＋</span>添加车型
 			</div>
 			<div class="personal-modifyInfo">
-				<p>车型信息：</p>
-				<p>车牌号：</p>
-				<p>车架号：</p>
+				<p>车型信息：{{carInfo.carInfo}}</p>
+				<p>车牌号：{{carInfo.carNo}}</p>
+				<p>车架号：{{carInfo.vin}}</p>
 				<p>技师备注：<input type="text" class="" /></p>
-				<p><button>修改车辆信息</button><button>删除车辆信息</button></p>
+                <p>上次行驶里程：{{carInfo.mileage}}</p>
+                <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
+				<p>
+                    <button>查看保养履历</button>
+                    <button @click="CheckUserInfo">修改车辆信息</button>
+                    <button @click="isDelCar = true">删除车辆信息</button>
+                </p>
 				<div class="personal-mArrow"></div>
 			</div>
 		</div>
@@ -49,49 +55,209 @@
 		<!--选填信息-->
 		<div class="personalOptional">
 			<div class="optional-input">
-				<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" />
+				<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.carInfo">
 			</div>
 			<div class="optional-input">
-				<span>上次保养：</span><input type="text" placeholder="上次保养时间" />
+				<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
 			</div>
 			<div class="optional-input">
-				<span>当前里程：</span><input type="text" placeholder="请输入..." />
+				<span>当前里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileage">
 			</div>
 			<div class="optional-input">
-				<span>月均里程：</span><input type="text" placeholder="请输入..." />
+				<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth">
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">过度磨损：</span>
-				<span class="inpRadio-judge">是</span>
-				<span class="inpRadio-frame"></span>
+				<span class="inpRadio-judge">
+                    是
+                    <input type="radio" value="true" v-model="updateInfo.WearAndTear">
+                </span>
+                <span class="inpRadio-judge">
+                    否
+                    <input type="radio" value="false" v-model="updateInfo.WearAndTear">
+                </span>
+				
 			</div>
 			<div class="optional-inpRadio inpRadio-border">
 				<span class="inpRadio-style">老化开裂：</span>
-				
+				<span class="inpRadio-judge">
+                    是
+                    <input type="radio"  value="true" v-model="updateInfo.Aging">
+                </span>
+                <span class="inpRadio-judge">
+                    否
+                    <input type="radio"  value="false" v-model="updateInfo.Aging">
+                </span>
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">胎侧损伤：</span>
-				
+				<span class="inpRadio-judge">
+                    是
+                    <input type="radio"  value="true" v-model="updateInfo.cracks">
+                </span>
+                <span class="inpRadio-judge">
+                    否
+                    <input type="radio"  value="false" v-model="updateInfo.cracks">
+                </span>
 			</div>
 			<div class="optional-button">
-				<button @click="">继续</button>
+				<button @click="UpadateUserInfo">继续</button>
 			</div>
 		</div>
+
+        <div class="surebox" v-show="isDelCar">
+            <div class="surefa">
+                <div class="info">您确定要删除该车辆吗？</div>
+                <div class="btn-group">
+                    <button class="cancel" @click="cancelDeleteCarInfo">取消</button>
+                    <button class="sure" @click="DeleteCarInfo">确定</button>
+                </div>
+            </div>
+        </div>
+        
 		
 	</div>
 </template>
 
 <script>
-	import Header from '@/components/header'
+    import Header from '@/components/header'
+    import api from '@/vuex/api'
 	import "./personalPage.sass"
 	export default {
 	    data () {
 	        return {
-	        	
+                userCarBindId: '', // 获取userInfo时  传参
+                uid: '',           // 获取userInfo时  传参
+                userInfo: {        // 获取的userInfo数据
+                    cardCoupons: []
+                },       
+                carInfo: {},        // 车辆数据信息
+                updateInfo: {       // 点击继续 需要提交的数据
+                    // CarId: '',    // 汽车id
+                    // Mileage: '',  
+                    // MileageMonth: '',
+                    // DotNo: '',
+                    // WearAndTear: '',
+                    // Aging: '',
+                    // cracks: '',
+                    // LastTime: ''
+                },
+                isDelCar: false      // 是否显示弹窗删除车辆
 	        }
-	    },
+        },
+        created () {
+            let route = this.$route
+            this.userCarBindId = route.query.userCarBindId
+            this.uid = route.query.uid
+            this.getUserInfo()
+        },
 	    methods: {
-			UserEdit(){
+            getUserInfo () {
+                api.getUserInfo({
+                    userCarBindId: this.userCarBindId,
+                    uid: this.uid
+                }).then(res => {
+                    this.userInfo = res.data
+                    this.carInfo = res.data.cars[0]
+                    this.updateInfo = this.carInfo
+                    // this.updateInfo.CarId = res.data.cars[0].carId
+                    // this.updateInfo.Mileage = res.data.cars[0].mileage
+                    // this.updateInfo.MileageMonth = res.data.cars[0].mileageMonth
+                    // this.updateInfo.DotNo = res.data.cars[0].dotNo
+                    // this.updateInfo.LastTime = res.data.cars[0].lastTime
+                })
+            },
+            // 点击换车
+            changeCar (data) {
+                this.carInfo = data
+                this.updateInfo = data
+            },
+            // 添加车型
+            addNewCar () {
+                this.$router.push({
+                    path: 'impCarInfo',
+                    query: {
+                        opera: 'add',
+                        id: this.carInfo.carId
+                    }
+                })
+            },
+            // 检车用户信息 跳转修改车辆信息
+            CheckUserInfo () {
+                api.CheckUserInfo({uid: this.userInfo.id}).then(res => {
+                    if (res.data) {
+                        this.$router.push({
+                            path: 'impCarInfo',
+                            query: {
+                                opera: 'update',
+                                id: this.carInfo.carId
+                            }
+                        })
+                    }
+                })
+            },
+            // 删除车辆
+            DeleteCarInfo () {
+                api.DeleteCarInfo({id: this.carInfo.carId, uid: this.userInfo.id}).then(res => {
+                    if (res.data) {
+                        alert('删除成功')
+                        this.getUserInfo()
+                    } else {
+                        alert('删除失败')
+                        this.getUserInfo()
+                    }
+                })
+            },
+            // 取消删除车辆
+            cancelDeleteCarInfo () {
+                this.isDelCar = false 
+            },
+            // 点击继续 
+            UpadateUserInfo () {
+                api.UpadateUserInfo(this.updateInfo).then(res => {
+                    let data = res.data
+                    if (data.success) {
+                        if (data.isBind) {
+                            this.$router.push({
+                                path: 'Confirm',
+                                query: {
+                                    userCarBindId: data.id
+                                }
+                            })
+                        } else {
+                            this.$router.push({
+                                path: 'scan',
+                                query: {
+                                    userCarBindId: data.id
+                                }
+                            })
+                        }
+                    } else {
+                        if (!data.phoneNumber) {
+                            alert('您的手机号格式不正确，请先修改手机号')
+                            this.$router.push({
+                                path: 'uservip',
+                                query: {
+                                    uid: userInfo.id,
+                                    cid: userCarBindId
+                                }
+                            })
+                        } else {
+                            alert(data.errMsg)
+                            if (data.errMsg === '请先维护完整车型信息') {
+                                this.$router.push({
+                                    path: 'impCarInfo',
+                                    query: {
+                                        opera: 'update',
+                                        id: data.id
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+            },
+			UserEdit (){
 				
 			}
 	    },

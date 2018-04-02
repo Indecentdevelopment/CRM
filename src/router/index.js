@@ -7,6 +7,7 @@ import Login from '@/pages/login/login'
 import Home from '@/pages/home/home'
 import ServerList from '@/pages/serverList/serverList'
 import PersonalPage from '@/pages/personalPage/personalPage'
+import ImpCarInfo from '@/pages/impcarInfo/impcarInfo'
 import Uservip from '@/pages/uservip/uservip'
 import OrderDetails from '@/pages/orderDetails/orderDetails'
 import CleaningCall from '@/pages/cleaningCall/cleaningCall'
@@ -49,6 +50,9 @@ const router = new Router({
                 {
                     path: 'cleaningCall',
                     component: CleaningCall
+                },{
+                    path: 'impCarInfo',
+                    component: ImpCarInfo
                 }
             ]
         }
@@ -56,9 +60,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    console.log(store)
     if (to.path.includes('login')) {
-        if (store.getters.isLogin) {
+        if (localStorage.getItem('access_token')) {
             router.push('/home')
             return
         }
