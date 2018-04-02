@@ -67,8 +67,8 @@
                 </div>
                 <div class="add-sign item" @click="ShowOrHiddenSign()">
                     标签
-                    <span v-show="!isShowSign">+</span>
-                    <span v-show="isShowSign">-</span>
+                    <span v-show="!isShowSign"> &nbsp;+</span>
+                    <span v-show="isShowSign"> &nbsp;-</span>
                 </div>
             </div>
 
@@ -87,8 +87,9 @@
         <swiper class="sign-swiper" :options="swiperOption" ref="mySwiper" v-show="isShowSign">
             <!-- slides -->
             <swiper-slide>
-                <div class="title">
+                <div class="title clearfix">
                     {{userExtendInfo.signAName}}
+                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
                 </div>
                 <div class="sign-box">
                     <div class="sign-item" v-for="item in userExtendInfo.signA" :key="item.id" @click="ShouSign(item)">
@@ -98,8 +99,9 @@
             </swiper-slide>
 
             <swiper-slide>
-                <div class="title">
+                <div class="title clearfix">
                     {{userExtendInfo.signBName}}
+                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
                 </div>
                 <div class="sign-box">
                     <div class="sign-item" v-for="item in userExtendInfo.signB" :key="item.id" @click="ShouSign(item)">
@@ -109,8 +111,9 @@
             </swiper-slide>
 
             <swiper-slide>
-                <div class="title">
+                <div class="title clearfix">
                     {{userExtendInfo.signCName}}
+                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
                 </div>
                 <div class="sign-box">
                     <div class="sign-item" v-for="item in userExtendInfo.signC" :key="item.id" @click="ShouSign(item)">
@@ -120,8 +123,9 @@
             </swiper-slide>
 
             <swiper-slide>
-                <div class="title">
+                <div class="title clearfix">
                     {{userExtendInfo.signDName}}
+                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
                 </div>
                 <div class="sign-box">
                     <div class="sign-item" v-for="item in userExtendInfo.signD" :key="item.id" @click="ShouSign(item)">
@@ -131,8 +135,9 @@
             </swiper-slide>
 
             <swiper-slide>
-                <div class="title">
+                <div class="title clearfix">
                     {{userExtendInfo.signEName}}
+                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
                 </div>
                 <div class="sign-box">
                     <div class="sign-item" v-for="item in userExtendInfo.signE" :key="item.id" @click="ShouSign(item)">

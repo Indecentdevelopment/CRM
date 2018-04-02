@@ -55,7 +55,7 @@
 		<!--选填信息-->
 		<div class="personalOptional">
 			<div class="optional-input">
-				<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.carInfo">
+				<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo">
 			</div>
 			<div class="optional-input">
 				<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
