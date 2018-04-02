@@ -128,9 +128,19 @@ export default {
         return axios.post(url + 'api/car/UpadateUserInfo', querystring.stringify(data))
     },
 
-    /***************************userExtendInfo**********************************/
+    /***************************vip 用户升级**********************************/
     GetUserExtendInfo (data) {
         return axios.get(url + 'api/car/GetUserExtendInfo', {
+            params: data
+        })
+    },
+    // 升级 会员
+    ChooseLeve (data) {
+        return axios.post(url + 'api/car/UpdateUserLevel', querystring.stringify(data))
+    },
+    // 添加标签
+    SetUserSign (data) {
+        return axios.get(url + 'api/car/SetUserSign', {
             params: data
         })
     },
