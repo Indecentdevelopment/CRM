@@ -213,5 +213,11 @@ export default {
             params: data
         })
     },
-
+	//首页获取预约洗车列表
+	GetCleanList(data){
+		return axios.get(url + 'Api/Car/GetCleanCall', {
+            params: data
+        })
+	}
+	
 }
