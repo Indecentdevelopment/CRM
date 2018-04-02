@@ -109,7 +109,7 @@
             <div class="surefa">
                 <div class="info">您确定要删除该车辆吗？</div>
                 <div class="btn-group">
-                    <button class="cancel">取消</button>
+                    <button class="cancel" @click="cancelDeleteCarInfo">取消</button>
                     <button class="sure" @click="DeleteCarInfo">确定</button>
                 </div>
             </div>
@@ -207,6 +207,10 @@
                         this.getUserInfo()
                     }
                 })
+            },
+            // 取消删除车辆
+            cancelDeleteCarInfo () {
+                this.isDelCar = false 
             },
             // 点击继续 
             UpadateUserInfo () {
