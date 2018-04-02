@@ -4,10 +4,28 @@ import router from '@/router/index'
 const state = {
     isLogin: false,
     shopData: { // 登录之后的 需要保存的shop信息
-        id: JSON.parse(localStorage.getItem('shopId'))
+        id: JSON.parse(localStorage.getItem('shopId')),
+        name: JSON.parse(localStorage.getItem('shopName'))
     }
 }
 const actions = {
+    checkToken ({commit}) {
+        api.getMyApplyRequireCount()
+        .then(res => {
+            commit(type.SET_ISLOGIN, true)
+            router.push('/home')
+        })
+        .catch(err => {
+            commit(type.SET_ISLOGIN, false)
+            return Promise.reject(err)
+        })
+    },
+    loginOut ({commit}, bool) { // 设置登录状态
+        commit(type.SET_ISLOGIN, false)
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('token_type')
+        router.push('/login')
+    },
     setCookie: function ({commit}, data) {
         return (document.cookie = [
             data.key, '=', escape(data.value),
@@ -57,15 +75,19 @@ const actions = {
 }
 const getters = {
     isLogin: state => state.isLogin,
-    shopData: state => state.shopData
+    shopData: state => state.shopData,
+    shopDataName: state => state.shopData.name
 }
 const mutations = {
     [type.SET_ISLOGIN] (state, bool) {
         state.isLogin = bool
     },
     [type.SET_SHOPDATA] (state, data) {
-        state.shopData.id = data.id
         localStorage.setItem('shopId', JSON.stringify(data.id))
+        localStorage.setItem('shopName', JSON.stringify(data.name))
+        state.shopData.id = data.id
+        state.shopData.name = data.name
+        
     }
 }
 export default {

@@ -7,11 +7,11 @@
         <!---->
         <div class="transactionType">
         	<el-tabs v-model="activeName" type="border-card"  @tab-click="handleClick"  >
-			    <el-tab-pane v-for="items in stateArr" :label = items></el-tab-pane>
+			    <el-tab-pane v-for="(items,i) in stateArr" :label = items :key="i"></el-tab-pane>
 			</el-tabs>
 	    	<div class="noNrder" v-show="orderList == ''">暂未找到相关订单！</div> 
 	    	<div class="about">
-	    		<div class="about-conten"  v-for="item in orderList">
+	    		<div class="about-conten"  v-for="(item,i) in orderList" :key="i">
 	    			<div class="about-style">
 	    				姓名：{{item.name}}
 		    		</div>

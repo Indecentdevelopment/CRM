@@ -46,7 +46,7 @@
         <!-- 内容部分 -->
         <div class="content">
             <div v-for="(group, index) in shopNameList" :key="index" class="group">
-            	<div v-for="item in group" :key="item.id" class="item" :class="{active: activeItem === item.id}" @click="getShopStaffInfos($event, index, item.id)">
+            	<div v-for="item in group" :key="item.id" class="item" :class="{active: activeItem === item.id}" @click="getShopStaffInfos($event, index, item.id, item.name)">
                     <div class="box">
                         <div class="name">{{item.name}}</div>
                         
@@ -77,7 +77,8 @@ export default {
             activeGroup: new Number(), // 当前活动的shopName组
             activeItem: new Number(),   // 当前活动的元素
             shopData: {                 // 登录之后 需要保存到vuex中的shop信息
-                id: ''
+                id: '',
+                name: ''
             }
         }
     },
@@ -129,11 +130,12 @@ export default {
             this.$store.dispatch('getShopName', this.currentCity)
         },
         // 点击shopName 获取shopStaffInfo数据
-        getShopStaffInfos (event, index, shopId) {
+        getShopStaffInfos (event, index, shopId, shopName) {
             this.activeItem = shopId
             this.activeGroup = index
             this.$store.dispatch('getShopStaffInfos', shopId)
             this.shopData.id = shopId
+            this.shopData.name = shopName
         }
     },
     components:{
