@@ -67,13 +67,13 @@
                 </div>
                 <div class="add-sign item" @click="ShowOrHiddenSign()">
                     标签
-                    <span v-show="isShowSign">+</span>
-                    <span v-show="!isShowSign">-</span>
+                    <span v-show="!isShowSign">+</span>
+                    <span v-show="isShowSign">-</span>
                 </div>
             </div>
 
             <!-- 确认按钮 -->
-            <button class="submit">确定</button>
+            <button class="submit" @click="btnSubmit">确定</button>
 
             <!-- 二维码 -->
             <div class="qecode">
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <swiper class="sign-swiper" :options="swiperOption" ref="mySwiper" >
+        <swiper class="sign-swiper" :options="swiperOption" ref="mySwiper" v-show="isShowSign">
             <!-- slides -->
             <swiper-slide>
                 <div class="title">
@@ -257,7 +257,44 @@
                         alert('删除失败')
                     }
                 })
-            }
+            },
+            // 确定
+            btnSubmit () {
+                let partten = /^1[3-9]\d{9}$/
+                if (!this.userExtendInfo.name) {
+                    alert('姓名不可为空')
+                    return
+                }
+                if (this.userExtendInfo.name.length > 20) {
+                    alert('用户名最多允许20位')
+                    return
+                }
+                if (!this.userExtendInfo.mobile) {
+                    alert('手机不可为空')
+                    return
+                }
+                if (this.userExtendInfo.mobile.length !== 11 || !partten.test(this.userExtendInfo.mobile)) {
+                    alert('手机号格式不正确')
+                    return
+                }
+                api.UpdateUserExtendInfo({
+                    UserId: this.userExtendInfo.userId,
+                    Name: this.userExtendInfo.name,
+                    Gender: this.userExtendInfo.gender,
+                    Mobile: this.userExtendInfo.mobile,
+                    UserCarBindId: this.userExtendInfo.userCarBindId,
+                    Address: this.userExtendInfo.address,
+                    Level: this.userExtendInfo.level
+                }).then(res => {
+                    this.$router.push({
+                        path: 'personalPage',
+                        query: {
+                            userCarBindId: res.data.activitionCar,
+                            uid: res.data.userId
+                        }
+                    })
+                })
+            },
 	    },
 	    components:{
             myHeader: Header,

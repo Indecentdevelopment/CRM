@@ -144,6 +144,10 @@ export default {
             params: data
         })
     },
+    // 点击确定 提交数据
+    UpdateUserExtendInfo (data) {
+        return axios.post(url + 'api/car/UpdateUserExtendInfo', querystring.stringify(data))
+    },
 
     /***************************完善车辆信息**********************************/
 
