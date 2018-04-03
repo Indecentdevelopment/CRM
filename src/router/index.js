@@ -11,6 +11,7 @@ import ImpCarInfo from '@/pages/impcarInfo/impcarInfo'
 import Uservip from '@/pages/uservip/uservip'
 import OrderDetails from '@/pages/orderDetails/orderDetails'
 import CleaningCall from '@/pages/cleaningCall/cleaningCall'
+import MaintainRecord from '@/pages/maintainRecord/maintainRecord'
 
 
 
@@ -50,9 +51,14 @@ const router = new Router({
                 {
                     path: 'cleaningCall',
                     component: CleaningCall
-                },{
+                },
+                {
                     path: 'impCarInfo',
                     component: ImpCarInfo
+                },
+                {
+                    path: 'maintainRecord',
+                    component: MaintainRecord
                 }
             ]
         }

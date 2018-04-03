@@ -92,10 +92,10 @@
                     <input type="checkbox" v-model="isSupplement">
                     <div>补充车型</div>
                 </div>
-                <input class="info" type="text" :disabled="!isSupplement" v-model="supplement">
+                <input class="info" type="text" :disabled="!isSupplement" v-model="supplement" placeholder="如：奥迪-A6-4.0L-2015">
             </div>
             <div class="vinNo">
-                <input type="text" v-model="initData.vin">
+                <input type="text" placeholder="车架号" v-model="initData.vin">
             </div>
             <div class="btn">
                 <button @click="register">确定</button>
@@ -132,8 +132,8 @@
             </div>
             
             <div class="user" v-for="item in carPeoples" :key="item.uid">
-                <div class="head-img"></div>
-                <div v-if="item.isTrue">车主</div>
+                <div class="head-img"><img src="../../assets/images/impCarInfo/mans.png"/></div>
+                <div v-if="item.isTrue" class="theOwner">车主</div>
                 <div v-else>
                     <button @click="btnSetting(item.ucBindId, 1)">删</button>
                     <button @click="btnSetting(item.ucBindId, 0)">设为车主</button>

@@ -120,6 +120,12 @@ export default {
             }
         })
     },
+    //查看保养履历   跳转到保养履历
+    SeeMaintain (data) {
+        return axios.get(url + '/Home/Record', {
+            params: data
+        })
+    },
     // 检车用户信息 然后跳转修改车辆信息
     CheckUserInfo (data) {
         return axios.get(url + 'api/car/CheckUserInfo', {
