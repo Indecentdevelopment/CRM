@@ -12,6 +12,8 @@ import Uservip from '@/pages/uservip/uservip'
 import OrderDetails from '@/pages/orderDetails/orderDetails'
 import CleaningCall from '@/pages/cleaningCall/cleaningCall'
 import Scan from '@/pages/scan/scan'
+import MaintainRecord from '@/pages/maintainRecord/maintainRecord'
+
 
 
 Vue.use(Router)
@@ -50,12 +52,17 @@ const router = new Router({
                 {
                     path: 'cleaningCall',
                     component: CleaningCall
-                },{
+                },
+                {
                     path: 'impCarInfo',
                     component: ImpCarInfo
                 },{
                     path: 'scan',
                     component: Scan
+                },
+                {
+                    path: 'maintainRecord',
+                    component: MaintainRecord
                 }
             ]
         }

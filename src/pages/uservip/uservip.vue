@@ -67,8 +67,8 @@
                 </div>
                 <div class="add-sign item" @click="ShowOrHiddenSign()">
                     标签
-                    <span v-show="!isShowSign">+</span>
-                    <span v-show="isShowSign">-</span>
+                    <span v-show="!isShowSign"> &nbsp;+</span>
+                    <span v-show="isShowSign"> &nbsp;-</span>
                 </div>
             </div>
 

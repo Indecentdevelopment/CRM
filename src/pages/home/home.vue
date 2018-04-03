@@ -128,12 +128,12 @@
 		
 		<!--服务中车牌号-->
 		<div class="inService">
-        	<div class="ins-btn">
+        	<div class="ins-btn" @click="serviceList">
         		<p class="ins-border"></p>
         		<p class="ins-txt">服务中</p>
         	</div>
         	<ul class="ins-ul">
-                <li class="ins-li" v-for="item in serverList" :key="item.orderId">
+                <li class="ins-li" v-for="item in serverList" :key="item.orderId"  v-show="inService">
                     <span class="ins-span">{{item.carNo}}</span>
                 </li>
         	</ul>
@@ -165,7 +165,8 @@
                     enWord: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A',
                     'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
                 },
-                isInputCarNo: false  // 是否显示自定义键盘
+                isInputCarNo: false,  // 是否显示自定义键盘
+                inService: true
             }
         },
         computed: {
@@ -221,6 +222,18 @@
                     this.serverList = res.data.repairsModel
                 })
                 .catch(err => Promise.reject(err))
+            },
+            //服务车辆列表  显示隐藏
+            serviceList (){
+            	
+            	if(this.inService == true){
+            		this.inService = false
+            		console.log('false')
+            	}else{
+            		this.inService = true
+            		console.log('true')
+            	}
+            	
             },
             // 获取他仓求助 消息个数
             getMyApplyRequireCount () {
