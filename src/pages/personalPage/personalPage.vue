@@ -44,7 +44,7 @@
                 <p>上次行驶里程：{{carInfo.mileage}}</p>
                 <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
 				<p>
-                    <button>查看保养履历</button>
+                    <button @click="SeeMaintain">查看保养履历</button>
                     <button @click="CheckUserInfo">修改车辆信息</button>
                     <button @click="isDelCar = true">删除车辆信息</button>
                 </p>
@@ -68,37 +68,42 @@
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">过度磨损：</span>
-				<span class="inpRadio-judge">
-                    是
-                    <input type="radio" value="true" v-model="updateInfo.WearAndTear">
-                </span>
-                <span class="inpRadio-judge">
-                    否
-                    <input type="radio" value="false" v-model="updateInfo.WearAndTear">
-                </span>
-				
+				<div class="radioBtn">
+			        <span>否</span>
+			        <input id="item1" type="radio" name="item" value="1" v-model="updateInfo.WearAndTear">
+			        <label for="item1"></label>
+			    </div>
+			    <div class="radioBtn">
+			        <span>是</span>
+			        <input id="item2" type="radio" name="item" value="2" v-model="updateInfo.WearAndTear">
+			        <label for="item2"></label>
+			    </div>
 			</div>
 			<div class="optional-inpRadio inpRadio-border">
 				<span class="inpRadio-style">老化开裂：</span>
-				<span class="inpRadio-judge">
-                    是
-                    <input type="radio"  value="true" v-model="updateInfo.Aging">
-                </span>
-                <span class="inpRadio-judge">
-                    否
-                    <input type="radio"  value="false" v-model="updateInfo.Aging">
-                </span>
+				<div class="radioBtn">
+			        <span>否</span>
+			        <input id="item3" type="radio" name="items" value="3"  v-model="updateInfo.Aging">
+			        <label for="item3"></label>
+			    </div>
+			    <div class="radioBtn">
+			        <span>是</span>
+			        <input id="item4" type="radio" name="items" value="4"  v-model="updateInfo.Aging">
+			        <label for="item4"></label>
+			    </div>
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">胎侧损伤：</span>
-				<span class="inpRadio-judge">
-                    是
-                    <input type="radio"  value="true" v-model="updateInfo.cracks">
-                </span>
-                <span class="inpRadio-judge">
-                    否
-                    <input type="radio"  value="false" v-model="updateInfo.cracks">
-                </span>
+				<div class="radioBtn">
+			        <span>否</span>
+			        <input id="item5" type="radio" name="itemss" value="5" v-model="updateInfo.cracks">
+			        <label for="item5"></label>
+			    </div>
+			    <div class="radioBtn">
+			        <span>是</span>
+			        <input id="item6" type="radio" name="itemss" value="6" v-model="updateInfo.cracks">
+			        <label for="item6"></label>
+			    </div>
 			</div>
 			<div class="optional-button">
 				<button @click="UpadateUserInfo">继续</button>
@@ -142,7 +147,8 @@
                     // cracks: '',
                     // LastTime: ''
                 },
-                isDelCar: false      // 是否显示弹窗删除车辆
+                isDelCar: false,      // 是否显示弹窗删除车辆
+                carId: ''
 	        }
         },
         created () {
@@ -160,6 +166,8 @@
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
                     this.updateInfo = this.carInfo
+                    this.carId = res.data.cars[0].carId
+                    console.log(this.carId)
                     // this.updateInfo.CarId = res.data.cars[0].carId
                     // this.updateInfo.Mileage = res.data.cars[0].mileage
                     // this.updateInfo.MileageMonth = res.data.cars[0].mileageMonth
@@ -181,6 +189,19 @@
                         id: this.carInfo.carId
                     }
                 })
+            },
+            //查看保养履历 跳转到保养履历
+            SeeMaintain(){
+            	api.SeeMaintain({carTypeId : 308325}).then(res => {
+            		if (res.data) {
+                        this.$router.push({
+                            path: 'maintainRecord',
+		                    query: {
+		                        id: 308325
+		                    }
+                        })
+                    }
+            	})
             },
             // 检车用户信息 跳转修改车辆信息
             CheckUserInfo () {

@@ -47,10 +47,19 @@
 	        }
 	    },
 	    created() {
-	    	
+	    	this.getCleanList()
 	    },
 	    methods: {
 	    	
+	    	getCleanList (){
+	    		api.GetCleanList()
+                .then( res => {
+                    console.log(res.data.cleans)
+                    console.log(res)
+                    
+                })
+                .catch()
+	    	}
 	    },
 	    components:{
 	        myHeader: Header

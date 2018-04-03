@@ -160,7 +160,8 @@
             overflow: hidden
             height: 2rem
             line-height: 2rem 
-            text-align: center  
+            text-align: center 
+            position: relative 
             .inpRadio-style
                 color: #fac800  
                 float: left  
@@ -175,6 +176,41 @@
                 height: 1rem
                 background: red
                 display: inline-block
+            .radioBtn 
+                width: 3rem
+                position: relative
+                right: 1.4rem
+                height: 2rem
+                line-height: 2rem
+                float: right
+            input[type="radio"] 
+                width: 1rem
+                height: 1rem
+                opacity: 0
+            label 
+                position: absolute
+                left: 1.6rem
+                top: 0.6rem
+                width: 0.8rem
+                height: 0.8rem
+                border: 1px solid #C1CACA
+            input:checked+label::after 
+                position: absolute
+                content: ""
+                width: 0.3rem
+                height: 0.6rem
+                top: 0rem
+                left: 0.2rem
+                border: 3px solid #fac800
+                border-top: none
+                border-left: none
+                transform: rotate(45deg)
+            
+            span
+                display: inline-block;
+                margin-top: 0.1rem;
+                color: #c8c8c8
+            
         .inpRadio-border
             border-top: 1px solid #716E6E
             border-bottom: 1px solid #716E6E 

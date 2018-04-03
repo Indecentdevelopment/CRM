@@ -23,6 +23,8 @@ const actions = {
         commit(type.SET_ISLOGIN, false)
         localStorage.removeItem('access_token')
         localStorage.removeItem('token_type')
+        localStorage.removeItem('shopId')
+        localStorage.removeItem('shopName')
         router.push('/login')
     },
     setCookie: function ({commit}, data) {
