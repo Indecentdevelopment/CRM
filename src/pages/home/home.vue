@@ -56,7 +56,7 @@
                             <option value="其他">其他</option>
                         </select>
                     <!--车牌输入框-->
-                    <input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" @focus="showKeyboard($event)" />
+                    <input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" @click="showKeyboard($event)" />
                     <!--搜索按钮-->
                     <div class="inp-search">搜索</div>
 
@@ -138,12 +138,16 @@
                 </li>
         	</ul>
         </div>
+
+        <keyboard-car-no :open="isInputCarNo" @inputWord="inputWord" 
+        @close="isInputCarNo=false" @backWord="backWord"></keyboard-car-no>
         
 	</div>
 </template>
 <script>
 	import { mapGetters } from 'vuex'
     import Header from '@/components/header'
+    import keyboardCarNo from '@/components/keyboardCarNo'
     import api from '@/vuex/api'
 	import "./home.sass"
 	export default {
@@ -159,14 +163,7 @@
                 isOpencarInfo: false, // 是否显示查询出的车辆信息列表
                 serverList: [],  // 最下方 服务列表
                 inputTimer: '',   // 输入电话号码 事件节流定时器
-                keyboaed: {       // 键盘数据
-                    zhWord: ['港', '澳', '学', '警', '领'],
-                    numWord: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
-                    enWord: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A',
-                    'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
-                },
-                isInputCarNo: false,  // 是否显示自定义键盘
-                inService: true
+                isInputCarNo: false  // 是否显示自定义键盘
             }
         },
         computed: {
@@ -241,23 +238,24 @@
                     this.myApplyRequireCount = res.data
                 })
             },
-            // 输入车牌号
+            // 点击车牌号输入框  显示自定义键盘
             showKeyboard (event) {
                 event.target.blur()
                 this.isInputCarNo = true
             },
-            // 开始输入车牌号
-            inputCarNo (word) {
-                this.carNo += word
+            // 点击键盘
+            inputWord (data) {
+                this.carNo += data
             },
             // 键盘 撤销
-            backSpace () {
+            backWord () {
                 let length = this.carNo.length
                 this.carNo = this.carNo.substring(0, length - 1)
             }
         },
 		components: {
-			myHeader: Header
+            myHeader: Header,
+            keyboardCarNo: keyboardCarNo
 		}
 	}
 </script>
