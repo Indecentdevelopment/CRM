@@ -163,7 +163,8 @@
                 isOpencarInfo: false, // 是否显示查询出的车辆信息列表
                 serverList: [],  // 最下方 服务列表
                 inputTimer: '',   // 输入电话号码 事件节流定时器
-                isInputCarNo: false  // 是否显示自定义键盘
+                isInputCarNo: false,  // 是否显示自定义键盘
+                inService: true
             }
         },
         computed: {
