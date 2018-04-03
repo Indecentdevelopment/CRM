@@ -138,12 +138,15 @@
                 </li>
         	</ul>
         </div>
+
+        <keyboard-car-no></keyboard-car-no>
         
 	</div>
 </template>
 <script>
 	import { mapGetters } from 'vuex'
     import Header from '@/components/header'
+    import keyboardCarNo from '@/components/keyboardCarNo'
     import api from '@/vuex/api'
 	import "./home.sass"
 	export default {
@@ -244,7 +247,8 @@
             }
         },
 		components: {
-			myHeader: Header
+            myHeader: Header,
+            keyboardCarNo: keyboardCarNo
 		}
 	}
 </script>
