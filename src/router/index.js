@@ -11,7 +11,7 @@ import ImpCarInfo from '@/pages/impcarInfo/impcarInfo'
 import Uservip from '@/pages/uservip/uservip'
 import OrderDetails from '@/pages/orderDetails/orderDetails'
 import CleaningCall from '@/pages/cleaningCall/cleaningCall'
-
+import Scan from '@/pages/scan/scan'
 
 
 Vue.use(Router)
@@ -53,6 +53,9 @@ const router = new Router({
                 },{
                     path: 'impCarInfo',
                     component: ImpCarInfo
+                },{
+                    path: 'scan',
+                    component: Scan
                 }
             ]
         }
