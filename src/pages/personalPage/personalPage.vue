@@ -61,10 +61,10 @@
 				<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
 			</div>
 			<div class="optional-input">
-				<span>当前里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileage">
+				<span>当前里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileage" @click="showKeyboard($event, 'mileage')">
 			</div>
 			<div class="optional-input">
-				<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth">
+				<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth" @click="showKeyboard($event, 'mileageMonth')">
 			</div>
 			<div class="optional-inpRadio">
 				<span class="inpRadio-style">过度磨损：</span>
@@ -121,7 +121,8 @@
         </div>
 
         <!-- 数字键盘 -->
-        <keyboardNum></keyboardNum>
+        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" 
+        @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 		
 	</div>
 </template>
@@ -140,18 +141,12 @@
                     cardCoupons: []
                 },       
                 carInfo: {},        // 车辆数据信息
-                updateInfo: {       // 点击继续 需要提交的数据
-                    // CarId: '',    // 汽车id
-                    // Mileage: '',  
-                    // MileageMonth: '',
-                    // DotNo: '',
-                    // WearAndTear: '',
-                    // Aging: '',
-                    // cracks: '',
-                    // LastTime: ''
-                },
+                updateInfo: {},       // 点击继续 需要提交的数据
                 isDelCar: false,      // 是否显示弹窗删除车辆
-                carId: ''
+                carId: '',
+
+                isShowKeyboard: false,   // 是否显示键盘
+                focusInp: ''             // 当前选中的输入框 （当前里程、月里程）
 	        }
         },
         created () {
@@ -280,6 +275,21 @@
                         }
                     }
                 })
+            },
+            // 显示键盘
+            showKeyboard (event, focus) {
+                event.target.blur()
+                this.focusInp = focus
+                this.isShowKeyboard = true
+            },
+            // 点击键盘 开始输入
+            inputWord (data) {
+                this.updateInfo[this.focusInp] += data
+            },
+            // 键盘 撤销
+            backWord () {
+                let length = this.updateInfo[this.focusInp].length
+                this.updateInfo[this.focusInp] = this.updateInfo[this.focusInp].substring(0, length - 1)
             },
 			UserEdit (){
 				
