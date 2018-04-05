@@ -119,13 +119,16 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- 数字键盘 -->
+        <keyboardNum></keyboardNum>
 		
 	</div>
 </template>
 
 <script>
     import Header from '@/components/header'
+    import keyboardNum from '@/components/keyboardNum'
     import api from '@/vuex/api'
 	import "./personalPage.sass"
 	export default {
@@ -283,7 +286,8 @@
 			}
 	    },
 	    components:{
-	        myHeader: Header
+	        myHeader: Header,
+            keyboardNum: keyboardNum
 	    }
 	}
 </script>

@@ -12,7 +12,14 @@
 <script>
 	import Header from '@/components/header'
     import api from '@/vuex/api'
-	import "./maintainRecord.sass"
+    import "./maintainRecord.sass"
+    export default {
+        data () {
+            return {}
+        },
+        created () {},
+        methods: {}
+    }
 </script>
 
 <style>
