@@ -127,7 +127,6 @@
     .service
         width: 84%
         margin: 0 8%
-        float: left
         display: flex
         justify-content: space-between
         flex-wrap: wrap
@@ -222,103 +221,11 @@
                     box-sizing: border-box
                     border-radius: 3px
 
-    .keyboard
-        position: fixed
-        bottom: 0
-        width: 100%
-        padding-bottom: 0.3rem
-        display: flex
-        flex-direction: column
-        z-index: 100
-        background-color: #D7D7D7
-        .close
-            position: absolute
-            top: -28px
-            right: 0
-            img
-                height: 28px
-        .zh-word
-            display: flex
-            justify-content: space-between
-            .zh-word-item
-                font-size: 1.2rem
-                text-align: center
-                width: 20%
-                background-color: #F8F8F8
-                color: #777
-                font-weight: 500
-                padding: 0.1rem 0
-                &:not(:last-child)
-                    border-right: solid 1px #999
-        .num-word
-            display: flex
-            justify-content: space-between
-            margin: 0.2rem 0
-            .num-word-item
-                width: 8%
-                height: 1.6rem
-                line-height: 1.6rem
-                font-size: 1.1rem
-                margin: 0.1rem 1%
-                text-align: center
-                background-color: #fff
-                box-shadow: 2px 2px 4px grey
-                border-radius: 3px
-        .en-word
-            display: flex
-            flex-wrap: wrap
-            justify-content: center
-            .en-word-item
-                width: 9%
-                height: 2.2rem
-                line-height: 2.2rem
-                text-align: center
-                margin: 1.03%
-                border-radius: 3px
-                font-size: 1rem
-                color: #777
-                background-color: #fff
-                box-shadow: 2px 2px 4px grey
-        .btn-group
-            display: flex
-            .sure
-                width: 65%
-                height: 2rem
-                line-height: 2rem
-                margin-left: 0.3rem
-                text-align: center
-                background-color: #fff
-                border-radius: 5px
-                font-size: 1rem
-                color: #e07d13  
-                box-shadow: 2px 2px 4px grey
-            .cancel
-                flex: 1
-                height: 2rem
-                display: flex
-                align-items: center
-                justify-content: center
-                background-color: #fff
-                border-radius: 5px
-                box-shadow: 2px 2px 4px grey
-                margin: 0 0.4rem
-                img
-                    width: 40%
-                    height: 80%
-
 .home
     .loading
         margin-top: 1.4rem
-        .el-loading-mask
-            background-color: rgba(0, 0, 0, 0.3)
-            .el-loading-spinner
-                top: 40%
-                .circular
-                    width: 3.5rem
-                    height: 3.5rem
-                    .path
-                        stroke: #ffd900
-                        stroke-width: 3
+        height: calc(100% - 1.4rem)
+
 
 
 

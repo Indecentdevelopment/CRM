@@ -5,10 +5,12 @@
         <my-header></my-header>
         
         <!---->
-        <div class="transactionType">
-        	<el-tabs v-model="activeName" type="border-card"  @tab-click="handleClick"  >
-			    <el-tab-pane v-for="(items,i) in stateArr" :label = items :key="i"></el-tab-pane>
-			</el-tabs>
+        <div class="transactionType loading" v-loading="isLoading">
+            <div class="tab">
+                <div class="item" v-for="(item, i) in stateArr" :key="i" :class="{active: status===item}" @click="handleClick(item)">
+                    {{item}}
+                </div>
+            </div>
 	    	<div class="noNrder" v-show="orderList == ''">暂未找到相关订单！</div> 
 	    	<div class="about">
 	    		<div class="about-conten"  v-for="(item,i) in orderList" :key="i">
@@ -44,7 +46,7 @@
 	export default {
 	    data () {
 	        return {
-	        	activeName: 0,
+                isLoading: true,  // loading
 	        	status: '已预约',
 	        	orderList: [],
 	        	stateArr: ['已预约','待确认','待付款','已完成','已取消']
@@ -56,17 +58,18 @@
 	    methods: {
 	    	getOrderList(){
 	    		//第一次渲染默认已预约
+                this.isLoading = true
 	    		api.getOrderList({
                 	status: this.status
                }).then( res => {
+                   this.isLoading = false
                 	this.orderList = res.data.repairsModel
                 })
 	    	},
 	    	//切换订单状态
-			handleClick(tab, event) {
-		        let state = tab.$options.propsData.label
-		        this.status = state
-		        this.getOrderList()
+			handleClick(tab) {
+		        this.status = tab
+                this.getOrderList()
 			}
 	    },
 	    components:{
