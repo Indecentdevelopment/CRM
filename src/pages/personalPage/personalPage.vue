@@ -190,16 +190,12 @@
             },
             //查看保养履历 跳转到保养履历
             SeeMaintain(){
-            	api.SeeMaintain({carTypeId : 308325}).then(res => {
-            		if (res.data) {
-                        this.$router.push({
-                            path: 'maintainRecord',
-		                    query: {
-		                        id: 308325
-		                    }
-                        })
+                this.$router.push({
+                    path: 'maintainRecord',
+                    query: {
+                        id: this.carId
                     }
-            	})
+                })
             },
             // 检车用户信息 跳转修改车辆信息
             CheckUserInfo () {
