@@ -10,18 +10,26 @@
 					<span class="fl modelsa" @click="timeAxis($event, index)">{{item.year}}<img src="../../assets/images/maintainRecord/triangle.png" class="triangle"/></span>
 					<span class="fl models">{{models}}</span>
 				</h3>
-				<div class="timeList fl clearfix" v-for="items in item.recordInfo" v-show="activeGroup">
-					<p class="fl listStylea">
-						{{items.time}}
-						<img src="../../assets/images/maintainRecord/circle-h.png" />
-					</p>
-					<div class="lestRight fl">
-						<p class="fr listStyleb">{{items.mileage}}</p>
-						<p class="fr listStyleb">实付价格:{{items.totalPrice}}</p>
-						<p class="fr listStylec" v-for="itemss in items.product">{{itemss.name}}</p>
-						<p class="fr listStylec"><button>详情</button></p>
-					</div>
-				</div>
+                <!-- <transition-group name="fade">
+                    
+                </transition-group> -->
+                <div class="timeBox" :class="{close: !item.active}">
+                    <div class="timeList fl clearfix" id="timeList" v-for="(items, i) in item.recordInfo" :key="i">
+                        <p class="fl listStylea">
+                            {{items.time}}
+                            <img src="../../assets/images/maintainRecord/circle-h.png" />
+                        </p>
+                        <div class="lestRight fl">
+                            <p class="fr listStyleb">{{items.mileage}}</p>
+                            <p class="fr listStyleb">实付价格:{{items.totalPrice}}</p>
+                            <p class="fr listStylec" v-for="(itemss, i) in items.product" :key="i">{{itemss.name}}</p>
+                            <p class="fr listStylec"><button>详情</button></p>
+                        </div>
+                    </div>
+                </div>
+                
+                
+				
 			</div>
 		</div>
 	</div>
@@ -48,17 +56,16 @@
 	    methods: {
             GetSeeMaintain(){
             	api.SeeMaintain( {carTypeId : this.carId} ).then(res => {
-            		this.yearArr = res.data.records
+                    res.data.records.map((item, index) => {
+                        res.data.records[index].active = true
+                    })
+                    this.yearArr = res.data.records
             		this.models = res.data.carInfo
             		this.dataList = res.data.carInfo[0].recordInfo
             	})
             },
             timeAxis(event,index){
-            	if(this.activeGroup == true){
-            		this.activeGroup = false
-            	}else{
-            		this.activeGroup = true
-            	}
+                this.yearArr[index].active = !this.yearArr[index].active
             }
 	    },
 	    components:{
