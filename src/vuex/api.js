@@ -120,9 +120,9 @@ export default {
             }
         })
     },
-    //查看保养履历   跳转到保养履历
-    SeeMaintain (data) {
-        return axios.get(url + '/Home/Record', {
+    //查看保养履历 跳转到保养履历
+    SeeMaintain (data){
+    	return axios.get(url + 'api/customerpage/GetCarRecord', {
             params: data
         })
     },
@@ -159,7 +159,7 @@ export default {
             params: data
         })
     },
-    // 点击确定 提交数据
+    //点击确定 提交数据
     UpdateUserExtendInfo (data) {
         return axios.post(url + 'api/car/UpdateUserExtendInfo', querystring.stringify(data))
     },
