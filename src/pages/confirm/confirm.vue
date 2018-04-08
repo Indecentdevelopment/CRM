@@ -24,8 +24,17 @@
         </div>
         <!-- 轮胎服务 -->
         <div class="server">
-            <div class="item" v-for="item in productData.data" :key="item.id">
-                <div class="title">{{item.name}}</div>
+            <div class="item" v-for="product in productData.data" :key="product.id">
+                <div class="title">{{product.name}}</div>
+                <div class="box">
+                    <div class="item" v-for="categorys in product.childCategorys" :key="categorys.id">
+                        <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
+                        <div class="info">
+                            <div class="name">{{categorys.name}}</div>
+                            <div class="promotion">{{categorys.promotionInfo}}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
