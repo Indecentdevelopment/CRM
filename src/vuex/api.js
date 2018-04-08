@@ -224,6 +224,13 @@ export default {
 		return axios.get(url + 'Api/Car/GetCleanCall', {
             params: data
         })
-	}
+    },
+    
+    /***************************产品也 confirm**********************************/
+    ProductPush(data) {
+        return axios.get(url + 'api/car/ProductPush', {
+            params: data
+        })
+    }
 	
 }
