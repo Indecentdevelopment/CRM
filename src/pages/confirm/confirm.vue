@@ -28,11 +28,22 @@
                 <div class="title">{{product.name}}</div>
                 <div class="box">
                     <div class="item" v-for="categorys in product.childCategorys" :key="categorys.id">
-                        <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
-                        <div class="info">
-                            <div class="name">{{categorys.name}}</div>
-                            <div class="promotion">{{categorys.promotionInfo}}</div>
+                        <div class="oparation" @click="showProductList($event)">
+                            <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
+                            <div class="info">
+                                <div class="name">{{categorys.name}}</div>
+                                <div class="promotion">{{categorys.promotionInfo}}</div>
+                            </div>
                         </div>
+                        <div class="productList">
+                            {{categorys.active}}
+                            <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
+                                <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === productData.defaultSpecs}">
+                                    {{tires}}
+                                </i>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -70,8 +81,23 @@ export default {
                 shopId: localStorage.getItem('shopId')
             }).then(res => {
                 this.productData = res.data
+                this.productData.defaultSpecs = this.productData.tiresSpecs[0]
                 this.carInfo = res.data.userCarBind.carInfo
             })
+        },
+        // 点击 显示服务列表
+        showProductList (event) {
+            let item = event.currentTarget.parentNode
+            console.log(item.children)
+            for (var i = 0; i < item.children.length; i++) {
+                // console.log(item.children[i].className.indexOf('productList'))
+                if (item.children[i].className.indexOf('productList') > -1) {
+                    item.children[i].setAttribute('class', 'aaaa')
+                }
+            }
+            // item.childNodes.map((item) => {
+            //     console.log(item)
+            // })
         }
     },
     components: {

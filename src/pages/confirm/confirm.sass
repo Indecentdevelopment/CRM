@@ -50,29 +50,48 @@
                 display: flex
                 flex-direction: column
                 .item
-                    height: 2rem
+                    min-height: 2rem
                     padding: 0.3rem 0.6rem
                     margin-top: 0.8rem
                     background-color: #ffffff
                     display: flex
-                    align-items: center
-                    border-radius: 10rem
-                    .iconfont
-                        width: 1.5rem
-                        height: 1.5rem
-
-                    .info
+                    flex-direction: column
+                    border-radius: 1.5rem
+                    overflow: hidden
+                    .oparation
+                        display: flex
+                        align-items: center
+                        .iconfont
+                            width: 1.5rem
+                            height: 1.5rem
+                        .info
+                            display: flex
+                            flex-direction: column
+                            margin-left: 0.6rem
+                            height: 100%
+                            flex: 1
+                            .name
+                                font-size: 1rem
+                                flex: 1
+                            .promotion
+                                color: #DF3348
+                                font-size: 0.4rem
+                    .productList
                         display: flex
                         flex-direction: column
-                        margin-left: 0.6rem
-                        height: 100%
-                        flex: 1
-                        .name
-                            font-size: 1rem
-                            flex: 1
-                        .promotion
-                            color: #DF3348
-                            font-size: 0.4rem
+                        .tiresSpecs
+                            display: flex
+                            flex-wrap: wrap
+                            align-items: center
+                            .item
+                                width: auto
+                                height: auto
+                                min-height: auto
+                                padding: 0.2rem
+                                margin: 0.3rem
+                                border-radius: 0
+                                color: rgb(238, 83, 78)
+                                font-size: 0.8rem
                     
             
     .subBottom
