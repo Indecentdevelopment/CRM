@@ -26,7 +26,9 @@
                             <p class="fr listStyleb">{{items.mileage}}</p>
                             <p class="fr listStyleb">实付价格:{{items.totalPrice}}</p>
                             <p class="fr listStylec" v-for="(itemss, i) in items.product" :key="i">{{itemss.name}}</p>
-                            <p class="fr listStylec"><button>详情</button></p>
+                            <p class="fr listStylec">
+                            	<router-link class="jump" :to="'/orderDetails/?OrderId='+items.orderId">详情</router-link>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -49,7 +51,8 @@
                 yearArr: [], 
                 models: '',
                 dataList: [],
-                activeGroup: true
+                activeGroup: true,
+                orderId: ''
 	        }
         },
         created () {
@@ -65,6 +68,7 @@
                     this.yearArr = res.data.records
             		this.models = res.data.carInfo
                     this.dataList = res.data.carInfo[0].recordInfo
+                    console.log(res.data.records[0].recordInfo[0].orderId)
                     this.$nextTick(() => {
                         let timeBox = document.getElementsByClassName('timeBox')
                         for (let i = 0, length = timeBox.length; i < length; i++) {
