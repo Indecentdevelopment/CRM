@@ -1,9 +1,9 @@
 <template>
     <div class="header">
-    	<img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
-    	<img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home"/>
-    	<img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
-    	<img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
+        <img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
+        <img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home"/>
+        <img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
+        <img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
         <span class="h-landingstate" v-show="isLogin">
         	<span id="passCity" class="passCity">{{shopDataName}}</span>
 			<span id="cancellation" class="cancellation" @click="loginOut">注销</span>
