@@ -14,6 +14,7 @@ import CleaningCall from '@/pages/cleaningCall/cleaningCall'
 import Scan from '@/pages/scan/scan'
 import MaintainRecord from '@/pages/maintainRecord/maintainRecord'
 import Confirm from '@/pages/confirm/confirm'
+import QueryPrice from '@/pages/queryPrice/queryPrice'
 
 
 
@@ -67,6 +68,9 @@ const router = new Router({
                 },{
                     path: 'Confirm',
                     component: Confirm
+                },{
+                    path: 'queryPrice',
+                    component: QueryPrice
                 }
             ]
         }

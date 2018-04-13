@@ -97,10 +97,12 @@
                     </router-link>
                 </div>
                 <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">快捷查价</p>
+                	<router-link to="queryPrice">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">快捷查价</p>
+	                </router-link>
                 </div>
             </div>
             <div class="service">

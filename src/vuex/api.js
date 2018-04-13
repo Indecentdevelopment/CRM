@@ -231,8 +231,29 @@ export default {
         return axios.get(url + 'api/car/ProductPush', {
             params: data
         })
-    }
+    },
 	
-	
-	
+	/***************************快捷查询   queryPrice**********************************/
+	GetProducts(data) {
+        return axios.get(url + 'Api/Car/GetElseShopProduct', {
+        	params: {
+	            Specs: data.productVal,
+	            BrandId: data.productBrandId,
+	            CategoryId: data.productCategoyId,
+	            Specifications: data.productSize
+	        }
+        })
+    },
+    /*获取品牌列表*/
+	GetThebrand(data){
+		return axios.get(url + 'Api/Car/GetProductBrand', {
+        	
+        })
+	},
+	/*获取类别列表*/
+	GetThetype(data){
+		return axios.get(url + 'Api/Car/GetProductCategory', {
+        	
+        })
+	}
 }
