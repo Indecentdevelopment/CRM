@@ -226,11 +226,13 @@ export default {
         })
     },
     
-    /***************************产品也 confirm**********************************/
+    /***************************产品页   confirm**********************************/
     ProductPush(data) {
         return axios.get(url + 'api/car/ProductPush', {
             params: data
         })
     }
+	
+	
 	
 }
