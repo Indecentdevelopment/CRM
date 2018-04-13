@@ -33,6 +33,10 @@ axios.interceptors.response.use(
         }
     },
     err => {
+        console.log(err.response)
+        if (err.response.status === 500) {
+            return err.response
+        }
         store.dispatch('loginOut')
         router.push('/login')
         return Promise.reject(err)
@@ -219,18 +223,51 @@ export default {
             params: data
         })
     },
-	//首页获取预约洗车列表
-	GetCleanList(data){
-		return axios.get(url + 'Api/Car/GetCleanCall', {
-            params: data
-        })
-    },
+	
     
     /***************************产品也 confirm**********************************/
     ProductPush(data) {
         return axios.get(url + 'api/car/ProductPush', {
             params: data
         })
+    },
+
+
+    /*************************** 洗车 **********************************/
+    //首页获取预约洗车列表
+	GetCleanList(data){
+		return axios.get(url + 'Api/Car/GetCleanCall', {
+            params: data
+        })
+    },
+
+    // 呼号
+    GetCleanvoice() {
+        return axios.get(url + 'Api/Car/GetCleanvoice')
+    },
+
+    // 详情
+    GetCleandetail(data) {
+        return axios.get(url + 'Api/Car/GetCleandetail', {
+            params: data
+        })
+    },
+
+    // 下一位
+    GetCleanNext(data) {
+        return axios.get(url + 'Api/Car/GetCleanNext', {
+            params: data
+        })
+    },
+
+    /*************************** washorder 洗车预约单 **********************************/
+    // 获取用户洗车预约详情
+    GetWashCarInfo(data) {
+        return axios.get(url + 'api/car/GetWashCarInfo', {
+            params: data
+        })
     }
 	
 }
+
+    
