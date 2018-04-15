@@ -55,21 +55,54 @@
                 width: 1.2rem
         .aboutTimeList
             width: 100%
-            padding: 0 0.5rem
+            
             background-color: #fff
             box-sizing: border-box
             .aboutTime
-                padding: 0.7rem 0
-                border-bottom: solid 1px #333
+                
+                
                 font-size: 14px
+                .preorder
+                    
+                    border-bottom: solid 1px #333
+                    .item
+                        display: flex
+                        justify-content: space-between
+                        padding: 0.7rem 0.5rem
+                        padding-right: 1rem
+                        .voice
+                            width: 1.1rem
+                            height: 1.1rem
+                            background: url(../../assets/images/cleaningCall/voice.gif) no-repeat
+                            background-position: 45% 50%
+                            background-size: 55% 60%
+                            background-color: #000
+                            padding: 0.2rem
+                            box-sizing: border-box
+                            border-radius: 50%
+                            &.active
+                                background: url(../../assets/images/cleaningCall/voicel-active.gif) no-repeat
+                        &.greyline
+                            background-color: #3C3838
+                            color: #fff
+                            .voice
+                                background: url(../../assets/images/cleaningCall/voicel-active.gif) no-repeat
+                                background-color: #ffffff
+                                background-position: 45% 50%
+                                background-size: 55% 60%
+
                 .nopreorder
                     display: flex
                     justify-content: space-between  
+                    padding: 0.7rem 0.5rem
+                    padding-right: 1rem
+                    border-bottom: solid 1px #333
+                    
                     .info
                         font-weight: 600
                     .icon
-                        width: 1rem
-                        height: 1rem
+                        width: 1.1rem
+                        height: 1.1rem
 
     .code-box
         width: 100%

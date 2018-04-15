@@ -19,12 +19,15 @@
         	</div>
         	
             <div class="aboutTimeList">
-                <div class="item.isok">
-                    <div class="preDate"></div>
-                </div>
+                
                 <div v-for="(item, i) in timeList" :key="i" class="aboutTime">
                     <div class="preorder" v-if="item.isok">
-                        <div v-for="(clean, index) in item.cleansData" :key="index" class="preDate" :class="{greyline: loctime === clean.preDate}">{{clean.preDate}}</div>
+                        <div v-for="(clean, index) in item.cleansData" :key="index" class="item" :class="{greyline: loctime === clean.preDate}">
+                            <div class="preDate">{{clean.preDate}}</div>
+                            <div class="carNumber">{{clean.carNumber}}</div>
+                            <div class="name">{{clean.name}}</div>
+                            <div class="voice" @click="clickVoice(clean.preDate, clean.carNumber)"></div>
+                        </div>
                     </div>
                    
                     <div v-else class="nopreorder">
@@ -92,11 +95,11 @@
                     let bool = time == pretimes[i].preDate || (longtime < longpretime && longtime.setMinutes(longtime.getMinutes() + timeSpan) > longpretime)
 
                     if (bool) {
-                        console.log('t')
                         let obj = {
                             preDate: pretimes[i].preDate,
                             carNumber: pretimes[i].carNumber,
-                            name: pretimes[i].nam
+                            name: pretimes[i].name,
+                            greyline: this.loctime === pretimes[i].preDate
                         }
                         arr.push(obj)
 
@@ -139,6 +142,7 @@
 	    		api.GetCleanList()
                 .then( res => {
                     this.CleanList = res.data
+                    this.timeList = []
                     let data = res.data
                     let SumMinutes = (data.endHour - data.starHour) * 60   // 总服务分钟数
                     for (var m = data.timeSpan; m <= SumMinutes - data.timeSpan; m += data.timeSpan) {
@@ -217,6 +221,18 @@
                         this.getCleanList()
                     }
                 })
+            },
+
+            // 点击voice
+            clickVoice (time, carNo) {
+                this.loctime = time
+                api.GetCleanvoicebycarNo({
+                    CarNumber: carNo
+                }).then(res => {
+                    this.$message('呼号成功！')
+                    this.getCleanList()
+                })
+                
             },
 
             // 点击加号

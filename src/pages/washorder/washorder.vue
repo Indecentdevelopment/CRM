@@ -78,50 +78,31 @@
                 <div class="mobile">{{washCarInfo.mobile}}</div>
                 <div class="carNo">{{washCarInfo.carNo}}</div>
                 <div class="products">
-                    <div class="time">{{query.time}}</div>
+                    <div class="time" @click="selectDay">{{currentDay}}&nbsp;&nbsp;{{query.time}}</div>
                     <div class="box">
-                        <div class="item" v-for="(item, i) in washCarInfo.products" :key="item.id">
+                        <div class="item" v-for="item in washCarInfo.products" :key="item.id">
                             <div class="info">{{item.name}}</div>
-                            <input type="radio" :checked="i === 0" :value="item.id">
+                            <input type="radio" :value="item.id" name="ProductId" v-model="ProductId">
                         </div>
                     </div>
                 </div>
                 <div class="btn-box">
-                    <button class="appoint">预约</button>
-                    <button class="cancel">取消</button>
+                    <button class="appoint" @click="btnSubmit">预约</button>
+                    <button class="cancel" @click="cancel">取消</button>
                 </div>
             </div>
 
-            <div class="select-date">
+            <div class="select-date" v-show="isSelectDay">
                 <div class="title">
                     <img src="/Content/img/r.png" alt="">
                     选择日期
                 </div>
                 <div class="days">
-                    <div class="item active">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
+                    <div class="item" :class="{active: item.day === currentDay}" v-for="item in washCarInfo.days" :key="item.day" @click="getTimeByDate(item.day,item.id)">
+                        <div class="showday">{{item.showDay}}</div>
+                        <div class="week">{{item.week}}</div>
                     </div>
-                    <div class="item">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
-                    </div>
-                    <div class="item">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
-                    </div>
-                    <div class="item">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
-                    </div>
-                    <div class="item">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
-                    </div>
-                    <div class="item">
-                        <div class="showday">4/13</div>
-                        <div class="week">今天</div>
-                    </div>
+                    
 
                 </div>
                 <hr class="hr">
@@ -131,22 +112,17 @@
                         选择时间
                     </div>
                     <div class="time-box">
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
-                        <div class="item">08:15</div>
+                        <div class="item" :class="{active: item.showDay === currentTime}" v-for="item in timeList.times" :key="item.day" @click="chooseTime(item.showDay)">{{item.showDay}}</div>
+
+                        <div class="msg" v-show="isNoTimeList">抱歉，该店今日已无可预约日期，请您更换日期试试吧！</div>
+
+                        <div class="error" v-show="isTimeError">{{timeList.excludeMsg}}</div>
+                        
                     </div>
                 </div>
                 <div class="btn-box">
-                    <button>取消</button>
-                    <button>选择</button>
+                    <button @click="cancelDateTime">取消</button>
+                    <button @click="selectDateTime">选择</button>
                 </div>
             </div>
             
@@ -185,6 +161,13 @@
 
                 isDetailOrder: false,    // 是否显示洗车预约单详情
                 washCarInfo: {},         // 洗车预约单
+                ProductId: '',           // 当前选中的服务类型的id
+                isSelectDay: false,      // 是否显示选择时间
+                currentDay: '',          // 当前日期
+                currentTime: '',         // 当前时间
+                timeList: [],            // 获取的时间列表
+                isNoTimeList: false,     // 是否时间列表为空
+                isTimeError: false,      // 获取时间 错误
                 query: {
                     time: ''
                 }
@@ -244,11 +227,98 @@
                     if (res.data.success) {
                         this.washCarInfo = res.data
                         this.isDetailOrder = true
+                        this.currentDay = this.washCarInfo.days[0].day
+                        this.ProductId = this.washCarInfo.products[0].id
                     } else {
                         this.$message(res.data.errMsg)
                     }
                 })
             },
+
+            // 点击时间 显示选择时间弹窗
+            selectDay () {
+                this.isSelectDay = true
+                this.getTimeByDate(this.washCarInfo.days[0].day, this.washCarInfo.days[0].id)
+            },
+
+            // 根据日期 获取时间列表
+            getTimeByDate (date, excludeId) {
+                this.isLoading = true
+                this.currentDay = date
+                api.GetTime({
+                    shopId: localStorage.getItem('shopId'),
+                    date: date,
+                    excludeId: excludeId
+                }).then(res => {
+                    this.isLoading = false
+                    this.timeList = res.data
+                    if (this.timeList.excludeMsg && this.timeList.excludeMsg) {
+                        this.isTimeError = true
+                    } else if (this.timeList.times.length === 0) {
+                        this.isNoTimeList = true
+                    } else {
+                        this.isNoTimeList = false
+                    }
+                })
+            },
+
+            // 点击时间
+            chooseTime (time) {
+                this.currentTime = time
+            },
+
+            // 取消选择时间
+            cancelDateTime () {
+                this.isDetailOrder = false
+                this.isSelectDay = false
+            },
+
+            // 确认选择时间
+            selectDateTime () {
+                alert()
+                if (!this.currentDay) {
+                    this.$message('请选择日期')
+                    return
+                } else if (!this.currentTime) {
+                    this.$message('请选择预约时间')
+                } else {
+                    this.query.time = this.currentTime
+                    
+                    this.isSelectDay = false
+                }
+            },
+
+            // 点击预约  开始预约
+            btnSubmit () {
+                this.isLoading = true
+                api.MakeWashOrder({
+                    CarNo: this.washCarInfo.carNo,
+                    WashTime: this.currentDay + ' ' + this.currentTime,
+                    ProductId: this.ProductId,
+                    PayType: 1,
+                    ProId: 0,
+                    Mobile: this.washCarInfo.mobile,
+                    ShopId: localStorage.getItem('shopId'),
+                    Uid: this.washCarInfo.uid
+                }).then(res => {
+                    this.isLoading = false
+                    if (res.data.success) {
+                        this.$router.push({
+                            path: 'cleaningCall',
+                        })
+                    } else {
+                        this.$message(res.data.errMsg)
+                    }
+                })
+            },
+
+            // 取消预约
+            cancel () {
+                this.$router.go(0)
+            },
+
+
+
 
 
             // 点击车牌号输入框  显示自定义键盘

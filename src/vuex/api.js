@@ -266,6 +266,25 @@ export default {
         return axios.get(url + 'api/car/GetWashCarInfo', {
             params: data
         })
+    },
+
+    // 根据日期 获取时间列表
+    GetTime (data) {
+        return axios.get(url + 'api/customerpage/GetTime', {
+            params: data
+        })
+    },
+
+    // 点击voice
+    GetCleanvoicebycarNo (data) {
+        return axios.get(url + 'Api/Car/GetCleanvoicebycarNo', {
+            params: data
+        })
+    },
+
+    // 开始预约
+    MakeWashOrder (data) {
+        return axios.post(url + 'api/car/MakeWashOrder', querystring.stringify(data))
     }
 	
 }
