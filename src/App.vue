@@ -6,6 +6,7 @@
 
 <script>
 import '@/assets/sass/common.sass'
+import '@/assets/sass/iconfont.css'
 export default {
     name: 'App',
     created () {

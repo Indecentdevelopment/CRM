@@ -104,14 +104,22 @@ export default {
         })
     },
     /***************************获取订单**********************************/
+
+    // 获取订单列表
 	getOrderList(data){
 		return axios.get(url + 'api/order/OrderList', {
 			params: {
 				status: data.status
 			}
 		})
-	},
-	/**************************获取订单详情*********************************/
+    },
+    // 获取订单详情
+    GetOrderInfo(data) {
+        return axios.get(url + 'api/order/GetOrderInfo', {
+            params: data
+        })
+    },
+	
 
     /***************************personalPage**********************************/
 

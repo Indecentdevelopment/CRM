@@ -4,16 +4,25 @@
     margin-top: 1.5rem
     .customerInfo
         width: 90%
-        margin-left: 3%
-        margin-right: 3%
-        background: #5f5d5d
-        padding-left: 2%
-        padding-right: 2%
-        padding-top: 0.5rem
+        margin: 0 3%
+
+        background: #505050
+        padding: 0 2%
+        
         padding-bottom: 0.5rem
         border-radius: 0px 0px 1rem 1rem
         box-shadow: 0px 0.1rem 0.3rem 0px #000000
         position: relative
+        .pre-count
+            width: 98%
+            margin: 0 1% 0.2rem 1%
+            padding: 0.2rem 0
+            text-align: center
+            background-color: #fff
+            border-bottom-left-radius: 10px
+            border-bottom-right-radius: 10px
+            color: #000
+            font-weight: 600
         .orderStyleOne
             width: 55%
             height: 1rem
@@ -26,31 +35,42 @@
             line-height: 1rem
             float: right
             text-align: right
+        .mobile
+            width: 100%
+            margin: 0.4rem 0
         .orderColor-white
             color: #fff
         .orderColor-gray
-            color: #999999;
+            color: #999999
         .orderVehicleInfo
             width: 100%
             border-top: 1px solid #999
             margin-top: 0.5rem
             padding-top: 0.3rem
+            display: flex
+            align-items: center
             .vehicleImg
                 width: 5rem
-                height: 3.5rem
-                line-height: 3.5rem
+                height: 3.8rem
+                line-height: 3.8rem
                 background-color: #fff
-                border-radius: 1.5rem
+                border-radius: 2.5rem
                 margin-right: 0.5rem
                 text-align: center
                 overflow: hidden
                 img
-                    width: 95%
+                    // width: 95%
+                    height: 100%
             .vehicleP
                 color: #fff
+                display: flex
+                flex-direction: column
+                justify-content: center
+                #brand
+                    font-weight: 600
         .orderUndetermined
             position: absolute
-            top: 1rem
+            top: 1.5rem
             right: 5%
             width: 7rem
             height: 7rem
@@ -83,8 +103,8 @@
             height: 1.2rem
             line-height: 1.2rem
             margin: 0.3rem 0
-            border-left: 3px solid #ffd900
-            text-indent: 3px
+            color: #666666
+            font-weight: 600
         .orderConDetails
             width: 100%
             background: #f9f9f9
@@ -99,50 +119,176 @@
                 width: 70%
                 height: 100%
                 color: #666666  #9f9361
-                p
-                    height: 1.2rem
-                    line-height: 1.2rem
-                .detailsColora
-                    color: red
-                .detailsColorb
-                    color: #9f9361
-    .settlementInfo
+                display: flex
+                align-items: center
+                .item-change
+                    width: 80%
+                    .reduce
+                        display: flex
+                .free-button
+                    width: 1rem
+                    height: 0.6rem
+                    position: relative
+                    background: #999
+                    line-height: 0.5rem
+                    font-size: 0.5rem
+                    text-align: center
+                    color: #fff
+                    
+                    &:before
+                        content: ""
+                        position: absolute
+                        top: -0.26rem
+                        left: 0
+                        width: 0
+                        height: 0
+                        border-left: 0.5rem solid transparent
+                        border-right: 0.5rem solid transparent
+                        border-bottom: 0.26rem solid #999
+                    &:after
+                        content: ""
+                        position: absolute
+                        bottom: -0.26rem
+                        left: 0
+                        width: 0
+                        height: 0
+                        border-left: 0.5rem solid transparent
+                        border-right: 0.5rem solid transparent
+                        border-top: 0.26rem solid #999
+                    &.active
+                        background: #61B630
+                    &.active:before
+                        border-bottom: 0.26rem solid #61B630
+                    &.active:after
+                        border-top: 0.26rem solid #61B630
+    .remark-info
         width: 90%
         margin-left: 5%
-        margin-right: 5%
-        padding-bottom: 1rem
-        .settlementInfop
+        .head
+            color: #666666
+            font-weight: 600
+        #technician-remark
             width: 100%
-            height: 1.2rem
-            line-height: 1.2rem
-            margin: 0.3rem 0
-            border-left: 3px solid #ffd900
-            text-indent: 3px
-        .settlementInfoLeft
-            width: 44%
-            margin-left: 6%
-            height: 1.4rem
-            line-height: 1.4rem
-            float: left
-            border-bottom: 1px dashed #ccc
-        .settlementInfoRight
-            width: 44%
-            margin-right: 6%
-            height: 1.4rem
-            line-height: 1.4rem
-            float: left
-            text-align: right
-            border-bottom: 1px dashed #ccc
-            color: #e4393c
-            font-weight: 800
-            span
-                padding-right: 0.5rem
-                display: inline-block
-    .userSign
+            margin-top: 0.5rem
+            padding: 0.2rem
+            box-sizing: border-box
+            background-color: #f1f1f1
+            border: solid 1px #A9A9A9
+            border-bottom-color: #ccc
+            resize: none
+            overflow: auto
+            display: block
+            &:focus
+                border: solid 1px #CDAF01
+                box-shadow: 0 0 1px #CDAF01
+        .technician-bg
+            width: 100%
+            height: 14rem
+            border: solid 1px #ccc
+            border-top: none
+            box-sizing: border-box
+    .checkout
+        width: 90%
+        margin: 1rem 5%
+        padding-bottom: 1rem
+        .head
+            color: #666666
+            font-weight: 600
+        .box
+            margin-top: 0.5rem
+            padding-left: 0.5rem
+            .item
+                display: flex
+                justify-content: space-between
+                align-items: center
+                border-bottom: dashed 1px #ccc
+                padding: 0.3rem
+                .info
+                    color: #e4393c
+                    font-weight: 600
+                    
+            .item#dvinvoice
+                .info
+                    font-weight: 300
+                    color: #333
+                    display: flex
+                    align-items: center
+                    input
+                        width: 6rem
+                        height: 1.8rem
+                        border: 1px solid #ccc
+                        box-shadow: inset 0 1px 1px rgba(0,0,0,.075)
+                        padding: 0.3rem 0.3rem
+                        border-top-left-radius: 5px
+                        border-bottom-left-radius: 5px
+                        box-sizing: border-box
+                        color: #666
+                    .apply
+                        height: 1.8rem
+                        width: 3rem
+                        line-height: 1.8rem
+                        text-align: center
+                        font-size: 0.8rem
+                        background-color: #FFD900
+                        border-top-right-radius: 5px
+                        border-bottom-right-radius: 5px
+
+ 
+
+    .payment-box
+        width: 90%
+        margin: 1rem 5% 2rem 5%
+        .head
+            color: 666
+            font-weight: 700
+        .pay-box
+            margin-top: 0.5rem
+            display: flex
+            flex-wrap: wrap
+            .item
+                width: 46%
+                display: flex
+                justify-content: space-between
+                align-items: center
+                margin-left: 4%
+                margin-bottom: 0.2rem
+                padding: 0.4rem 0.5rem
+                border: solid 1px #ddd
+                box-sizing: border-box
+                font-weight: 600
+                i
+                    font-size: 1rem
+                .icon-weixinzhifu1
+                    color: #12CC0D
+                .icon-wallet
+                    color: #9E937B
+                .icon-zhifufangshi-huodaoshuaqia
+                    color: #45697B
+                .icon-zhipiao2
+                    color: #F3734A
+                .icon-saoma
+                    color: #25ABEE
+                .icon-yanshishuchulogo
+                    color: #00B0EC
+                .icon-payduigong
+                    color: #F3734A
+        .btn-box
+            margin: 0.5rem 0
+            display: flex
+            justify-content: space-between
+            padding: 0 0.3rem
+            button
+                width: 46%
+                margin: 0 2%
+                border: solid 1px #ffd900
+                color: #ffd900
+                background-color: #fff
+                padding: 0.6rem 0
+    .sign
         width: 90%
         margin-left: 5%
         margin-right: 5%
-        .userSignp
+        .signp
             width: 100%
             height: 1.2rem
             line-height: 1.2rem
@@ -162,6 +308,24 @@
             color: #333
             border-radius: 4px
             margin: 0.4rem 5%
+    .customer-sign
+        width: 90%
+        margin: 0.6rem 5%
+        display: flex
+        flex-direction: column
+        align-items: center
+        .head
+            width: 100%
+            color: 666
+            font-weight: 700
+        .wrap
+            width: 11.5rem
+            height: 7.6rem
+            margin-top: 0.3rem
+            img
+                width: 100%
+                height: 100%
+
             
 
 
