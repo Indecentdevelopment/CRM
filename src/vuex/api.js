@@ -103,7 +103,7 @@ export default {
             }
         })
     },
-    /***************************获取订单**********************************/
+    /***************************服务列表**********************************/
 
     // 获取订单列表
 	getOrderList(data){
@@ -116,6 +116,26 @@ export default {
     // 获取订单详情
     GetOrderInfo(data) {
         return axios.get(url + 'api/order/GetOrderInfo', {
+            params: data
+        })
+    },
+    // 点击 免 免单
+    freeComplimentary(data) {
+        return axios.get(url + 'api/order/freeComplimentary', {
+            params: data
+        })
+    },
+    // 点击（编辑后）保存
+    saveOrderItem (data) {
+        return axios.post(url + 'api/order/saveOrderItem', querystring.stringify(data))
+    },
+    // 选择/保存技师
+    SaveRemark (data) {
+        return axios.post(url + 'api/order/SaveRemark', querystring.stringify(data))
+    },
+    // 检查商品
+    CheckGetGoods (data) {
+        return axios.get(url + 'api/order/CheckGetGoods', {
             params: data
         })
     },
