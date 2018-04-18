@@ -15,6 +15,7 @@ import Scan from '@/pages/scan/scan'
 import MaintainRecord from '@/pages/maintainRecord/maintainRecord'
 import Confirm from '@/pages/confirm/confirm'
 import washorder from '@/pages/washorder/washorder'
+import Sign from '@/pages/sign/sign'
 
 
 
@@ -71,6 +72,9 @@ const router = new Router({
                 },{
                     path: 'washorder',
                     component: washorder
+                },{
+                    path: 'sign',
+                    component: Sign
                 }
             ]
         }

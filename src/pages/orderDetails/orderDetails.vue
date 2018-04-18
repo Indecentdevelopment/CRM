@@ -415,6 +415,11 @@
             clearSign () {
                 this.$refs.signature.clear()
             },
+            // 生成 签名图片 url
+            saveSign () {
+                var imgUrl = this.$refs.signature.save()
+                return imgUrl
+            },
             
             // 选择/保存 技师
             SaveRemark () {
@@ -425,12 +430,34 @@
                 // 检查商品
                 api.CheckGetGoods({orderId: this.query.orderId}).then(res => {
                     if(res.data.success) {
-                        this.sendImage()
+                        this.sendImage(this.saveSign(), this.query.orderId)
                     }
                 })
             },
             // 发送签名
-            sendImage () {}
+            sendImage (dataurl, OrderId) {
+                dataurl = dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
+                api.UserSign({
+                    OrderId: OrderId,
+                    FileData: dataurl
+                }).then(res => {
+                    console.log(res)
+                    if (res.statusText === 'OK') {
+                        if (res.data) {
+                            this.$router.push({
+                                path: 'sign',
+                                query: {
+                                    oid: this.query.orderId
+                                }
+                            })
+                        } else {
+                            this.$message('保存失败，请重试！')
+                        }
+                    } else {
+                        this.$message('保存失败，请重试！')
+                    }
+                })
+            }
 	    },
 	    components:{
 	        myHeader: Header

@@ -139,7 +139,19 @@ export default {
             params: data
         })
     },
-	
+    // 发送签名 图片
+    UserSign (data) {
+        return axios.post(url + 'api/car/UserSign', querystring.stringify(data))
+    },
+
+    
+    /***************************选择技师**********************************/
+    // 获取技师信息
+    Technician(data) {
+        return axios.get(url + 'api/car/Technician', {
+            params: data
+        })
+    },
 
     /***************************personalPage**********************************/
 
