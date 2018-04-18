@@ -78,7 +78,7 @@
             </div>
 
             <!-- 技师备注 -->
-            <div class="remark-info">
+            <div class="remark-info" v-if="orderInfo.status !== '已预约'">
                 <div class="head">技师备注</div>
                 <textarea name="" id="technician-remark" rows="2" v-model="orderInfo.staffComments"></textarea>
                 <!-- --------------------------------此地注意  ----------------------------------------- -->
@@ -201,10 +201,16 @@
                 </div>
             </div>
             
-            <!--顾客签字确认-->
-            <div class="sign clearfix">
-                <p class="sign fl">&nbsp;&nbsp;顾客签字确认</p>
-                <div class="signpLate fl">
+            <!--顾客签字-->
+            <div class="sign">
+                <p class="head">顾客签字确认</p>
+                <div class="signbtn-box">
+                    <div class="signbtn" @click="clearSign">
+                        <img src="/Content/img/images/refresh.png" alt="">
+                    </div>
+                </div>
+                <div class="mySignature">
+                    <vueSignature ref="signature" :sigOption="option" :w="'100%'" :h="'16rem'"></vueSignature> 
                 </div>
             </div>
 
@@ -245,6 +251,11 @@
                     shop: {},
                     user: {}
                 },
+
+                option: {
+                    penColor:"rgb(0, 0, 0)",
+                    backgroundColor:"#E4E4E4"
+                }
 	        	
 	        }
 	    },
@@ -271,13 +282,13 @@
                 switch (data.status) {
                     case 12:
                         data.status = '已预约'
-                        document.getElementsByClassName('sign')[0].style.display = 'block'
-                        document.getElementsByClassName('pre-count')[0].style.display = 'block'
-                        document.getElementsByClassName('payment-box')[0].style.display = 'none'
-                        document.getElementsByClassName('customer-sign')[0].style.display = 'none'
-                        document.getElementsByClassName('remark-info')[0].style.display = 'none'
-                        document.getElementsByClassName('useother-box')[0].style.display = 'none'   // 尚未解决
-                        document.getElementById('dvinvoice').style.display = 'none'
+                        // document.getElementsByClassName('sign')[0].style.display = 'block'
+                        // document.getElementsByClassName('pre-count')[0].style.display = 'block'
+                        // document.getElementsByClassName('payment-box')[0].style.display = 'none'
+                        // document.getElementsByClassName('customer-sign')[0].style.display = 'none'
+                        // document.getElementsByClassName('remark-info')[0].style.display = 'none'
+                        // document.getElementsByClassName('useother-box')[0].style.display = 'none'   // 尚未解决
+                        // document.getElementById('dvinvoice').style.display = 'none'
                         
                         break
                     case 0:
@@ -398,6 +409,11 @@
 	    	addCurrentNum (index) {
                 this.orderInfo.items[index].quantity++
                 // document.getElementById('current-num').innerHTML = this.orderInfo.items[index].quantity
+            },
+
+            // 清除签名
+            clearSign () {
+                this.$refs.signature.clear()
             },
             
             // 选择/保存 技师

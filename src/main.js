@@ -9,9 +9,10 @@ import store from './vuex/index'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-
-
 import './config/index'
+
+import vueSignature from "vue-signature"
+Vue.use(vueSignature)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
