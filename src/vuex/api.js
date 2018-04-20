@@ -272,6 +272,11 @@ export default {
         })
     },
 
+    // 点击服务 获取服务列表
+    GetCarProduct (data) {
+        return axios.post(url + 'api/car/GetCarProduct', querystring.stringify(data))
+    },
+
 
     /*************************** 洗车 **********************************/
     //首页获取预约洗车列表

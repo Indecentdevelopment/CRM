@@ -7,6 +7,9 @@
     background-color: #696666
     display: flex
     flex-direction: column
+    .loading
+        display: flex
+        flex-direction: column
     .car-info
         height: 2.6rem
         width: 19.6rem
@@ -31,10 +34,11 @@
                 font-weight: 600
     .server
         flex: 1
-        margin-top: 3.4rem
         padding-bottom: 3rem
         width: 19.5rem
+        height: calc(100% - 3rem)
         margin-left: 0.25rem
+        margin-top: 3.3rem
         overflow: auto
         .item
             background-color: #808080
@@ -83,15 +87,79 @@
                             display: flex
                             flex-wrap: wrap
                             align-items: center
+                            margin-top: 0.3rem
                             .item
                                 width: auto
                                 height: auto
                                 min-height: auto
                                 padding: 0.2rem
-                                margin: 0.3rem
+                                margin: 0
+                                margin-right: 0.5rem
                                 border-radius: 0
                                 color: rgb(238, 83, 78)
                                 font-size: 0.8rem
+                                &.active
+                                    background-color: #ee534e
+                                    color: #fff
+                            .otherTries
+                                width: 100%
+                                margin-top: 0.3rem
+                                color: rgb(238, 83, 78)
+                        .product-box
+                            .item
+                                display: flex
+                                flex-direction: column
+                                align-items: flex-end
+                                padding: 0
+                                border-radius: 0
+                                .goods
+                                    display: flex
+                                    justify-content: space-between
+                                    height: 4.5rem
+                                    width: 100%
+                                    img.head
+                                        width: 3rem
+                                        height: 3rem
+                                    .info
+                                        display: flex
+                                        flex-direction: column
+                                        justify-content: space-between
+                                        .btn-box
+                                            display: flex
+                                            justify-content: space-between
+                                            button
+                                                border: none
+                                                background-color: rgb(255, 217, 0)
+                                                margin: 0 0.2rem
+                                                padding: 0.2rem 0.4rem
+                                                color: #3C3838
+                                                border-radius: 5px
+                                    .price
+                                        display: flex
+                                        flex-direction: column
+                                        align-items: flex-end
+                                        width: 4rem
+                                        color: #999
+                                        .old-price
+                                            text-decoration: line-through
+                                            text-align: right
+                                        .new-price
+                                            color: #df3448
+                                .operation
+                                    display: flex
+                                    width: calc(100% - 3rem)
+                                    margin-left: 3rem
+                                    height: 2.6rem
+                                    align-items: center
+                                    border-top: solid 1px #d9d9d9
+                                    .num
+                                        flex: 1
+                                        display: flex
+
+                                        
+
+
+
                     
             
     .subBottom
