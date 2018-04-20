@@ -9,7 +9,7 @@
 		<div class="allocationNber">
 			<span class="allNber-amount">调拨数量：</span>
 			<span class="allNber-reduce" @click="allReduce">-</span>
-			<input class="allNber-conter"onfocus=this.blur() type="text" v-model="allocationNumber" />
+			<input class="allNber-conter" onfocus=this.blur() type="text" v-model="allocationNumber" />
 			<span class="allNber-plus" @click="allPlus">+</span>
 		</div>
 		<!--调拨时间-->
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<!--门店列表-->
-			<div class="storeList clearfix" v-for="item in supplierList">
+			<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i)">
 				<div class="storeImg fl">
 					<img src="../../assets/images/allocationSingle/shop.png"/>
 				</div>
@@ -46,7 +46,7 @@
 					<p class="fl">电话：{{item.phone}}</p>
 					<p class="fl">库存：{{item.quantity}}</p>
 				</div>
-				<div v-bind:class="classObject"></div>
+				<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
 			</div>
 		</div>
 	</div>
@@ -61,10 +61,10 @@
 		data() {
 			return {
 				isLoading: true,
-				classObject: { 
-					'choice-a':false,
-			        'choice-b': true  
-		      	}, 
+				// classObject: { 
+				// 	'choice-a':false,
+			    //     'choice-b': true  
+		      	// }, 
 				pickerOptions1: {
 					disabledDate(time) {
 						return time.getTime < Date.now();
@@ -85,7 +85,7 @@
 					}]
 				},
 				value1: '',						//调拨时间
-				supplierList: '',				//调拨店铺列表
+				supplierList: [],				//调拨店铺列表
 				allocationNumber: '1',			//调拨数量
 				storejudge: false,				//调拨判断
 				proId: '130935_204',			//proId
@@ -135,11 +135,31 @@
 						applyShopName: this.applyShopName
 	                }).then(res => {
 	                	console.log(res.data)
-	                	this.supplierList = res.data.shops
+	                	
+                        res.data.shops.map((item, index) => {
+                            res.data.shops[index].active = false
+                        })
+                        this.supplierList = res.data.shops
 	                	console.log(this.supplierList)
 	                })
 				}
-			}
+			},
+
+
+            // 点击 某个门店
+            selectStore (index) {
+                this.supplierList[index].active = !this.supplierList[index].active
+                console.log(this.supplierList[index].active)
+                // 根据 index 索引  给数据源添加一个active属性
+                // if (this.supplierList[index].active) {
+                //     this.supplierList[index].active = !this.supplierList[index].active
+                // } else {
+                //     console.log(index)
+                //     this.supplierList[index].active = true
+                // }
+                
+                
+            }
 		},
 		components: {
 			myHeader: Header
