@@ -226,11 +226,46 @@ export default {
         })
     },
     
-    /***************************产品也 confirm**********************************/
+    /***************************产品页   confirm**********************************/
     ProductPush(data) {
         return axios.get(url + 'api/car/ProductPush', {
             params: data
         })
-    }
+    },
+	
+	/***************************快捷查询   queryPrice**********************************/
+	//获取产品列表
+	GetProducts(data) {
+		return axios.post(url + 'Api/Car/GetElseShopProduct', querystring.stringify(data))
+    },
+    //校验物料编码
+   	GetCheckCode(data) {
+		return axios.get(url + 'Api/Car/CheckProductMatnr', {
+            params: data
+		})
+    },
+    /*获取品牌列表*/
+	GetThebrand(data){
+		return axios.get(url + 'Api/Car/GetProductBrand', {
+        	
+        })
+	},
+	/*获取类别列表*/
+	GetThetype(data){
+		return axios.get(url + 'Api/Car/GetProductCategory', {
+        	
+        })
+	},
+	/*店铺库存列表*/
+	GetStoreStock(data){
+		return axios.post(url + 'Api/Car/GetElseShopProductSub', querystring.stringify(data))
+	},
+	/**************************************调拨申请单****************************************/
+	/*供应商列表*/
+	GetSupplierList(data){
+		return axios.get(url + 'api/ApplyRequire/DiliverApply', {
+            params: data
+		})
+	}
 	
 }

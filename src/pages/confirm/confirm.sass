@@ -17,6 +17,7 @@
         background: #EE534E
         position: fixed
         border-radius: 10rem
+        z-index: 9
         .head-img
             width: 2.3rem
             height: 2.3rem
@@ -76,6 +77,8 @@
                             .promotion
                                 color: #DF3348
                                 font-size: 0.4rem
+                                padding-left: 0.5rem
+                                display: inline-block
                     .productList
                         display: flex
                         flex-direction: column
@@ -83,6 +86,10 @@
                             display: flex
                             flex-wrap: wrap
                             align-items: center
+                            .search
+                                background: #ee534e
+                                color: #ffffff
+                                cursor: pointer
                             .item
                                 width: auto
                                 height: auto
@@ -92,12 +99,257 @@
                                 border-radius: 0
                                 color: rgb(238, 83, 78)
                                 font-size: 0.8rem
-                    
-            
+                        .tiresSpecsbtn
+                            padding: 0.1rem 0.1rem
+                            display: inline-block
+                            color: rgb(238, 83, 78)
+                            position: relative
+                            font-size: 0.8rem
+                        .proItem
+                            margin: 0.2rem 0px
+                            .proItemdetails
+                                position: relative
+                                .imgBg
+                                    width: 3rem
+                                    height: 5rem
+                                    position: relative
+                                    img
+                                        width: 3rem
+                                    .hook
+                                        width: 1.2rem
+                                        position: absolute
+                                        top: 0
+                                        left: 0
+                                .rightInfo
+                                    width: 14rem
+                                    height: 5rem
+                                    font-size: 0.4rem
+                                    .model
+                                        width: 70%
+                                        height: 3rem
+                                        color: #333
+                                        word-wrap: break-word
+                                        word-break: normal
+                                        word-break:break-all
+                                    .price
+                                        width: 30%
+                                        height: 3rem
+                                        text-align: center
+                                    .min-btn-box
+                                        width: 100%
+                                        .btn
+                                            padding: 0.2rem 0.3rem
+                                            margin: 5px
+                                            display: inline-block
+                                            background: rgb(255, 217, 0)
+                                            border-radius: 5px
+                                .edit
+                                    width: 14rem
+                                    height: 3.5rem
+                                    border-top: 1px solid #d9d9d9
+                                    border-bottom: 1px solid #d9d9d9
+                                    .control
+                                        height: 3.5rem
+                                        line-height: 3.5rem
+                                        vertical-align: middle
+                                        .kong
+                                            width: 1.5rem
+                                            height: 1.5rem
+                                            line-height: 1.2rem !important
+                                            color: #FFD900;
+                                            font-size: 1.5rem
+                                            line-height: 1.5rem
+                                            background: #3C3838
+                                            text-align: center
+                                            vertical-align: middle
+                                            font-weight: 800
+                                            border-radius: 50%
+                                            display: inline-block
+                                        .chan
+                                            width: 1.5rem
+                                            font-weight: 800
+                                            display: inline-block
+                                            text-align: center
+                                            font-size: 1rem
+                                    .replace
+                                        width: 3rem
+                                        height: 3rem
+                                        padding-top: 0.5rem
+                                        border-left: 1px solid #d9d9d9
+                                        text-align: center
+                                        line-height: 1.2rem
+                                        color: #f57c33
+                                        img
+                                            width: 1rem
+                                           
+                        .fillPlus
+                            width: 100%
+                            text-align: center
+                            padding: 0.2rem 0
+                            p
+                                width: 80%
+                                height: 1.4rem
+                                display: inline-block
+                                text-align: center
+                                line-height: 1.4rem
+                                color: #696666
+                                border: 1px solid #ddd
+                                span
+                                    width: 0.8rem
+                                    height: 0.8rem
+                                    line-height: 0.7rem
+                                    background: #666
+                                    border-radius: 50%
+                                    color: #fff
+                                    display: inline-block
+                                    margin-right: 0.2rem
+                        .servicetitle
+                            padding: 0.3rem 0.5rem 0px
+                            border-bottom: 1px solid #EEE
+                            margin: 0px 0.2rem
+                            .servicetype-name
+                                display: inline-block
+                                border: 5px solid #EEEEEE
+                                padding: 0.1rem 1.5rem
+                                border-bottom: 0px solid
+                                border-top: 5px solid
+                                border-left: 0.6rem solid
+                                border-right: 0.6rem solid
+                                border-radius: 7rem 0px 7rem 0px
+                                background: #696666
+                                border-color: #FFD900
+                                color: #fff
+                                font-size: 0.8rem
+                        .preferentialPolicys
+                            display: flex
+                            border: 1px #EE534E dashed
+                            margin: 15px 5px
+                            padding: 0.7rem 0px
+                            position: relative
+                            border-right: 0px
+                            border-left: 0px
+                            position: relative
+                            p
+                                color: #444444
+                                background: #E0E0E0
+                                margin: 0.2rem
+                                padding: 0.4rem 0.9rem
+                                border: 1px #696666 dashed
+                                cursor: pointer
+                                font-size: 0.6rem
+                            .servicePackage
+                                position: absolute
+                                top: -0.5rem
+                                right: 1rem
+                                background: #FFF
+                                color: #EE534E
+                                display: inline-block
+                                border: 1px #EE534E dashed
+                                border-radius: 20px
+                                padding: 0px 10px
+                                font-size: 15px
+                                font-weight: 700
+                        .serviceproduct-box
+                            width: 100%
+                            padding: 0.3rem 0px
+                            .sdiscount
+                                padding: 0px 2px;
+                                color: #EE534E
+                                font-size: 0.3rem;
+                                border: 1px solid #EE534E
+                                margin-left: 2px
+                                display: inline-block
+                            .serviceproduct-item
+                                width: 42%
+                                padding: 0 0.1rem
+                                height: 4.5rem
+                                background: #696666
+                                border: 3px solid #A2A2A2
+                                margin: 4px 2%
+                                border-radius: 0px 20px 0px
+                                position: relative
+                                color: #FFFFFF
+                                overflow: hidden
+                                vertical-align: middle
+                                .selected
+                                    color: #D2D2D2
+                                    background: #A2A2A2
+                                    border-radius: 0px 0px 100% 0px
+                                    padding: 0px 10px 4px 0px
+                                    padding-left: 5px
+                                    left: -3px
+                                    top: -3px
+                                    position: absolute
+                                    font-weight: 1000
+                                .productName
+                                    margin-top: 0.8rem
+                                    overflow: hidden
+                                .productBtn
+                                    width: 95%
+                                    height: 1.1rem
+                                    line-height: 1.1rem
+                                    position: absolute
+                                    bottom: 0.1rem
+                                    left: 5%
+                                    font-weight: 800
+                                    .unitPrice
+                                        font-size: 0.8rem
+                                        color: #D2D2D2
+                                    .cut
+                                        width: 1rem
+                                        text-align: center
+                                        vertical-align: middle
+                                        font-weight: 800
+                                        border-radius: 50% 0px 0px 50%
+                                        background: #fff
+                                        color: #666
+                                        font-size: 1rem
+                                    .squantity
+                                        width: 1.7rem
+                                        background: #fff
+                                        color: #666
+                                        text-align: center
+                                        border-left: 1px solid #F3F3F3 
+                                        border-right: 1px solid #F3F3F3 
+                                        font-size: 0.6rem
+                                    .add
+                                        width: 1rem
+                                        text-align: center
+                                        vertical-align: middle
+                                        font-weight: 800
+                                        border-radius: 0px 50% 50% 0px
+                                        background: #fff
+                                        color: #666
+                                        margin-right: 0.2rem
+                                        font-size: 1rem
     .subBottom
         position: fixed
         bottom: 0
         width: 100%
         height: 2.6rem
-        background: red
+        background: #333
+        .cost
+            padding-left: 1rem
+            padding-top: 0.2rem
+            width: 60%
+            color: #fff
+            .total
+                width: 100%
+                font-size: 0.9rem
+            .singlePrice
+                width: 100%
+                font-size: 0.6rem
+        .determine
+            width: 6rem
+            float: right
+            height: 2.6rem
+            line-height: 2.6rem
+            background: #FFD900
+            font-size: 0.8rem
+            color: #222
+            text-align: center
+.confirm
+    .loading
+        height: calc(100%)        
+            
         

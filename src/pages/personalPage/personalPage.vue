@@ -3,127 +3,127 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		
-		<!--个人信息-->
-		<div class="personalData">
-			<div class="personal-information">
-				<div class="personal-user">
-					<div class="personal-userImg">
-						<img src="../../assets/images/index/user-img.png"/>
+		<div class="loading" v-loading="isLoading">	
+			<!--个人信息-->
+			<div class="personalData">
+				<div class="personal-information">
+					<div class="personal-user">
+						<div class="personal-userImg">
+							<img src="../../assets/images/index/user-img.png"/>
+						</div>
+						<div class="personal-userName">
+							<p>{{userInfo.name}}<br />{{userInfo.mobile}}</p>
+							<router-link :to="{path: 'uservip', query: {uid: userInfo.id,cid: userCarBindId}}">
+								<img src="../../assets/images/personalPage/edit.png" class="personal-userEdit" />
+							</router-link>
+						</div>
 					</div>
-					<div class="personal-userName">
-						<p>{{userInfo.name}}<br />{{userInfo.mobile}}</p>
-						<router-link :to="{path: 'uservip', query: {uid: userInfo.id,cid: userCarBindId}}">
-							<img src="../../assets/images/personalPage/edit.png" class="personal-userEdit" />
-						</router-link>
+					<p v-if="userInfo.memberCard" class="personal-userInfo">会员卡：{{userInfo.memberCard.cardType.typeName}}({{userInfo.memberCard.cardType.discount}})折</p>
+					<p class="personal-userInfo">卡券：<span >共{{userInfo.cardCoupons.length}}张 【查看】</span></p>
+					<p class="personal-userInfo">积分：<span >剩余{{userInfo.integralCount}} 【查看】</span></p>
+					<p class="personal-userInfo">可开发票订单：<span >【开票】</span></p>
+				</div>
+			</div>
+			
+			<!--车辆信息-->
+			<div class="personalModels">
+				<div v-for="item in userInfo.cars" :class="{active: item.carId === carInfo.carId}" class="personal-allCar personal-choose" :key="item.carId" @click="changeCar(item)">
+					<div class="personal-car">
+						<img :src="item.carImg"/>
 					</div>
+					<p>{{item.brand}}<br />{{item.carNo}}</p>
 				</div>
-				<p v-if="userInfo.memberCard" class="personal-userInfo">会员卡：{{userInfo.memberCard.cardType.typeName}}({{userInfo.memberCard.cardType.discount}})折</p>
-				<p class="personal-userInfo">卡券：<span >共{{userInfo.cardCoupons.length}}张 【查看】</span></p>
-				<p class="personal-userInfo">积分：<span >剩余{{userInfo.integralCount}} 【查看】</span></p>
-				<p class="personal-userInfo">可开发票订单：<span >【开票】</span></p>
-			</div>
-		</div>
-		
-		<!--车辆信息-->
-		<div class="personalModels">
-			<div v-for="item in userInfo.cars" :class="{active: item.carId === carInfo.carId}" class="personal-allCar personal-choose" :key="item.carId" @click="changeCar(item)">
-				<div class="personal-car">
-					<img :src="item.carImg"/>
+				<div class="personal-plusModels" @click="addNewCar()">
+					<span>＋</span>添加车型
 				</div>
-				<p>{{item.brand}}<br />{{item.carNo}}</p>
+				<div class="personal-modifyInfo">
+					<p>车型信息：{{carInfo.carInfo}}</p>
+					<p>车牌号：{{carInfo.carNo}}</p>
+					<p>车架号：{{carInfo.vin}}</p>
+					<p>技师备注：<input type="text" class="" /></p>
+	                <p>上次行驶里程：{{carInfo.mileage}}</p>
+	                <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
+					<p>
+	                    <button @click="SeeMaintain">查看保养履历</button>
+	                    <button @click="CheckUserInfo">修改车辆信息</button>
+	                    <button @click="isDelCar = true">删除车辆信息</button>
+	                </p>
+					<div class="personal-mArrow"></div>
+				</div>
 			</div>
-			<div class="personal-plusModels" @click="addNewCar()">
-				<span>＋</span>添加车型
+			
+			<!--选填信息-->
+			<div class="personalOptional">
+				<div class="optional-input">
+					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo">
+				</div>
+				<div class="optional-input">
+					<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
+				</div>
+				<div class="optional-input">
+					<span>当前里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileage" @click="showKeyboard($event, 'mileage')">
+				</div>
+				<div class="optional-input">
+					<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth" @click="showKeyboard($event, 'mileageMonth')">
+				</div>
+				<div class="optional-inpRadio">
+					<span class="inpRadio-style">过度磨损：</span>
+					<div class="radioBtn">
+				        <span>否</span>
+				        <input id="item1" type="radio" name="item" value="1" v-model="updateInfo.WearAndTear">
+				        <label for="item1"></label>
+				    </div>
+				    <div class="radioBtn">
+				        <span>是</span>
+				        <input id="item2" type="radio" name="item" value="2" v-model="updateInfo.WearAndTear">
+				        <label for="item2"></label>
+				    </div>
+				</div>
+				<div class="optional-inpRadio inpRadio-border">
+					<span class="inpRadio-style">老化开裂：</span>
+					<div class="radioBtn">
+				        <span>否</span>
+				        <input id="item3" type="radio" name="items" value="3"  v-model="updateInfo.Aging">
+				        <label for="item3"></label>
+				    </div>
+				    <div class="radioBtn">
+				        <span>是</span>
+				        <input id="item4" type="radio" name="items" value="4"  v-model="updateInfo.Aging">
+				        <label for="item4"></label>
+				    </div>
+				</div>
+				<div class="optional-inpRadio">
+					<span class="inpRadio-style">胎侧损伤：</span>
+					<div class="radioBtn">
+				        <span>否</span>
+				        <input id="item5" type="radio" name="itemss" value="5" v-model="updateInfo.cracks">
+				        <label for="item5"></label>
+				    </div>
+				    <div class="radioBtn">
+				        <span>是</span>
+				        <input id="item6" type="radio" name="itemss" value="6" v-model="updateInfo.cracks">
+				        <label for="item6"></label>
+				    </div>
+				</div>
+				<div class="optional-button">
+					<button @click="UpadateUserInfo">继续</button>
+				</div>
 			</div>
-			<div class="personal-modifyInfo">
-				<p>车型信息：{{carInfo.carInfo}}</p>
-				<p>车牌号：{{carInfo.carNo}}</p>
-				<p>车架号：{{carInfo.vin}}</p>
-				<p>技师备注：<input type="text" class="" /></p>
-                <p>上次行驶里程：{{carInfo.mileage}}</p>
-                <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
-				<p>
-                    <button @click="SeeMaintain">查看保养履历</button>
-                    <button @click="CheckUserInfo">修改车辆信息</button>
-                    <button @click="isDelCar = true">删除车辆信息</button>
-                </p>
-				<div class="personal-mArrow"></div>
-			</div>
+	
+	        <div class="surebox" v-show="isDelCar">
+	            <div class="surefa">
+	                <div class="info">您确定要删除该车辆吗？</div>
+	                <div class="btn-group">
+	                    <button class="cancel" @click="cancelDeleteCarInfo">取消</button>
+	                    <button class="sure" @click="DeleteCarInfo">确定</button>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <!-- 数字键盘 -->
+	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" 
+	        @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 		</div>
-		
-		<!--选填信息-->
-		<div class="personalOptional">
-			<div class="optional-input">
-				<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo">
-			</div>
-			<div class="optional-input">
-				<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
-			</div>
-			<div class="optional-input">
-				<span>当前里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileage" @click="showKeyboard($event, 'mileage')">
-			</div>
-			<div class="optional-input">
-				<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth" @click="showKeyboard($event, 'mileageMonth')">
-			</div>
-			<div class="optional-inpRadio">
-				<span class="inpRadio-style">过度磨损：</span>
-				<div class="radioBtn">
-			        <span>否</span>
-			        <input id="item1" type="radio" name="item" value="1" v-model="updateInfo.WearAndTear">
-			        <label for="item1"></label>
-			    </div>
-			    <div class="radioBtn">
-			        <span>是</span>
-			        <input id="item2" type="radio" name="item" value="2" v-model="updateInfo.WearAndTear">
-			        <label for="item2"></label>
-			    </div>
-			</div>
-			<div class="optional-inpRadio inpRadio-border">
-				<span class="inpRadio-style">老化开裂：</span>
-				<div class="radioBtn">
-			        <span>否</span>
-			        <input id="item3" type="radio" name="items" value="3"  v-model="updateInfo.Aging">
-			        <label for="item3"></label>
-			    </div>
-			    <div class="radioBtn">
-			        <span>是</span>
-			        <input id="item4" type="radio" name="items" value="4"  v-model="updateInfo.Aging">
-			        <label for="item4"></label>
-			    </div>
-			</div>
-			<div class="optional-inpRadio">
-				<span class="inpRadio-style">胎侧损伤：</span>
-				<div class="radioBtn">
-			        <span>否</span>
-			        <input id="item5" type="radio" name="itemss" value="5" v-model="updateInfo.cracks">
-			        <label for="item5"></label>
-			    </div>
-			    <div class="radioBtn">
-			        <span>是</span>
-			        <input id="item6" type="radio" name="itemss" value="6" v-model="updateInfo.cracks">
-			        <label for="item6"></label>
-			    </div>
-			</div>
-			<div class="optional-button">
-				<button @click="UpadateUserInfo">继续</button>
-			</div>
-		</div>
-
-        <div class="surebox" v-show="isDelCar">
-            <div class="surefa">
-                <div class="info">您确定要删除该车辆吗？</div>
-                <div class="btn-group">
-                    <button class="cancel" @click="cancelDeleteCarInfo">取消</button>
-                    <button class="sure" @click="DeleteCarInfo">确定</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 数字键盘 -->
-        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" 
-        @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
-		
 	</div>
 </template>
 
@@ -135,6 +135,7 @@
 	export default {
 	    data () {
 	        return {
+	        	isLoading: true,
                 userCarBindId: '', // 获取userInfo时  传参
                 uid: '',           // 获取userInfo时  传参
                 userInfo: {        // 获取的userInfo数据
@@ -153,7 +154,12 @@
             let route = this.$route
             this.userCarBindId = route.query.userCarBindId
             this.uid = route.query.uid
-            this.getUserInfo()
+            
+            Promise.all([this.getUserInfo()]).then(res => {
+            setTimeout(() => {
+                this.isLoading = false
+            }, 500)
+        })
         },
 	    methods: {
             getUserInfo () {

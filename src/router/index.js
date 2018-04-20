@@ -14,6 +14,8 @@ import CleaningCall from '@/pages/cleaningCall/cleaningCall'
 import Scan from '@/pages/scan/scan'
 import MaintainRecord from '@/pages/maintainRecord/maintainRecord'
 import Confirm from '@/pages/confirm/confirm'
+import QueryPrice from '@/pages/queryPrice/queryPrice'
+import AllocationSingle from '@/pages/allocationSingle/allocationSingle'
 
 
 
@@ -64,9 +66,18 @@ const router = new Router({
                 {
                     path: 'maintainRecord',
                     component: MaintainRecord
-                },{
+                },
+                {
                     path: 'Confirm',
                     component: Confirm
+                },
+                {
+                    path: 'queryPrice',
+                    component: QueryPrice
+                },
+                {
+                    path: 'allocationSingle',
+                    component: AllocationSingle
                 }
             ]
         }
