@@ -2,55 +2,58 @@
     <div class="confirm loading">
         <my-header></my-header>
         
-        <!-- 车辆信息 -->
-        <div class="car-info">
-            <img class="head-img" id="head-img" :src="carInfo.carType.carSeries.seriesMinImage">
-            <div class="info">
-                <div class="name">
-                    {{carInfo.carType.carSeries.brandName.replace(/^[A-Z] - /g,'')}}
-                    {{carInfo.carType.carSeries.brandType}}
-                    {{carInfo.carType.carSeries.seriesName}}
-                    {{carInfo.carType.displacement}}
-                    {{carInfo.carType.productiveYear}} 年生产
-                    ({{carInfo.carNumber}}/{{carInfo.mileage}}km/
-                    {{carInfo.monthMileage}}km)
-                </div>
-                <div class="config">
-                    采用{{carInfo.carType.cylinder}} 
-                    缸发动机,机油用量 {{carInfo.carType.engineOil}}L 
-                    防冻液用量 {{carInfo.carType.antifreezing}}L
-                </div>
-            </div>
-        </div>
-        <!-- 轮胎服务 -->
-        <div class="server">
-            <div class="item" v-for="product in productData.data" :key="product.id">
-                <div class="title">{{product.name}}</div>
-                <div class="box">
-                    <div class="item" v-for="categorys in product.childCategorys" :key="categorys.id">
-                        <div class="oparation" @click="showProductList($event)">
-                            <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
-                            <div class="info">
-                                <div class="name">{{categorys.name}}</div>
-                                <div class="promotion">{{categorys.promotionInfo}}</div>
-                            </div>
-                        </div>
-                        <div class="productList">
-                            {{categorys.active}}
-                            <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
-                                <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === productData.defaultSpecs}">
-                                    {{tires}}
-                                </i>
-                            </div>
-                        </div>
-                        
+        <div class="loading" v-loading="isLoading">
+            <!-- 车辆信息 -->
+            <div class="car-info" v-if="carInfo.carType">
+                <img class="head-img" id="head-img" :src="carInfo.carType.carSeries.seriesMinImage">
+                <div class="info">
+                    <div class="name">
+                        {{carInfo.carType.carSeries.brandName.replace(/^[A-Z] - /g,'')}}
+                        {{carInfo.carType.carSeries.brandType}}
+                        {{carInfo.carType.carSeries.seriesName}}
+                        {{carInfo.carType.displacement}}
+                        {{carInfo.carType.productiveYear}} 年生产
+                        ({{carInfo.carNumber}}/{{carInfo.mileage}}km/
+                        {{carInfo.monthMileage}}km)
+                    </div>
+                    <div class="config">
+                        采用{{carInfo.carType.cylinder}} 
+                        缸发动机,机油用量 {{carInfo.carType.engineOil}}L 
+                        防冻液用量 {{carInfo.carType.antifreezing}}L
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- 轮胎服务 -->
+            <div class="server">
+                <div class="item" v-for="product in productData.data" :key="product.id">
+                    <div class="title">{{product.name}}</div>
+                    <div class="box">
+                        <div class="item" v-for="categorys in product.childCategorys" :key="categorys.id">
+                            <div class="oparation" @click="showProductList($event)">
+                                <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
+                                <div class="info">
+                                    <div class="name">{{categorys.name}}</div>
+                                    <div class="promotion">{{categorys.promotionInfo}}</div>
+                                </div>
+                            </div>
+                            <div class="productList">
+                                {{categorys.active}}
+                                <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
+                                    <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === productData.defaultSpecs}">
+                                        {{tires}}
+                                    </i>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- subBottom -->
-        <div class="subBottom"></div>
+            <!-- subBottom -->
+            <div class="subBottom"></div>
+        </div>
+        
     </div>
 </template>
 
@@ -61,6 +64,7 @@ import './confirm.sass'
 export default {
     data () {
         return {
+            isLoading: false,
             query: {
                 userCarBindId: ''
             },
@@ -75,18 +79,21 @@ export default {
     mounted () {
     },
     methods: {
+        // 获取初始数据
         ProductPush () {
+            this.isLoading = true
             api.ProductPush({
                 userCarBindId: this.query.userCarBindId,
                 shopId: localStorage.getItem('shopId')
             }).then(res => {
+                this.isLoading = false
                 this.productData = res.data
                 this.productData.defaultSpecs = this.productData.tiresSpecs[0]
                 this.carInfo = res.data.userCarBind.carInfo
             })
         },
-        // 点击 显示服务列表
-        showProductList (event) {
+        // 点击某一条服务  显示服务列表
+        showProductList (event) { 
             let item = event.currentTarget.parentNode
             console.log(item.children)
             for (var i = 0; i < item.children.length; i++) {

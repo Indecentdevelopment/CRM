@@ -1,5 +1,5 @@
 <template>
-    <div class="sign">
+    <div class="signature">
         <!-- 头部 顶部 -->
 		<my-header></my-header>
         <div class="loading" v-loading="isLoading">
