@@ -12,8 +12,8 @@
 					<el-button type="text" @click="checkBtn" class="checkbtn fr">效验</el-button>
 				</div>
 				<div class="titlebottom clearfix">
-					<div class="fl thebrand" @click="getThebrand" v-model="brandName">{{brandName}}</div>
-					<div class="fl thetype" @click="getThetype" v-model="thetypeName">{{thetypeName}}</div>
+					<div class="fl thebrand" @click="getThebrand">{{brandName}}</div>
+					<div class="fl thetype" @click="getThetype" >{{thetypeName}}</div>
 					<input type="text" placeholder="请输入规格" class="fr thesize" v-model="carNo" @click="showKeyboard($event)" />
 					<!--展示区域-->
 					<!--品牌展示-->
@@ -26,7 +26,7 @@
 					</div>
 				</div>
 				<!--产品列表-->
-				<div class="productList" >
+				<div class="productList"  v-if="productList.length>0">
 					<div class="productExample" v-for="item in productList" :key="item.id">
 						<ul class="clearfix">
 							<li class="fl clearfix">
@@ -34,13 +34,19 @@
 								<span class="fr price">¥{{item.price}}</span>
 							</li>
 							<li class="fl clearfix">item.productId
+<<<<<<< HEAD
 								<router-link to="allocationSingle" class="fl btnStyle">
+=======
+								<router-link :to="{path: 'allocationSingle', query:{proId:item.shopId}}" class="fl btnStyle">
+>>>>>>> 5c83f70689055b544ae156dd779b8ee101845d86
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
 									<div class="stock" v-show="item.id == productId">
 										<div class="triangle"></div>
-										<p class="storeName" v-for="items in storeStock">{{items.name}} - {{items.stock}}</p>
+										<p class="storeName" v-for="(items, j) in storeStock" :key="j">
+                                            {{items.name}} - {{items.stock}}
+                                        </p>
 									</div>
 								</span>
 								<span class="fr color">{{item.categoryName}}</span>
