@@ -266,6 +266,40 @@ export default {
 		return axios.get(url + 'api/ApplyRequire/DiliverApply', {
             params: data
 		})
-	}
+	},
+	/*******************************************************************************/
+	GetCardsList(data){
+		return axios.get(url + 'Api/Car/CheckCardCoupons',{
+			params:{
+				cardno: data.cardsNo
+			}
+		})
+	},
+	GetCardsUsedList(data){
+		return axios.get(url + 'Api/Order/GetCardCouponDetalis',{
+			params:{
+				CardCouponId: data.CardCouponId
+			}
+		})
+	},
+	GetApplyRequireList(){
+		return axios.get(url + 'Api/applyrequire/ApplyRequireList',{
+			
+		})
+	},
+	/****************************************他仓求助*****************************************/
+	GetMyApplyRequireList(){
+		return axios.get(url + 'api/applyrequire/MyApplyRequireList',{
+			
+		})
+	},
+	/************************************调拨列表**********************************************/
+	GetApplyRequireDetail(data){
+		return axios.get(url + 'api/applyrequire/ApplyRequireDetail',{
+			params:{
+				serial: data.serial
+			}
+		})
+	},
 	
 }

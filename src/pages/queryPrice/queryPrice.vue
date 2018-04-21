@@ -34,7 +34,7 @@
 								<span class="fr price">¥{{item.price}}</span>
 							</li>
 							<li class="fl clearfix">item.productId
-								<router-link :to="{path: 'allocationSingle', query:{proId:item.id_item.shopId}}" class="fl btnStyle">
+								<router-link to="allocationSingle" class="fl btnStyle">
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
@@ -80,7 +80,8 @@
                 carNo: '',				//
                 keyword: '',			//关键字		物料编码
                 productList: '',		//搜索到的产品列表
-                storeStock: ''			//店铺库存列表
+                storeStock: '',			//店铺库存列表
+                shopId: '123456'
             }
         },
         created () {
