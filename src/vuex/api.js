@@ -144,6 +144,20 @@ export default {
         return axios.post(url + 'api/car/UserSign', querystring.stringify(data))
     },
 
+    // 更新 技师
+    UpdateTec (data) {
+        return axios.get(url + 'api/car/UpdateTec', {
+            params: data
+        })
+    },
+
+    // 取消 订单
+    CancelOrder (data) {
+        return axios.get(url + 'api/order/CancelOrder', {
+            params: data
+        })
+    },
+
     
     /***************************选择技师**********************************/
     // 获取技师信息
@@ -272,9 +286,21 @@ export default {
         })
     },
 
-    // 点击服务 获取服务列表
+    // 点击服务 获取商品列表
     GetCarProduct (data) {
         return axios.post(url + 'api/car/GetCarProduct', querystring.stringify(data))
+    },
+    // 获取服务列表
+    GetCarServiceProduct (data) {
+        return axios.post(url + 'api/car/GetCarServiceProduct', querystring.stringify(data))
+    },
+    // 记账
+    GetProductsTotal (data) {
+        return axios.post(url + 'api/order/GetProductsTotal', querystring.stringify(data))
+    },
+    // 创建 单子
+    CreateOrder (data) {
+        return axios.post(url + 'api/order/CreateOrder', querystring.stringify(data))
     },
 
 

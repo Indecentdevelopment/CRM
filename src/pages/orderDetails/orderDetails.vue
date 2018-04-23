@@ -7,7 +7,9 @@
         <div class="loading" v-loading="isLoading">
             <!--顾客信息-->
             <div class="customerInfo clearfix">
-                <div class="pre-count">您前边还有 {{orderInfo.preBeforeCount}} 位顾客正在排队</div>
+                <div class="pre-count" v-if="orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
+                    您前边还有 {{orderInfo.preBeforeCount}} 位顾客正在排队
+                </div>
                 <p class="orderStyleOne orderColor-white fl">订单编号：{{new Date(orderInfo.datePlaced).toString('yyMMdd10' + orderInfo.id)}}</p>
                 <p class="orderStyleTwo orderColor-white fl">客户：{{orderInfo.user.firstName}}</p>
                 
@@ -23,8 +25,15 @@
                     </div>
                     <p class="vehicleP fl">
                         <span id="brand"></span>
-                        <span>行驶里程：{{orderInfo.mileage}} <span id="average"></span></span>
-                        <span id="carNo"></span>
+                        <span>
+                            行驶里程：{{orderInfo.mileage}} 
+                            <span id="average" v-if="orderInfo.userCarBind">
+                                月均里程：{{orderInfo.userCarBind.carInfo.monthMileage}}
+                            </span>
+                        </span>
+                        <span id="carNo" v-if="orderInfo.userCarBind">
+                            车牌号：{{orderInfo.userCarBind.carInfo.carNumber}}
+                        </span>
                     </p>
                 </div>
                 <div class="orderUndetermined">
@@ -34,7 +43,7 @@
             
             <!--编辑 + 添加 按钮-->
             <div class="editAdd clearfix">
-                <p class="fr"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
+                <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
             </div>
@@ -72,13 +81,13 @@
                                 <div id="add" @click="addCurrentNum(index)" v-show="isEditProduct">+</div>
                             </div>
                         </div>
-                        <div id="free-button" @click="freeComplimentary">免</div>
+                        <div v-show="item.product.isAllowFree" id="free-button" @click="freeComplimentary">免</div>
                     </div>
                 </div>
             </div>
 
             <!-- 技师备注 -->
-            <div class="remark-info" v-if="orderInfo.status !== '已预约'">
+            <div class="remark-info" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'">
                 <div class="head">技师备注</div>
                 <textarea name="" id="technician-remark" rows="2" v-model="orderInfo.staffComments"></textarea>
                 <!-- --------------------------------此地注意  ----------------------------------------- -->
@@ -101,11 +110,13 @@
                         <div class="title">合计金额：</div>
                         <div class="info">¥{{orderInfo.subtotal+orderInfo.serviceAmount}}</div>
                     </div>
-                    <div class="item useother-box" v-if="orderInfo.status!=='已预约'">
+                    <div class="item useother-box" 
+                    v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
                         <div class="title">useother-box</div>
                         <div class="info">¥123</div>
                     </div>
-                    <div class="item useother-box1" id="dvinvoice" v-if="orderInfo.status!=='已预约'">
+                    <div class="item useother-box1" id="dvinvoice" 
+                    v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
                         <div class="title">发票号：</div>
                         <div class="info">
                             <input type="text" placeholder="发票号">
@@ -146,7 +157,7 @@
             </div>
 
             <!-- 付款方式 -->
-            <div class="payment-box" v-if="orderInfo.status!=='已预约'">
+            <div class="payment-box" v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
                 <!-- ----------------------------此地注意 退款---------------------------------- -->
                 <div class="head">选择<span>付</span>款方式：</div>
                 <div class="pay-box">
@@ -202,7 +213,7 @@
             </div>
             
             <!--顾客签字-->
-            <div class="sign">
+            <div class="sign" v-if="orderInfo.status!=='服务中'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
@@ -215,17 +226,17 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign" v-if="orderInfo.status!=='已预约'">
+            <div class="customer-sign" v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
-                    <img src="" alt="">
+                    <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
                 </div>
             </div>
 
             <div class="btn-box">
                 <div v-show="orderInfo.status === '服务中'">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
-                <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'">取消</div>
+                <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'" @click="cancelOrder()">取消订单</div>
             </div>
         </div>
         
@@ -389,12 +400,27 @@
             saveOrderItem () {
                 this.isLoading = true
                 this.isEditProduct = !this.isEditProduct
-                api.saveOrderItem({
-                    id: this.query.orderId,
-                    "order.OrderItemProducts[0][key]": this.orderInfo.items[0].productId,
-                    "order.OrderItemProducts[0][value]": this.orderInfo.items[0].quantity
-                }).then(res => {
+                let obj = {
+                    id: this.query.orderId
+                }
+                this.orderInfo.items.map((item, index) => {
+                    obj[`OrderItemProducts[${index}][key]`] = this.orderInfo.items[index].productId
+                    obj[`OrderItemProducts[${index}][value]`] = this.orderInfo.items[index].quantity
+                })
+                api.saveOrderItem(obj).then(res => {
                     this.isLoading = false
+                    this.drawingData(res.data)
+                })
+            },
+
+            // 店家 添加产品
+            addProduct () {
+                this.$router.push({
+                    path: 'confirm',
+                    query: {
+                        userCarBindId: this.orderInfo.userCarBindId,
+                        OrderId: this.orderInfo.id
+                    }
                 })
             },
 
@@ -431,6 +457,8 @@
                 api.CheckGetGoods({orderId: this.query.orderId}).then(res => {
                     if(res.data.success) {
                         this.sendImage(this.saveSign(), this.query.orderId)
+                    } else {
+                        alert(res.data.msg)
                     }
                 })
             },
@@ -457,6 +485,22 @@
                         this.$message('保存失败，请重试！')
                     }
                 })
+            },
+
+
+            // 取消 订单
+            cancelOrder () {
+                if (confirm("确定取消此订单吗？")) {
+                    api.CancelOrder({
+                        oid: this.query.orderId
+                    }).then(res => {
+                        if (res.data.success) {
+                            this.$router.go(0)
+                        } else {
+                            alert(res.data.msg)
+                        }
+                    })
+                }
             }
 	    },
 	    components:{

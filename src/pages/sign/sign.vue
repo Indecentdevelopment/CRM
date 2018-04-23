@@ -5,7 +5,8 @@
         <div class="loading" v-loading="isLoading">
             <div class="title">选择技师</div>
             <div class="teach-box">
-                <div class="item" :class="{active: choList.includes(item.name)}" v-for="(item, index) in techData.techs" :key="index" @click="choose(item.name)">
+                <div class="item" :class="{active: JSON.stringify(choList).includes(item.uid)}" v-for="(item, index) in techData.techs" 
+                :key="index" @click="choose(item)">
                     {{item.name}}
                 </div>
             </div>
@@ -22,11 +23,11 @@
             </div>
             <div class="select-teach">
                 <div class="item" v-for="(item, i) in choList" :key="i" @click="cancelTech(item)">
-                    {{item}}
+                    {{item.name}}
                 </div>
             </div>
             <div class="btn-box">
-                <button>开始服务</button>
+                <button @click="submit()">开始服务</button>
                 <button>取消订单</button>
             </div>
         </div>
@@ -45,6 +46,7 @@ export default {
             },
             techData: {},     // 初始数据
             choList: [],      // 选中技师
+
         }
     },
     created () {
@@ -63,22 +65,88 @@ export default {
                     return
                 }
                 this.techData = res.data
-                this.choList.push(res.data.techs[0].nowName)
+                res.data.techs.map((item, index) => {
+                    if (item.nowName === item.name) {
+                        this.choList.push({
+                            name: item.name,
+                            uid: item.uid
+                        })
+                    }
+                })
+                // this.choList.push(res.data.techs[0].nowName)
                 console.log(this.choList)
             })
         },
         // 点击技师 选择技师
-        choose (name) {
+        choose (tec) {
+            let isInarr = false
             if (this.choList.length < 3) {
-                if (!this.choList.includes(name)) {
-                    this.choList.push(name)
+                this.choList.map((item, index) => {
+                    if (item.name === tec.name) {
+                        isInarr = true
+                        return
+                    }
+                })
+                if (!isInarr) {
+                    this.choList.push({
+                        name: tec.name,
+                        uid: tec.uid
+                    })
                 }
+                // if (!this.choList.includes(name)) {
+                //     this.choList.push(name)
+                // }
             }
         },
         // 点击选中技师  从选中列表删除
-        cancelTech (name) {
-            var index = this.choList.indexOf(name)
-            this.choList.splice(index, 1)
+        cancelTech (tec) {
+            let i = null
+            this.choList.map((item, index) => {
+                
+                if (tec.uid === item.uid) {
+                    i = index
+                    console.log(i)
+                    return
+                }
+            })
+            if (i!==null) {
+                this.choList.splice(i, 1)
+                console.log(this.choList)
+            }
+            // this.choList.splice(index, 1)
+        },
+        
+        // 点击 开始服务
+        submit () {
+            let ids = []
+            this.choList.map((item, index) => {
+                ids.push(item.uid)
+            })
+            api.UpdateTec({
+                oid: this.query.OrderId,
+                name: ids.join(','),
+                no: ''
+            }).then(res => {
+                if (res.data.success) {
+                    this.$router.push({
+                        path: 'orderdetails',
+                        query: {
+                            OrderId: this.query.OrderId
+                        }
+                    })
+                } else {
+                    if (res.data.msg === '非待确认') {
+                        this.$router.push({
+                            path: 'orderdetails',
+                            query: {
+                                OrderId: this.query.OrderId
+                            }
+                        })
+                    } else {
+                        alert(res.data.msg)
+                    }
+                }
+            })
         }
     },
     components: {

@@ -7,16 +7,17 @@
     background-color: #696666
     display: flex
     flex-direction: column
+    font-family: "Helvetica Neue",Helvetica,STHeiTi,Arial,sans-serif
     .loading
         display: flex
         flex-direction: column
     .car-info
         height: 2.6rem
-        width: 19.6rem
+        width: 20rem
         top: 1.8rem
         display: flex
         align-items: center
-        margin-left: 0.2rem
+        margin-left: 0.5rem
         background: #EE534E
         position: fixed
         border-radius: 10rem
@@ -35,9 +36,9 @@
     .server
         flex: 1
         padding-bottom: 3rem
-        width: 19.5rem
+        width: 19.8rem
         height: calc(100% - 3rem)
-        margin-left: 0.25rem
+        margin-left: 0.5rem
         margin-top: 3.3rem
         overflow: auto
         .item
@@ -55,7 +56,7 @@
                 flex-direction: column
                 .item
                     min-height: 2rem
-                    padding: 0.3rem 0.6rem
+                    padding: 0.3rem 0
                     margin-top: 0.8rem
                     background-color: #ffffff
                     display: flex
@@ -65,6 +66,7 @@
                     .oparation
                         display: flex
                         align-items: center
+                        padding-left: 0.5rem
                         .iconfont
                             width: 1.5rem
                             height: 1.5rem
@@ -112,6 +114,24 @@
                                 align-items: flex-end
                                 padding: 0
                                 border-radius: 0
+                                position: relative
+                                &:before
+                                    content: "\2713"
+                                    font-size: 1rem
+                                    font-weight: 800
+                                    color: #fff
+                                    position: absolute
+                                    top: 0
+                                    left: 0.3rem
+                                    z-index: 1
+                                    background-color: #A2A2A2
+                                    width: 1.2rem
+                                    height: 1.2rem
+                                    border-radius: 50%
+                                    text-align: center
+                                    line-height: 1.2rem
+                                &.active:before
+                                    background-color: #f57c33
                                 .goods
                                     display: flex
                                     justify-content: space-between
@@ -140,6 +160,7 @@
                                         align-items: flex-end
                                         width: 4rem
                                         color: #999
+                                        padding-right: 0.2rem
                                         .old-price
                                             text-decoration: line-through
                                             text-align: right
@@ -149,12 +170,185 @@
                                     display: flex
                                     width: calc(100% - 3rem)
                                     margin-left: 3rem
+                                    margin-top: 0.5rem
                                     height: 2.6rem
                                     align-items: center
                                     border-top: solid 1px #d9d9d9
+                                    border-bottom: solid 1px #d9d9d9
                                     .num
                                         flex: 1
                                         display: flex
+                                        .minus,.add
+                                            width: 1.3rem
+                                            height: 1.3rem
+                                            line-height: 1.1rem
+                                            text-align: center
+                                            background-color: #3C3838
+                                            color: #FFD900
+                                            font-weight: 800
+                                            font-size: 1.4rem
+                                            border-radius: 50%
+                                            font-family: "Microsoft YaHei","Arial",'Glyphicons Halflings'
+                                        .minus:before
+                                            content: "\2212"
+                                        .add:before
+                                            content: "\2b"
+                                        .info
+                                            height: 1.3rem
+                                            line-height: 1.4rem
+                                            font-size: 1.1rem
+                                            margin: 0 0.5rem
+                                    .exchange
+                                        display: flex
+                                        height: 100%
+                                        flex-direction: column
+                                        align-items: center
+                                        border-left: solid 1px #d9d9d9
+                                        padding: 0.3rem 1rem
+                                        box-sizing: border-box
+                                        img
+                                            width: 1.1rem
+                                            height: 1rem
+                            .addproductbtn
+                                color: #696666
+                                padding: 0.2rem 0.2rem
+                                border: 1px solid #ddd
+                                width: 80%
+                                text-align: center
+                                margin: auto
+                                background: #FFF
+                                position: relative
+                                &:before
+                                    content: "\e081"
+                        .service-list
+                            margin-top: 0.5rem
+                            .single
+                                margin-left: 0.5rem
+                                background-color: #696666
+                                border-color: #FFD900
+                                color: #ffffff
+                                display: inline-block
+                                border: 5px solid #FFD900
+                                padding: 2px 30px
+                                border-bottom: 0px solid
+                                border-top: 5px solid  #FFD900
+                                border-left: 15px solid #FFD900
+                                border-right: 15px solid  #FFD900
+                                border-radius: 44px 0px 37px 0px
+                                font-size: 0.8rem
+                            .preferentialPolicys
+                                width: 98%
+                                margin-left: 1%
+                                display: flex
+                                justify-content: flex-start
+                                border-top: 1px #EE534E dashed
+                                border-bottom: 1px #EE534E dashed
+                                padding: 0.8rem 0
+                                margin-top: 0.5rem
+                                box-sizing: border-box
+                                position: relative
+                                &:after
+                                    content: '服务套餐'
+                                    position: absolute
+                                    top: -0.6rem
+                                    right: 3rem
+                                    color: #EE534E
+                                    background-color: #ffffff
+                                    height: 1.2rem
+                                    line-height: 1.2rem
+                                    padding: 0 0.5rem
+                                    border: 1px #EE534E dashed
+                                    border-radius: 1rem
+                                    font-weight: 800
+                                .item
+                                    width: 3rem
+                                    height: 1.6rem
+                                    min-height: auto
+                                    display: flex
+                                    flex-direction: row
+                                    align-items: center
+                                    margin: 0 0.2rem
+                                    padding: 0 0.5rem
+                                    border-radius: 0
+                                    background-color: #E0E0E0
+                                    border: 1px #696666 dashed
+                                    &.active
+                                        border: 1px solid #444444
+                                        color: #ffffff
+                                        background-color: #EE534E
+                            .service-box
+                                display: flex
+                                flex-wrap: wrap
+                                .item
+                                    width: 46%
+                                    margin: 0.5rem 2%
+                                    border-radius: 0
+                                    color: #D2D2D2
+                                    background: #696666
+                                    border: 3px solid #A2A2A2
+                                    border-radius: 0px 20px 0px
+                                    box-sizing: border-box
+                                    position: relative
+                                    padding: 0.7rem 0.5rem 0.3rem 0.5rem
+                                    &:before
+                                        content: "\2713"
+                                        position: absolute
+                                        left: -3px
+                                        top: -3px
+                                        padding: 0 10px 4px 5px
+                                        color: #D2D2D2
+                                        background-color: #A2A2A2
+                                        font-family: 'Glyphicons Halflings' !important
+                                        border-radius: 0px 0px 100% 0px
+                                    &.active
+                                        color: #FFD900
+                                        border-color: #FFD900
+                                    &.active:before
+                                        color: #696666
+                                        background-color: #FFD900
+                                        
+                                    .btn-box
+                                        height: 1rem
+                                        display: flex
+                                        margin: 0.2rem 0
+                                        &>div
+                                            color: #EE534E
+                                            border: 1px solid #EE534E
+                                    .price-num
+                                        display: flex
+                                        justify-content: space-between
+                                        .price
+                                            font-weight: 800
+                                            font-size: 0.8rem
+                                        .num
+                                            display: flex
+                                            background-color: #ffffff
+                                            align-items: center
+                                            height: 1rem
+                                            line-height: 1rem
+                                            border-radius: 1rem
+                                            .minus,.add
+                                                width: 1rem
+                                                text-align: center
+                                                font-size: 0.8rem
+                                                font-weight: 800
+                                            .minus:before
+                                                content: "\2212"
+                                            .add:before
+                                                content: "\2b"
+                                            .num-info
+                                                display: flex
+                                                align-items: center
+                                                justify-content: center
+                                                width: 1.5rem
+                                                border-left: 1px solid #F3F3F3
+                                                border-right: 1px solid #F3F3F3
+                                        
+                                    
+
+                                            
+                                            
+
 
                                         
 
@@ -165,10 +359,61 @@
     .subBottom
         position: fixed
         bottom: 0
+        left: 0
         width: 100%
         height: 2.6rem
-        background: red
+        z-index: 10
+        display: flex
+        .info
+            height: 2.6rem
+            background-color: #222
+            color: #fff
+            padding-left: 2rem
+            width: 70%
+            display: flex
+            flex-direction: column
+            box-sizing: border-box
+            .total
+                font-size: 1rem
+        .submit
+            flex: 1
+            background-color: #FFD900
+            height: 2.6rem
+            line-height: 2.6rem
+            text-align: center
+            font-size: 1rem
+
+    /* 立省 */
+    .preferentialAmount
+        position: fixed
+        bottom: 3rem
+        right: 1rem
+        height: 4rem
+        width: 4rem
+        display: flex
+        justify-content: center
+        align-items: center
+        box-shadow: 1px 0px 6px 0px #000
+        border: 5px solid rgba(0, 0, 0, 0.25)
+        color: #ffffff
+        border-radius: 2rem
+        background-color: rgba(238, 83, 78, 0.88)
+        font-size: 1.1rem
+
+        animation: bounce .6s cubic-bezier(.68, .06, .68, .42) infinite alternate
+
+
 .confirm
     .loading
         height: 100%
+
+@keyframes bounce 
+    0%, 10% 
+        bottom: 150px
+        transform: scaleX(1) scaleY(1.35)
+    100% 
+        bottom: 50px
+        transform: scaleX(1.35) scaleY(1)
+    
+
         
