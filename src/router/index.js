@@ -17,6 +17,13 @@ import Confirm from '@/pages/confirm/confirm'
 import washorder from '@/pages/washorder/washorder'
 import Sign from '@/pages/sign/sign'
 
+import QueryPrice from '@/pages/queryPrice/queryPrice'
+import AllocationSingle from '@/pages/allocationSingle/allocationSingle'
+import CardsInfo from '@/pages/cardsInfo/cardsInfo'
+import ApplyRequireList from '@/pages/applyRequireList/applyRequireList'
+import SeekHelp from '@/pages/seekHelp/seekHelp'
+import AllocationDetailed from '@/pages/allocationDetailed/allocationDetailed'
+import AllocationYes from '@/pages/allocationYes/allocationYes'
 
 
 Vue.use(Router)
@@ -66,7 +73,8 @@ const router = new Router({
                 {
                     path: 'maintainRecord',
                     component: MaintainRecord
-                },{
+                },
+                {
                     path: 'Confirm',
                     component: Confirm
                 },{
@@ -75,6 +83,34 @@ const router = new Router({
                 },{
                     path: 'sign',
                     component: Sign
+                },
+                {
+                    path: 'queryPrice',
+                    component: QueryPrice
+                },
+                {
+                    path: 'allocationSingle',
+                    component: AllocationSingle
+                },
+                {
+                	path: 'cardsInfo',
+                	component: CardsInfo
+                },
+                {
+                	path: 'applyRequireList',
+                	component: ApplyRequireList
+                },
+                {
+                	path: 'seekHelp',
+                	component: SeekHelp
+                },
+                {
+                	path: 'allocationDetailed',
+                	component: AllocationDetailed
+                },
+                {
+                	path: 'allocationYes',
+                	component: AllocationYes
                 }
             ]
         }

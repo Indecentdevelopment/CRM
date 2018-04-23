@@ -356,7 +356,83 @@ export default {
     // 开始预约
     MakeWashOrder (data) {
         return axios.post(url + 'api/car/MakeWashOrder', querystring.stringify(data))
-    }
+    },
+    
+    /***************************产品页   confirm**********************************/
+    ProductPush(data) {
+        return axios.get(url + 'api/car/ProductPush', {
+            params: data
+        })
+    },
+	
+	/***************************快捷查询   queryPrice**********************************/
+	//获取产品列表
+	GetProducts(data) {
+		return axios.post(url + 'Api/Car/GetElseShopProduct', querystring.stringify(data))
+    },
+    //校验物料编码
+   	GetCheckCode(data) {
+		return axios.get(url + 'Api/Car/CheckProductMatnr', {
+            params: data
+		})
+    },
+    /*获取品牌列表*/
+	GetThebrand(data){
+		return axios.get(url + 'Api/Car/GetProductBrand', {
+        	
+        })
+	},
+	/*获取类别列表*/
+	GetThetype(data){
+		return axios.get(url + 'Api/Car/GetProductCategory', {
+        	
+        })
+	},
+	/*店铺库存列表*/
+	GetStoreStock(data){
+		return axios.post(url + 'Api/Car/GetElseShopProductSub', querystring.stringify(data))
+	},
+	/**************************************调拨申请单****************************************/
+	/*供应商列表*/
+	GetSupplierList(data){
+		return axios.get(url + 'api/ApplyRequire/DiliverApply', {
+            params: data
+		})
+	},
+	/*******************************************************************************/
+	GetCardsList(data){
+		return axios.get(url + 'Api/Car/CheckCardCoupons',{
+			params:{
+				cardno: data.cardsNo
+			}
+		})
+	},
+	GetCardsUsedList(data){
+		return axios.get(url + 'Api/Order/GetCardCouponDetalis',{
+			params:{
+				CardCouponId: data.CardCouponId
+			}
+		})
+	},
+	GetApplyRequireList(){
+		return axios.get(url + 'Api/applyrequire/ApplyRequireList',{
+			
+		})
+	},
+	/****************************************他仓求助*****************************************/
+	GetMyApplyRequireList(){
+		return axios.get(url + 'api/applyrequire/MyApplyRequireList',{
+			
+		})
+	},
+	/************************************调拨列表**********************************************/
+	GetApplyRequireDetail(data){
+		return axios.get(url + 'api/applyrequire/ApplyRequireDetail',{
+			params:{
+				serial: data.serial
+			}
+		})
+	},
 	
 }
 

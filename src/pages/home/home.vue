@@ -97,31 +97,39 @@
                     </router-link>
                 </div>
                 <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">快捷查价</p>
+                	<router-link to="queryPrice">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/hc-checktheprice.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">快捷查价</p>
+	                </router-link>
                 </div>
             </div>
             <div class="service">
                 <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-allocation.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">调拨列表</p>
+                	<router-link to="applyRequireList">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/hc-allocation.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">调拨列表</p>
+	                </router-link>
                 </div>
                 <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-cardcoupons.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">卡券查询</p>
+                	<router-link to="cardsInfo">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/hc-cardcoupons.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">卡券查询</p>
+                   </router-link>
                 </div>
                 <div class="service-conten">
-                    <div class="service-btn">
-                        <img src="../../assets/images/home/hc-seekhelp.png" class="service-img"/>
-                    </div>
-                    <p class="service-p">他仓求助</p>
-                    <div class="prompt">{{myApplyRequireCount}}</div>
+                	<router-link to="seekHelp">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/hc-seekhelp.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">他仓求助</p>
+	                    <div class="prompt">{{myApplyRequireCount}}</div>
+	                </router-link>
                 </div>
             </div>
             

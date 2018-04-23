@@ -180,7 +180,11 @@ export default {
     },
     created () {
         this.query.userCarBindId = this.$route.query.userCarBindId
-        this.ProductPush()
+        Promise.all([this.ProductPush()]).then(res => {
+            setTimeout(() => {
+                this.isLoading = false
+            }, 500)
+        })
     },
     mounted () {
     },
