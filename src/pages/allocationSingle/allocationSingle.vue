@@ -28,7 +28,8 @@
 			<!--同城门店-->
 			<div class="cityStore">
 				<div class="cityHeader">
-					<span>同城门店</span>
+					<span :class="{active: shopType==='同城门店'}">同城门店</span>
+                    <span :class="{active: shopType==='供应商'}">供应商</span>
 				</div>
 				<div class="allocation clearfix">
 					<span class="fr" @click="applicationApply">调拨申请</span>
@@ -84,24 +85,30 @@
 				supplierList: [],				//调拨店铺列表
 				allocationNumber: '1',			//调拨数量
 				storejudge: false,				//调拨判断
-				shopId: '',						//shopId
-				productId: '',					//proId
-				type: '',						//供应商
-				applyShopName: ''				//应用商店
+
+                query: {                        // 参数
+                    productId: this.$route.query.productId,
+                    shopId: this.$route.query.shopId,
+                    ShowShopType: this.$route.query.ShowShopType
+                },
+                shopType: ''                    // 他仓求助 商品类型 
 			}
 		},
 		created() {
-			let route = this.$route
-            this.shopId = route.query.shopId
-            this.productId = route.query.productId
-            this.type = route.query.type
-            this.applyShopName = route.query.applyShopName
             
 			Promise.all([]).then(res => {
 				setTimeout(() => {
 					this.isLoading = false
 				}, 500)
-			})
+            })
+            
+            if (this.query.ShowShopType === 1) {
+                this.shopType = '同城门店'
+            } else if (this.query.ShowShopType === 2) {
+                this.shopType = '供应商'
+            } else {
+                this.shopType = '同城门店'
+            }
 			
 		},
 		methods: {
@@ -120,6 +127,7 @@
 			},
 			//查找门店（供应商）
 			supplier(){
+                
 				if(this.value1 == ''){
 					this.$alert('调拨时间不正确！', '轮库Tirecool', {
 			          	confirmButtonText: '确定',
@@ -133,9 +141,9 @@
 				}else{
 					this.storejudge = true
 					api.GetSupplierList({
-	        			proId: this.shopId +'_'+ this.productId,
-						type: this.type,
-						applyShopName: this.applyShopName
+	        			proId: this.query.productId +'_'+ this.query.shopId,
+						type: this.shopType,
+						applyShopName: ''
 	                }).then(res => {
 	                	console.log(res.data)
 	                	

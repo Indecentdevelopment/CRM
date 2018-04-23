@@ -34,7 +34,8 @@
 								<span class="fr price">¥{{item.price}}</span>
 							</li>
 							<li class="fl clearfix">
-								<router-link :to="{path: 'allocationSingle', query:{ productId:item.productId,shopId:item.shopId}}" class="fl btnStyle">
+								<router-link class="fl btnStyle" :to="{path: 'allocationSingle', 
+                                query:{ productId:item.productId,shopId:item.shopId, ShowShopType: 1}}">
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
@@ -96,12 +97,14 @@
         methods: {
         	//搜索产品
         	getProducts () {
+                this.isLoading = true
         		api.GetProducts({
         			Specs: this.keyword,
 		            BrandId: this.productBrandId,
 		            CategoryId: this.productCategoyId,
 		            Specifications: this.carNo
                 }).then(res => {
+                    this.isLoading = false
                     console.log(res)
                     console.log(res.data)
                     this.productList = res.data

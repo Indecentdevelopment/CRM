@@ -29,97 +29,161 @@
                     <div class="title">{{product.name}}</div>
                     <div class="box">
                         <div class="item" v-for="(categorys, catIndex) in product.childCategorys" :key="categorys.id">
-                            <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
-                                <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
-                                <div class="info">
-                                    <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
+                            
+                            <div v-if="categorys.childCategorys.length===0">
+                                <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
+                                    <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
+                                    <div class="info">
+                                        <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
+                                    </div>
+                                </div>
+                                <div class="productList" v-show="categorys.active">
+                                    <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
+                                        <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === currentTiresSpecs}">
+                                            {{tires}}
+                                        </i>
+                                        <i class="otherTries">
+                                            其他规格
+                                        </i>
+                                    </div>
+
+                                    <div class="product-box">
+                                        <div class="item" v-for="(goods, goodsIndex) in categorys.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
+                                        v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" 
+                                        :data-id="goods.id" :data-num="goods.selectQuantity">
+                                            <!-- 商品信息 -->
+                                            <div class="goods">
+                                                <img class="head" src="/Content/img/images/1_c.jpg">
+                                                <div class="info">
+                                                    <div class="name">{{goods.name}}</div>
+                                                    <div class="btn-box">
+                                                        <button>优点</button>
+                                                        <button>存：{{goods.stock}}</button>
+                                                        <button>他店求助</button>
+                                                    </div>
+                                                </div>
+                                                <!-- 价格 -->
+                                                <div class="price">
+                                                    <div class="old-price" v-show="goods.oldPrice>goods.price">
+                                                        原价<br />￥{{goods.oldPrice}}
+                                                    </div>
+                                                    <div class="new-price">
+                                                        ￥{{goods.price}}
+                                                    </div>
+                                                    <div class="quantity">x{{goods.selectQuantity}}</div>
+                                                </div>
+                                            </div>
+                                            <!-- 操作 -->
+                                            <div class="operation">
+                                                <div class="num">
+                                                    <div class="minus" @click="minus($event, proIndex, catIndex, goodsIndex)"></div>
+                                                    <div class="info">{{goods.selectQuantity}}</div>
+                                                    <div class="add" @click="add($event, proIndex, catIndex, goodsIndex)"></div>
+                                                </div>
+                                                <!-- 更换 -->
+                                                <div class="exchange">
+                                                    <img src="/Content/img/selectproduct/v1exchange.png" alt="">
+                                                    <div class="info">更换</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="addproductbtn"><span>+ </span> 添加</div>
+                                    </div>
+
+                                    <!-- 服务 列表 -->
+                                    <div class="service-list" v-if="categorys.serviceList.length>0">
+                                        <div class="single">养车服务</div>
+                                        <!-- 服务 套餐 -->
+                                        <div class="preferentialPolicys" v-if="categorys.preferentialPolicys.length>0">
+                                            <div class="item" v-for="(policy, polIndex) in categorys.preferentialPolicys" 
+                                                :key="policy.id" :class="{active: policy.active}" @click="policyClick(proIndex, catIndex, polIndex)">
+                                                {{policy.name}}
+                                            </div>
+                                        </div>
+                                        <div class="service-box">
+                                            <div class="item" v-for="(service, serIndex) in categorys.serviceList" :key="service.id" 
+                                            :class="{'active check': service.active}" @click="serviceClick(proIndex, catIndex, serIndex)"
+                                            :data-id="service.id" :data-num="service.selectQuantity">
+                                                <div class="name">{{service.name}}</div>
+                                                <div class="btn-box">
+                                                    <div v-show="service.isRequired">必选</div>
+                                                    <div v-show="service.isRecommend">推荐</div>
+                                                    <div v-show="service.discount>0&&service.price>0">
+                                                        限时{{service.discount}}折
+                                                    </div>
+                                                </div>
+                                                <div class="price-num">
+                                                    <div class="price">￥{{service.price}}</div>
+                                                    <div class="num">
+                                                        <div class="minus"></div>
+                                                        <div class="num-info">{{service.selectQuantity}}</div>
+                                                        <div class="add"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                             </div>
-                            <div class="productList" v-show="categorys.active">
-                                <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
-                                    <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === currentTiresSpecs}">
-                                        {{tires}}
-                                    </i>
-                                    <i class="otherTries">
-                                        其他规格
-                                    </i>
+
+                            <div v-else>
+
+                                <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
+                                    <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
+                                    <div class="info">
+                                        <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
+                                    </div>
                                 </div>
 
-                                <div class="product-box">
-                                    <div class="item" v-for="(goods, goodsIndex) in categorys.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
-                                     v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" 
-                                     :data-id="goods.id" :data-num="goods.selectQuantity">
-                                        <!-- 商品信息 -->
-                                        <div class="goods">
-                                            <img class="head" src="/Content/img/images/1_c.jpg">
-                                            <div class="info">
-                                                <div class="name">{{goods.name}}</div>
-                                                <div class="btn-box">
-                                                    <button>优点</button>
-                                                    <button>存：{{goods.stock}}</button>
-                                                    <button>他店求助</button>
-                                                </div>
-                                            </div>
-                                            <!-- 价格 -->
-                                            <div class="price">
-                                                <div class="old-price" v-show="goods.oldPrice>goods.price">
-                                                	原价<br />￥{{goods.oldPrice}}
-                                                </div>
-                                                <div class="new-price">
-                                                	￥{{goods.price}}
-                                                </div>
-                                                <div class="quantity">x{{goods.selectQuantity}}</div>
-                                            </div>
-                                        </div>
-                                        <!-- 操作 -->
-                                        <div class="operation">
-                                            <div class="num">
-                                                <div class="minus" @click="minus($event, proIndex, catIndex, goodsIndex)"></div>
-                                                <div class="info">{{goods.selectQuantity}}</div>
-                                                <div class="add" @click="add($event, proIndex, catIndex, goodsIndex)"></div>
-                                            </div>
-                                            <!-- 更换 -->
-                                            <div class="exchange">
-                                                <img src="/Content/img/selectproduct/v1exchange.png" alt="">
-                                                <div class="info">更换</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div class="" v-for="(categorys2) in categorys.childCategorys" :key="categorys2.id">
 
-                                    <div class="addproductbtn"><span>+ </span> 添加</div>
-                                </div>
+                                    <div class="productList" v-show="categorys.active">
+                                        <div class="product-box">
+                                            <div class="item" v-for="(goods, goodsIndex) in categorys2.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
+                                            v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" 
+                                            :data-id="goods.id" :data-num="goods.selectQuantity">
+                                                <!-- 商品信息 -->
+                                                <div class="goods">
+                                                    <img class="head" src="/Content/img/images/1_c.jpg">
+                                                    <div class="info">
+                                                        <div class="name">{{goods.name}}</div>
+                                                        <div class="btn-box">
+                                                            <button>优点</button>
+                                                            <button>存：{{goods.stock}}</button>
+                                                            <button>他店求助</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- 价格 -->
+                                                    <div class="price">
+                                                        <div class="old-price" v-show="goods.oldPrice>goods.price">
+                                                            原价<br />￥{{goods.oldPrice}}
+                                                        </div>
+                                                        <div class="new-price">
+                                                            ￥{{goods.price}}
+                                                        </div>
+                                                        <div class="quantity">x{{goods.selectQuantity}}</div>
+                                                    </div>
+                                                </div>
+                                                <!-- 操作 -->
+                                                <div class="operation">
+                                                    <div class="num">
+                                                        <div class="minus" @click="minus($event, proIndex, catIndex, goodsIndex)"></div>
+                                                        <div class="info">{{goods.selectQuantity}}</div>
+                                                        <div class="add" @click="add($event, proIndex, catIndex, goodsIndex)"></div>
+                                                    </div>
+                                                    <!-- 更换 -->
+                                                    <div class="exchange">
+                                                        <img src="/Content/img/selectproduct/v1exchange.png" alt="">
+                                                        <div class="info">更换</div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                <!-- 服务 列表 -->
-                                <div class="service-list" v-if="categorys.serviceList.length>0">
-                                    <div class="single">养车服务</div>
-                                    <!-- 服务 套餐 -->
-                                    <div class="preferentialPolicys" v-if="categorys.preferentialPolicys.length>0">
-                                        <div class="item" v-for="(policy, polIndex) in categorys.preferentialPolicys" 
-                                            :key="policy.id" :class="{active: policy.active}" @click="policyClick(proIndex, catIndex, polIndex)">
-                                            {{policy.name}}
+                                            <div class="addproductbtn"><span>+ </span> 添加</div>
                                         </div>
-                                    </div>
-                                    <div class="service-box">
-                                        <div class="item" v-for="(service, serIndex) in categorys.serviceList" :key="service.id" 
-                                        :class="{'active check': service.active}" @click="serviceClick(proIndex, catIndex, serIndex)"
-                                        :data-id="service.id" :data-num="service.selectQuantity">
-                                            <div class="name">{{service.name}}</div>
-                                            <div class="btn-box">
-                                                <div v-show="service.isRequired">必选</div>
-                                                <div v-show="service.isRecommend">推荐</div>
-                                                <div v-show="service.discount>0&&service.price>0">
-                                                    限时{{service.discount}}折
-                                                </div>
-                                            </div>
-                                            <div class="price-num">
-                                                <div class="price">￥{{service.price}}</div>
-                                                <div class="num">
-                                                    <div class="minus"></div>
-                                                    <div class="num-info">{{service.selectQuantity}}</div>
-                                                    <div class="add"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     
                                 </div>
