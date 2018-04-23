@@ -31,7 +31,7 @@
 					<span>同城门店</span>
 				</div>
 				<div class="allocation clearfix">
-					<span class="fr">调拨申请</span>
+					<span class="fr" @click="applicationApply">调拨申请</span>
 				</div>
 			</div>
 			<!--门店列表-->
@@ -61,10 +61,6 @@
 		data() {
 			return {
 				isLoading: true,
-				// classObject: { 
-				// 	'choice-a':false,
-			    //     'choice-b': true  
-		      	// }, 
 				pickerOptions1: {
 					disabledDate(time) {
 						return time.getTime < Date.now();
@@ -144,21 +140,26 @@
 	                })
 				}
 			},
-
-
             // 点击 某个门店
             selectStore (index) {
                 this.supplierList[index].active = !this.supplierList[index].active
                 console.log(this.supplierList[index].active)
-                // 根据 index 索引  给数据源添加一个active属性
-                // if (this.supplierList[index].active) {
-                //     this.supplierList[index].active = !this.supplierList[index].active
-                // } else {
-                //     console.log(index)
-                //     this.supplierList[index].active = true
-                // }
-                
-                
+            },
+            applicationApply(){
+//          	var apply = {
+//                  ProductId: proid,
+//                  ShopIds: shopIds,
+//                  Quantity: quantity,
+//                  ProviderDateTime: dateTime,
+//                  ApplyType: $("#hidApplyType").val(),
+//                  OrderNum: getUrlParam("ordernum"),
+//                  RowNum: getUrlParam("rownum")
+//              }
+//          	if(){
+//          		调拨数量不正确!
+//          	}else if(){
+//          		调拨时间不正确!
+//          	}
             }
 		},
 		components: {

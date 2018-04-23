@@ -1,7 +1,9 @@
 <template>
     <div class="header">
         <img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
-        <img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home"/>
+        <router-link to="home">
+        	<img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home" />
+       	</router-link>
         <img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
         <img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
         <span class="h-landingstate" v-show="isLogin">
@@ -34,6 +36,9 @@ export default {
     methods: {
         loginOut () {
             this.$store.dispatch('loginOut')
+        },
+        home(){
+        	console.log('123')
         }
     }
 }

@@ -13,13 +13,13 @@
         flex-direction: column
     .car-info
         height: 2.6rem
-        width: 20rem
+        width: 96%
         top: 1.8rem
         display: flex
         align-items: center
-        margin-left: 0.5rem
         background: #EE534E
         position: fixed
+        left: 2%
         border-radius: 10rem
         z-index: 9
         .head-img
@@ -37,15 +37,20 @@
     .server
         flex: 1
         padding-bottom: 3rem
-        width: 19.8rem
+        width: 96%
         height: calc(100% - 3rem)
-        margin-left: 0.5rem
+        margin-left: 2%
         margin-top: 3.3rem
         overflow: auto
         .item
             background-color: #808080
             padding: 0.5rem
             margin-bottom: 0.5rem
+            .name
+                word-wrap: break-word
+                word-break: break-all
+                white-space: normal
+                overflow: hidden
             .title
                 margin-top: 0.5rem
                 padding: 0.5rem
@@ -93,6 +98,7 @@
                             flex-wrap: wrap
                             align-items: center
                             margin-top: 0.3rem
+                            padding: 0 0.3rem
                             .item
                                 width: auto
                                 height: auto
@@ -164,11 +170,19 @@
                                         width: 4rem
                                         color: #999
                                         padding-right: 0.2rem
+                                        text-align: center
                                         .old-price
                                             text-decoration: line-through
-                                            text-align: right
+                                            text-align: center
+                                            width: 4rem
                                         .new-price
+                                            width: 4rem
+                                            text-align: center
                                             color: #df3448
+                                            text-decoration: none
+                                        .quantity
+                                            width: 4rem
+                                            text-align: center
                                 .operation
                                     display: flex
                                     width: calc(100% - 3rem)
@@ -221,8 +235,16 @@
                                 margin: auto
                                 background: #FFF
                                 position: relative
-                                &:before
-                                    content: "\e081"
+                                span
+                                    width: 0.8rem
+                                    height: 0.8rem
+                                    line-height: 0.8rem
+                                    display: inline-block
+                                    background: #000
+                                    color: #fff
+                                    border-radius: 50%
+                                    font-weight: 800
+                                    font-size: 0.7rem
                         .service-list
                             margin-top: 0.5rem
                             .single

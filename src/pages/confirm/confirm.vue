@@ -32,8 +32,7 @@
                             <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
                                 <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
                                 <div class="info">
-                                    <div class="name">{{categorys.name}}</div>
-                                    <div class="promotion">{{categorys.promotionInfo}}</div>
+                                    <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
                                 </div>
                             </div>
                             <div class="productList" v-show="categorys.active">
@@ -64,10 +63,10 @@
                                             <!-- 价格 -->
                                             <div class="price">
                                                 <div class="old-price" v-show="goods.oldPrice>goods.price">
-                                                    原价： ￥{{goods.oldPrice}}
+                                                	原价<br />￥{{goods.oldPrice}}
                                                 </div>
                                                 <div class="new-price">
-                                                    ￥{{goods.price}}
+                                                	￥{{goods.price}}
                                                 </div>
                                                 <div class="quantity">x{{goods.selectQuantity}}</div>
                                             </div>
@@ -87,7 +86,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="addproductbtn">添加</div>
+                                    <div class="addproductbtn"><span>+ </span> 添加</div>
                                 </div>
 
                                 <!-- 服务 列表 -->
