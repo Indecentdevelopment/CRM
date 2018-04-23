@@ -44,7 +44,9 @@
 			        	<p class="fl">{{recorditem.createDate.substring(0,10)}}</p>
 			        	<p class="fl">{{recorditem.useAmount}}</p>
 			        	<p class="fl">{{recorditem.orderId}}</p>
-			        	<span class="fl">查看</span>
+			        	<router-link :to="{path: 'orderDetails', query:{ OrderId:recorditem.orderId}}" class="fl">
+			        		查看
+						</router-link>	
 			        </div>
 		        </div>
 		   </div>

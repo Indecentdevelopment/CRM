@@ -84,12 +84,19 @@
 				supplierList: [],				//调拨店铺列表
 				allocationNumber: '1',			//调拨数量
 				storejudge: false,				//调拨判断
-				proId: '130935_204',			//proId
-				type: '同城门店',				//供应商
-				applyShopName: '1524191803014'	//应用商店
+				shopId: '',						//shopId
+				productId: '',					//proId
+				type: '',						//供应商
+				applyShopName: ''				//应用商店
 			}
 		},
 		created() {
+			let route = this.$route
+            this.shopId = route.query.shopId
+            this.productId = route.query.productId
+            this.type = route.query.type
+            this.applyShopName = route.query.applyShopName
+            
 			Promise.all([]).then(res => {
 				setTimeout(() => {
 					this.isLoading = false
@@ -126,7 +133,7 @@
 				}else{
 					this.storejudge = true
 					api.GetSupplierList({
-	        			proId: this.proId,
+	        			proId: this.shopId +'_'+ this.productId,
 						type: this.type,
 						applyShopName: this.applyShopName
 	                }).then(res => {

@@ -42,7 +42,7 @@
             </div>
             
             <!--编辑 + 添加 按钮-->
-            <div class="editAdd clearfix">
+            <div class="editAdd clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'&&orderInfo.status !== '待付款'">
                 <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
@@ -94,6 +94,14 @@
                 <div class="technician-bg" id="technician-bg"></div>
             </div>
             
+            <!--增减工时：-->
+            <div class="worktimecalc clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
+            	<p class="fl">增减工时：</p>
+            	<div class="fr workOperation">
+            		<span @click="reduceworktime">-</span><p>{{workingHours}}</p><span @click="addworktime">+</span><button @click="useit">使用</button>
+            	</div>
+            </div>
+            
             <!--结算信息-->
             <div class="checkout clearfix">
                 <p class="head">结算信息</p>
@@ -116,7 +124,7 @@
                         <div class="info">¥123</div>
                     </div>
                     <div class="item useother-box1" id="dvinvoice" 
-                    v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
+                     v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
                         <div class="title">发票号：</div>
                         <div class="info">
                             <input type="text" placeholder="发票号">
@@ -157,7 +165,7 @@
             </div>
 
             <!-- 付款方式 -->
-            <div class="payment-box" v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
+            <div class="payment-box" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
                 <!-- ----------------------------此地注意 退款---------------------------------- -->
                 <div class="head">选择<span>付</span>款方式：</div>
                 <div class="pay-box">
@@ -213,7 +221,7 @@
             </div>
             
             <!--顾客签字-->
-            <div class="sign" v-if="orderInfo.status!=='服务中'">
+            <div class="sign"  v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
@@ -226,7 +234,7 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign" v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
+            <div class="customer-sign"  v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -266,7 +274,8 @@
                 option: {
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
-                }
+                },
+                workingHours: '0'			//工时
 	        	
 	        }
 	    },
@@ -412,7 +421,44 @@
                     this.drawingData(res.data)
                 })
             },
-
+			//增减工时
+				//增加工时
+			addworktime(){
+				this.workingHours ++
+				console.log('+')
+			},
+				//减少工时
+			reduceworktime(){
+				if(this.workingHours == 0){
+					this.workingHours = 0
+				}else{
+					this.workingHours --
+				}
+				console.log('-')
+			},
+				//使用
+			useit(){
+				let hours = Number(this.workingHours)
+		        let reg = /^[\d\-]+$/
+		        if (reg.test(hours)) {
+		        	api.GetUpdateGS({
+		        		hour: this.workingHours,
+		        		orderId: this.query.orderId
+	                }).then(res => {
+	                    if (res.data.isok) {
+		                    window.location.reload()
+		                } else {
+		                	this.$alert(res.data.msg, '轮库Tirecool', {
+					          	confirmButtonText: '确定',
+					          	callback: action => {}
+					        })
+		                }
+	                })
+		        } else {
+		            console.log('false')
+		        }
+				
+			},
             // 店家 添加产品
             addProduct () {
                 this.$router.push({

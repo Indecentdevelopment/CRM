@@ -279,7 +279,7 @@ export default {
     },
 	
     
-    /***************************产品也 confirm**********************************/
+    /***************************产品页 confirm**********************************/
     ProductPush(data) {
         return axios.get(url + 'api/car/ProductPush', {
             params: data
@@ -302,7 +302,12 @@ export default {
     CreateOrder (data) {
         return axios.post(url + 'api/order/CreateOrder', querystring.stringify(data))
     },
-
+    GetUpdateGS(data){
+    	 return axios.get(url + 'api/order/UpdateGS', {
+            params: data
+       })
+    },
+	
 
     /*************************** 洗车 **********************************/
     //首页获取预约洗车列表

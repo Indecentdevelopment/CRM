@@ -33,8 +33,8 @@
 								<span class="fl fontSize">{{item.name}}</span>
 								<span class="fr price">¥{{item.price}}</span>
 							</li>
-							<li class="fl clearfix">item.productId
-								<router-link :to="{path: 'allocationSingle', query:{proId:item.shopId}}" class="fl btnStyle">
+							<li class="fl clearfix">
+								<router-link :to="{path: 'allocationSingle', query:{ productId:item.productId,shopId:item.shopId}}" class="fl btnStyle">
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
@@ -102,6 +102,7 @@
 		            CategoryId: this.productCategoyId,
 		            Specifications: this.carNo
                 }).then(res => {
+                    console.log(res)
                     console.log(res.data)
                     this.productList = res.data
                     if(res.data == ''){
@@ -111,10 +112,10 @@
 				        });
                     }
                 })
-                console.log(this.keyword)
-                console.log(this.productBrandId)
-                console.log(this.productCategoyId)
-                console.log(this.carNo)
+//              console.log(this.keyword)
+//              console.log(this.productBrandId)
+//              console.log(this.productCategoyId)
+//              console.log(this.carNo)
         	},
         	//获取品牌列表
         	getThebrand () {
