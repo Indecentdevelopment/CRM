@@ -34,11 +34,7 @@
 								<span class="fr price">¥{{item.price}}</span>
 							</li>
 							<li class="fl clearfix">item.productId
-<<<<<<< HEAD
-								<router-link to="allocationSingle" class="fl btnStyle">
-=======
 								<router-link :to="{path: 'allocationSingle', query:{proId:item.shopId}}" class="fl btnStyle">
->>>>>>> 5c83f70689055b544ae156dd779b8ee101845d86
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
