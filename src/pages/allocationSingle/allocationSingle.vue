@@ -36,7 +36,7 @@
 				</div>
 			</div>
 			<!--门店列表-->
-			<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i)">
+			<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i, item.id)">
 				<div class="storeImg fl">
 					<img src="../../assets/images/allocationSingle/shop.png"/>
 				</div>
@@ -85,7 +85,7 @@
 				supplierList: [],				//调拨店铺列表
 				allocationNumber: '1',			//调拨数量
 				storejudge: false,				//调拨判断
-
+				shopIds: [],					//店铺ID
                 query: {                        // 参数
                     productId: this.$route.query.productId,
                     shopId: this.$route.query.shopId,
@@ -156,25 +156,68 @@
 				}
 			},
             // 点击 某个门店
-            selectStore (index) {
+            selectStore (index,id) {
                 this.supplierList[index].active = !this.supplierList[index].active
                 console.log(this.supplierList[index].active)
+                let shops = this.shopIds
+                if(this.supplierList[index].active == true){
+                	this.shopIds.push('['+ id +']')
+                	console.log(id)
+                	console.log(this.shopIds.join())
+                }else if(this.supplierList[index].active == false){
+                	this.shopIds.pop()
+                	console.log(this.shopIds)
+                }
+                
             },
             applicationApply(){
-//          	var apply = {
-//                  ProductId: proid,
-//                  ShopIds: shopIds,
-//                  Quantity: quantity,
-//                  ProviderDateTime: dateTime,
-//                  ApplyType: $("#hidApplyType").val(),
-//                  OrderNum: getUrlParam("ordernum"),
-//                  RowNum: getUrlParam("rownum")
-//              }
-//          	if(){
-//          		调拨数量不正确!
-//          	}else if(){
-//          		调拨时间不正确!
-//          	}
+            	//店铺ID
+            	console.log(this.shopIds)
+            	if(this.shopIds != ""){
+            		if(this.value1 == ''){
+						this.$alert('调拨时间不正确！', '轮库Tirecool', {
+				          	confirmButtonText: '确定',
+				          	callback: action => {}
+				        });
+					}else if(this.shopType == '供应商')
+					{
+						if(this.allocationNumber > 4){
+							this.$alert('零采调拨数量不能超过4个！', '轮库Tirecool', {
+					          	confirmButtonText: '确定',
+					          	callback: action => {}
+					        });
+						}
+					}else{
+						var isApply = window.confirm("您确认发送调拨申请吗？")
+						console.log(isApply)	//获取布尔值  判断是否发送请求
+						if(isApply == false){
+							
+						}else{
+							console.log(this.query.productId)
+							console.log(this.shopIds)
+							console.log(this.allocationNumber)
+							console.log(this.value1)
+							console.log(this.shopType)
+							api.GetCreateApply({
+								ProductId: this.query.productId,
+								ShopIds: this.shopIds.join(),
+								Quantity: this.allocationNumber,
+								ProviderDateTime: this.value1,
+								ApplyType: this.shopType,
+								OrderNum: '',
+								RowNum: ''
+			                }).then(res => {
+			                	console.log(res.data)
+			                	this.$router.push({path:'allocationYes',query:{serial: res.data.errMsg}})
+			                })
+						}
+					}
+            	}else{
+            		this.$alert('请选择一个门店！', '轮库Tirecool', {
+			          	confirmButtonText: '确定',
+			          	callback: action => {}
+			        });
+            	}
             }
 		},
 		components: {
