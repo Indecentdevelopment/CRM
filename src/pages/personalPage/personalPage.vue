@@ -55,7 +55,7 @@
 			<!--选填信息-->
 			<div class="personalOptional">
 				<div class="optional-input">
-					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo">
+					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dot" @click="showDot($event, 'dot')">
 				</div>
 				<div class="optional-input">
 					<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
@@ -121,8 +121,9 @@
 	        </div>
 	
 	        <!-- 数字键盘 -->
-	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" 
-	        @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
+	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
+	        <!--DOT键盘-->
+			<keyboardDot :dot="isInputDot" @dotWords="dotWords"  @dotHides="isInputDot=false"></keyboardDot>
 		</div>
 	</div>
 </template>
@@ -130,24 +131,26 @@
 <script>
     import Header from '@/components/header'
     import keyboardNum from '@/components/keyboardNum'
+    import keyboardDot from '@/components/keyboardDot'
     import api from '@/vuex/api'
 	import "./personalPage.sass"
 	export default {
 	    data () {
 	        return {
 	        	isLoading: true,
-                userCarBindId: '', // 获取userInfo时  传参
-                uid: '',           // 获取userInfo时  传参
-                userInfo: {        // 获取的userInfo数据
+                userCarBindId: '', 		// 获取userInfo时  传参
+                uid: '',           		// 获取userInfo时  传参
+                userInfo: {        		// 获取的userInfo数据
                     cardCoupons: []
                 },       
-                carInfo: {},        // 车辆数据信息
-                updateInfo: {},       // 点击继续 需要提交的数据
-                isDelCar: false,      // 是否显示弹窗删除车辆
+                carInfo: {},        	// 车辆数据信息
+                updateInfo: {},       	// 点击继续 需要提交的数据
+                isDelCar: false,      	// 是否显示弹窗删除车辆
                 carId: '',
-
-                isShowKeyboard: false,   // 是否显示键盘
-                focusInp: ''             // 当前选中的输入框 （当前里程、月里程）
+                isShowKeyboard: false,  // 是否显示键盘
+                isInputDot: false,   	// 是否显示DOT键盘
+                dotNo: '',   			// 当前选中DOT输入框
+                focusInp: ''            // 当前选中的输入框 （当前里程、月里程）
 	        }
         },
         created () {
@@ -278,7 +281,7 @@
                     }
                 })
             },
-            // 显示键盘
+        // 显示键盘
             showKeyboard (event, focus) {
                 event.target.blur()
                 this.focusInp = focus
@@ -293,13 +296,30 @@
                 let length = this.updateInfo[this.focusInp].length
                 this.updateInfo[this.focusInp] = this.updateInfo[this.focusInp].substring(0, length - 1)
             },
-			UserEdit (){
-				
-			}
+        // DOT显示键盘
+            showDot (event, focus) {
+            	event.target.blur()
+                this.dotNo = focus
+            	this.isInputDot = true
+            },
+            // 点击键盘 开始输入
+            dotWords (data) {
+            	this.updateInfo[this.dotNo] += data
+            	console.log(data)
+            },
+            //空格dotSpace
+            dotSpace () {
+            	console.log('dotSpace')
+            },
+            //删除 dotbackWord
+            dotBackWord () {
+            	console.log('dotBackWord')
+            }
 	    },
 	    components:{
 	        myHeader: Header,
-            keyboardNum: keyboardNum
+            keyboardNum: keyboardNum,
+            keyboardDot: keyboardDot
 	    }
 	}
 </script>
