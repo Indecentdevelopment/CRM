@@ -81,14 +81,56 @@
                                                     <div class="add" @click="add($event, proIndex, catIndex, goodsIndex)"></div>
                                                 </div>
                                                 <!-- 更换 -->
-                                                <div class="exchange">
+                                                <div class="exchange" @click="changeProduct($event, proIndex, catIndex)">
                                                     <img src="/Content/img/selectproduct/v1exchange.png" alt="">
                                                     <div class="info">更换</div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="addproductbtn"><span>+ </span> 添加</div>
+                                        <div v-show="!categorys.isNoProduct" class="addproductbtn" @click="addProduct($event, proIndex, catIndex)">
+                                            <span>+ </span> 添加
+                                        </div>
+
+                                        <!-- 待添加的商品 默认隐藏 -->
+                                        <div class="hideProduct" v-show="categorys.isHideProduct">
+                                            <div class="hidePro-box">
+                                                <div class="head">
+                                                    <div class="title">添加/更换商品列表</div>
+                                                    <div class="close" @click="categorys.isHideProduct = false"></div>
+                                                </div>
+                                                <div class="search">
+                                                    <select class="brandlist" id="brandlist" v-model="search.brand">
+                                                        <option value="0">全部</option>
+                                                        <option v-for="brand in categorys.brands" :key="brand.id" :value="brand.id">{{brand.name}}</option>
+                                                    </select>
+                                                    <input class="search-input" id="search-input" placeholder="搜索产品" v-model="search.specs">
+                                                    <button class="search-btn" @click="getProduct(proIndex,catIndex)">搜索</button>
+
+                                                </div>
+                                                <div class="hideProList">
+                                                    <div class="hide-item" :class="hidePro.active?'active':''" v-for="hidePro in categorys.hideProductList"
+                                                        :key="hidePro.id" @click="addHideProTo(hidePro,proIndex,catIndex)">
+                                                        <img class="imgBg" :src="hidePro.productImg">
+                                                        <div class="info">
+                                                            <div class="name">{{hidePro.name}}</div>
+                                                            <div class="btn-box">
+                                                                <div>优点</div>
+                                                                <div>存：{{hidePro.stock}}</div>
+                                                                <div>他店求助</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="price-num">
+                                                            <div class="oldPrice" v-show="hidePro.oldPrice>hidePro.price">
+                                                                ￥{{hidePro.oldPrice}}
+                                                            </div>
+                                                            <div class="price">￥{{hidePro.price}}</div>
+                                                            <div class="num">x{{hidePro.selectQuantity}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- 服务 列表 -->
@@ -137,16 +179,21 @@
                                     </div>
                                 </div>
 
-                                <div class="" v-for="(categorys2) in categorys.childCategorys" :key="categorys2.id">
+                                <div class="" v-for="(categorys2, cat2Index) in categorys.childCategorys" :key="categorys2.id">
 
                                     <div class="productList" v-show="categorys.active">
+                                        <div class="proTitle">{{categorys2.name}}</div>
+
+                                        <div class="noProduct" v-show="categorys2.productList.length === 0">
+                                            暂无匹配产品，可手动添加！
+                                        </div>
                                         <div class="product-box">
                                             <div class="item" v-for="(goods, goodsIndex) in categorys2.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
-                                            v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" 
+                                             :class="{'active check': goods.active}" 
                                             :data-id="goods.id" :data-num="goods.selectQuantity">
                                                 <!-- 商品信息 -->
                                                 <div class="goods">
-                                                    <img class="head" src="/Content/img/images/1_c.jpg">
+                                                    <img class="head" :src="goods.productImg">
                                                     <div class="info">
                                                         <div class="name">{{goods.name}}</div>
                                                         <div class="btn-box">
@@ -176,12 +223,91 @@
                                                     <!-- 更换 -->
                                                     <div class="exchange">
                                                         <img src="/Content/img/selectproduct/v1exchange.png" alt="">
-                                                        <div class="info">更换</div>
+                                                        <div class="info" @click="changeProduct($event, proIndex, catIndex, cat2Index)">更换</div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="addproductbtn"><span>+ </span> 添加</div>
+                                            <div v-show="!categorys2.isNoProduct" class="addproductbtn" @click="addProduct($event, proIndex, catIndex, cat2Index)">
+                                                <span>+ </span> 添加
+                                            </div>
+                                            
+                                            <!-- 待添加的商品 默认隐藏 -->
+                                            <div class="hideProduct" v-show="categorys2.isHideProduct">
+                                                <div class="hidePro-box">
+                                                    <div class="head">
+                                                        <div class="title">添加/更换商品列表</div>
+                                                        <div class="close" @click="categorys2.isHideProduct = false"></div>
+                                                    </div>
+                                                    <div class="search">
+                                                        <select class="brandlist" id="brandlist" v-model="search.brand">
+                                                            <option value="0-全部">全部</option>
+                                                            <option v-for="brand in categorys2.brands" :key="brand.id" :value="brand.id+'-'+brand.name">{{brand.name}}</option>
+                                                        </select>
+                                                        
+                                                        <input class="search-input" id="search-input" placeholder="搜索产品" v-model="search.specs">
+                                                        <button class="search-btn" @click="getProduct(proIndex,catIndex,cat2Index)">搜索</button>
+
+                                                    </div>
+                                                   
+                                                    <div class="hideProList">
+                                                        <div class="hide-item" :class="hidePro.active?'active':''" v-for="hidePro in categorys2.hideProductList"
+                                                         :key="hidePro.id" @click="addHideProTo(hidePro,proIndex,catIndex,cat2Index)">
+                                                            <img class="imgBg" :src="hidePro.productImg">
+                                                            <div class="info">
+                                                                <div class="name">{{hidePro.name}}</div>
+                                                                <div class="btn-box">
+                                                                    <div>优点</div>
+                                                                    <div>存：{{hidePro.stock}}</div>
+                                                                    <div>他店求助</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="price-num">
+                                                                <div class="oldPrice" v-show="hidePro.oldPrice>hidePro.price">
+                                                                    ￥{{hidePro.oldPrice}}
+                                                                </div>
+                                                                <div class="price">￥{{hidePro.price}}</div>
+                                                                <div class="num">x{{hidePro.selectQuantity}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 服务 列表 -->
+                                        <div class="service-list" v-if="categorys.serviceList.length>0">
+                                            <div class="single">养车服务</div>
+                                            <!-- 服务 套餐 -->
+                                            <div class="preferentialPolicys" v-if="categorys.preferentialPolicys.length>0">
+                                                <div class="item" v-for="(policy, polIndex) in categorys.preferentialPolicys" 
+                                                    :key="policy.id" :class="{active: policy.active}" @click="policyClick(proIndex, catIndex, polIndex)">
+                                                    {{policy.name}}
+                                                </div>
+                                            </div>
+                                            <div class="service-box">
+                                                <div class="item" v-for="(service, serIndex) in categorys.serviceList" :key="service.id" 
+                                                :class="{'active check': service.active}" @click="serviceClick(proIndex, catIndex, serIndex)"
+                                                :data-id="service.id" :data-num="service.selectQuantity">
+                                                    <div class="name">{{service.name}}</div>
+                                                    <div class="btn-box">
+                                                        <div v-show="service.isRequired">必选</div>
+                                                        <div v-show="service.isRecommend">推荐</div>
+                                                        <div v-show="service.discount>0&&service.price>0">
+                                                            限时{{service.discount}}折
+                                                        </div>
+                                                    </div>
+                                                    <div class="price-num">
+                                                        <div class="price">￥{{service.price}}</div>
+                                                        <div class="num">
+                                                            <div class="minus"></div>
+                                                            <div class="num-info">{{service.selectQuantity}}</div>
+                                                            <div class="add"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                         
                                     </div>
@@ -223,6 +349,8 @@ export default {
     data () {
         return {
             isLoading: false,
+            isSearching: false,      // 正在 搜索中
+            changeOrAdd: '',         // 添加/更换商品
             query: {
                 userCarBindId: ''
             },
@@ -230,6 +358,11 @@ export default {
             productList: [],         // 商品 列表
             serviceList: [],         // 服务列表
             carInfo: {},             // 车辆信息
+
+            search: {
+                specs: '',           // 添加商品 搜索框的数据
+                brand: '',           // 添加商品 下拉框的数据
+            },
             currentCategorys: '',    // 当前 打开的服务列表
             currentTiresSpecs: '',   // 当前 规格
             defaultProductIds: [],   // 默认 必选的 服务
@@ -243,11 +376,12 @@ export default {
     },
     created () {
         this.query.userCarBindId = this.$route.query.userCarBindId
-        Promise.all([this.ProductPush()]).then(res => {
-            setTimeout(() => {
-                this.isLoading = false
-            }, 500)
-        })
+        // Promise.all([this.ProductPush()]).then(res => {
+        //     setTimeout(() => {
+        //         this.isLoading = false
+        //     }, 500)
+        // })
+        this.ProductPush()
     },
     mounted () {
     },
@@ -264,11 +398,23 @@ export default {
                 this.currentTiresSpecs = res.data.tiresSpecs[0]  // 设置 当前 轮胎规格
                 res.data.data.map((item, index) => {
                     item.childCategorys.map((v, i) => {
-                        res.data.data[index]['childCategorys'][i].active = false
-                        res.data.data[index]['childCategorys'][i].productList = []
-                        res.data.data[index]['childCategorys'][i].currentProduct = []
-                        res.data.data[index]['childCategorys'][i].serviceList = []
-                        res.data.data[index]['childCategorys'][i].currentService = []
+                        res.data.data[index]['childCategorys'][i].active = false         // 当前显/隐状态
+                        res.data.data[index]['childCategorys'][i].isHideProduct = false  // 当前隐藏列表显/隐状态
+                        res.data.data[index]['childCategorys'][i].productList = []       // 商品列表
+                        res.data.data[index]['childCategorys'][i].currentProduct = []    // 当前商品
+                        res.data.data[index]['childCategorys'][i].serviceList = []       // 服务列表
+                        res.data.data[index]['childCategorys'][i].currentService = []    // 当前服务
+                        res.data.data[index]['childCategorys'][i].hideProductList = []   // 点击添加 隐藏的列表
+
+                        if (res.data.data[index]['childCategorys'][i]['childCategorys'].length > 0) {
+                            res.data.data[index]['childCategorys'][i]['childCategorys'].map((vv, ii) => {
+                                res.data.data[index]['childCategorys'][i]['childCategorys'][ii].active = false
+                                res.data.data[index]['childCategorys'][i]['childCategorys'][ii].isHideProduct = false
+                                res.data.data[index]['childCategorys'][i]['childCategorys'][ii].productList = []
+                                res.data.data[index]['childCategorys'][i]['childCategorys'][ii].serviceList = []
+                                res.data.data[index]['childCategorys'][i]['childCategorys'][ii].hideProductList = []
+                            })
+                        }
                     })
                 })
                 res.data.data[0].childCategorys[0].preferentialPolicys.map((item, index)=>{
@@ -366,6 +512,115 @@ export default {
 
         },
 
+        // 点击 添加 添加商品
+        addProduct (event,proIndex, catIndex, cat2Index) {
+            event.stopPropagation()
+            this.changeOrAdd = 'add'
+            if (this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
+                this.search.specs = this.currentTiresSpecs
+            } else {
+                this.search.specs = ''
+            }
+            if (cat2Index !== undefined) {
+                this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].isHideProduct = true
+            } else {
+                this.productData.data[proIndex]['childCategorys'][catIndex].isHideProduct = true
+            }
+            
+        },
+
+        // 点击 更换 商品
+        changeProduct (event,proIndex, catIndex, cat2Index) {
+            event.stopPropagation()
+            this.changeOrAdd = 'change'
+            if (this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
+                this.search.specs = this.currentTiresSpecs
+            } else {
+                this.search.specs = ''
+            }
+            if (cat2Index !== undefined) {
+                this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].isHideProduct = true
+            } else {
+                this.productData.data[proIndex]['childCategorys'][catIndex].isHideProduct = true
+            }
+        },
+
+        // 点击 搜索 商品
+        getProduct (proIndex,catIndex,cat2Index) {
+            var obj = {
+                specs: $(".search-input").val(),
+                brandId: $("#brandlist").val(),
+                brand: $("#brandlist option:selected").text(),
+                mcid: '',
+                shopId: localStorage.getItem('shopId'),
+                categoryId: '',
+                page: 1
+            }
+            if (cat2Index !== undefined) {
+                obj.mcid = this.productData.data[proIndex]['childCategorys'][catIndex].id
+                obj.categoryId = this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].id
+            } else {
+                obj.mcid = this.productData.data[proIndex].id
+                obj.categoryId = this.productData.data[proIndex]['childCategorys'][catIndex].id
+            }
+            api.getProduct(obj).then(res => {
+                res.data.map((item, index) => {
+                    res.data[index].active = false
+                })
+                if (cat2Index !== undefined) {
+                    this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].hideProductList = res.data
+                } else {
+                    this.productData.data[proIndex]['childCategorys'][catIndex].hideProductList = res.data
+                }
+            })
+            
+        },
+
+        // 点击 搜索出来的商品 添加到列表
+        addHideProTo (hidePro,proIndex,catIndex,cat2Index) {
+            
+            if (cat2Index!==undefined) {
+                let isInArr = false
+                let i = null
+                this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.map((item, index) =>{
+                    if (item.id === hidePro.id) {
+                        isInArr = true
+                        i = index
+                    }
+                })
+                if (this.changeOrAdd = 'add') {
+                    if (!isInArr) {
+                        hidePro.active = true
+                        this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.push(hidePro)
+                    }
+                } else if (this.changeOrAdd = 'change') {
+                    this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[i] = hidePro
+                }
+                
+                this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].isHideProduct = false
+            } else {
+                let isInArr = false
+                this.productData.data[proIndex]['childCategorys'][catIndex].productList.map((item, index) => {
+                    if(item.id === hidePro.id) {
+                        isInArr = true
+                    }
+                })
+                if (this.changeOrAdd = 'add') {
+                    if (!isInArr) {
+                        hidePro.active = true
+                        this.productData.data[proIndex]['childCategorys'][catIndex].productList.push(hidePro)
+                    }
+                } else if (this.changeOrAdd = 'change') {
+                    this.productData.data[proIndex]['childCategorys'][catIndex].productList[i] = hidePro
+                }
+                
+                this.productData.data[proIndex]['childCategorys'][catIndex].isHideProduct = false
+            }
+
+            this.calculateTotal(proIndex,catIndex)
+
+        },
+
         // 点击 服务
         serviceClick(proIndex, catIndex, serIndex) {
             let preferentialPolicys = this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys
@@ -382,20 +637,13 @@ export default {
             } else {
                 this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[serIndex].active = true
             }
-            // this.productData.data[proIndex]['childCategorys'][catIndex].serviceList.map((item, index) => {
-            //     console.log(item.active)
-            //     if (item.active && !this.defaultProductIds.includes(item.productId + '')) {
-            //         this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[index].active = false
-            //     }
-            //     else {
-            //         this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[index].active = true
-            //     }
-            // })
+           
             this.calculateTotal(proIndex, catIndex)
         },
 
         // 算账
         calculateTotal (proIndex, catIndex) {
+            // 处理 轮胎 携带服务
             let preferentialPolicys = this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys
             preferentialPolicys.map((item ,index) => {
                 var pids = item.productIds.split(',')
@@ -406,7 +654,17 @@ export default {
                             thisq = thisq + item.selectQuantity
                         }
                     })
-                    this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys[index].active = true
+                    // 判断 当前是否已经选中套餐
+                    let isCurPolicy = false
+                    this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys.map(item => {
+                        if (item.active) {
+                            isCurPolicy = true
+                            return
+                        }
+                    })
+                    if (!isCurPolicy) {
+                        this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys[index].active = true
+                    }
                     this.productData.data[proIndex]['childCategorys'][catIndex].serviceList.map((item, index) => {
                         if (pids.includes(item.productId + '')){
                             this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[index].active = true
@@ -440,9 +698,12 @@ export default {
                     obj[`OrderProducts[${index}][key]`] = $(item)[0].dataset.id
                     obj[`OrderProducts[${index}][value]`] = $(item)[0].dataset.num
                 })
-                api.GetProductsTotal(obj).then(res => {
-                    this.total = res.data
-                })
+                if (check.length > 0) {
+                    api.GetProductsTotal(obj).then(res => {
+                        this.total = res.data
+                    })
+                }
+                
             })
             
             

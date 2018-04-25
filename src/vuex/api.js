@@ -290,6 +290,10 @@ export default {
     GetCarProduct (data) {
         return axios.post(url + 'api/car/GetCarProduct', querystring.stringify(data))
     },
+    // 点击添加 搜索产品
+    getProduct (data) {
+        return axios.post(url + 'api/car/GetProduct', querystring.stringify(data))
+    },
     // 获取服务列表
     GetCarServiceProduct (data) {
         return axios.post(url + 'api/car/GetCarServiceProduct', querystring.stringify(data))
