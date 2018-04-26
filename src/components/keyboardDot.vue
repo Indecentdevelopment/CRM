@@ -73,7 +73,7 @@ export default {
         },
         // 回撤 Backspace
         dotbackWord () {
-            this.$emit('dotbackWords')
+            this.$emit('dotbackWord')
         },
         // 空格
         dotSpace () {
