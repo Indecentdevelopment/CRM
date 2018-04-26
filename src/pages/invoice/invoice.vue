@@ -11,7 +11,7 @@
         
         <div class="userData clearfix" v-for="item in userDetails">
         	<div class="useLeft fl">
-        		<input type="checkbox" :id="item.price" :value="item.price" name="total" v-model="total" @change="totalTotalFn(total)"/>
+        		<input type="checkbox" :id="item.orderId" :value="item.orderId" name="total" v-model="total" @change="totalTotalFn()"/>
         	</div>
         	<div class="useRighr fr">
         		<p class="fl">姓名：{{item.name}}</p>
@@ -33,7 +33,7 @@
 	        return {
                 isLoading: true,  		// loading
                 uid: '',			    //获取userInfo时  传参
-                userDetails: '',		//用户信息
+                userDetails: [],		//用户信息
                 total: [],				//总额数组
                 totalTotal: 0			//总额求和
 	        }
@@ -52,19 +52,24 @@
                 	console.log(res.data)
                 })
 	    	},
-	    	totalTotalFn(i){
-	    		console.log(i)
-	    		if(i <= 0){
-	    			if(this.total.length == 0){
-		    			this.totalTotal = 0
-		    		}
-		    		if(this.totalTotal == 0){
-		    			this.totalTotal = 0
-		    		}
-	    		}else{
-	    			this.totalTotal = parseInt(this.totalTotal) + parseInt(this.total.slice(-1))
-	    		}
-	    		
+	    	totalTotalFn(){
+	    		// if(i <= 0){
+	    		// 	if(this.total.length == 0){
+		    	// 		this.totalTotal = 0
+		    	// 	}
+		    	// 	if(this.totalTotal == 0){
+		    	// 		this.totalTotal = 0
+		    	// 	}
+	    		// }else{
+	    		// 	this.totalTotal = parseInt(this.totalTotal) + parseInt(this.total.slice(-1))
+                // }
+                this.totalTotal = 0
+                this.userDetails.map((item, index) => {
+                    if (this.total.includes(item.orderId)) {
+                        this.totalTotal += item.price * 1
+                    }
+                })
+	    		this.totalTotal = this.totalTotal.toFixed(3)
 	    	}
 	    },
 	    components:{
