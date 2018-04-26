@@ -39,8 +39,11 @@
                                 </div>
                                 <div class="productList" v-show="categorys.active">
                                     <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
-                                        <i class="item" v-for="tires in productData.tiresSpecs" :key="tires" :class="{active: tires === currentTiresSpecs}">
-                                            {{tires}}
+                                        <!-- 规格 -->
+                                        <i class="item" v-for="(tires, tiresIndex) in productData.tiresSpecs" :key="tiresIndex" 
+                                        :class="{active: tires.value === currentTiresSpecs}" @click="checkSpecs(tires.value)">
+                                            {{tires.value}}
+                                            <div class="num-info" v-show="tires.selectProductNum>0">{{tires.selectProductNum}}</div>
                                         </i>
                                         <i class="otherTries">
                                             其他规格
@@ -48,7 +51,7 @@
                                     </div>
 
                                     <div class="product-box">
-                                        <div class="item" v-for="(goods, goodsIndex) in categorys.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
+                                        <div class="item" v-for="(goods, goodsIndex) in categorys.productList" @click="productClick(goodsIndex, proIndex, catIndex)" :key="goods.id"
                                         v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" 
                                         :data-id="goods.id" :data-num="goods.selectQuantity">
                                             <!-- 商品信息 -->
@@ -81,7 +84,7 @@
                                                     <div class="add" @click="add($event, proIndex, catIndex, goodsIndex)"></div>
                                                 </div>
                                                 <!-- 更换 -->
-                                                <div class="exchange" @click="changeProduct($event, proIndex, catIndex)">
+                                                <div class="exchange" @click="changeProduct($event, goodsIndex, proIndex, catIndex)">
                                                     <img src="/Content/img/selectproduct/v1exchange.png" alt="">
                                                     <div class="info">更换</div>
                                                 </div>
@@ -101,8 +104,10 @@
                                                 </div>
                                                 <div class="search">
                                                     <select class="brandlist" id="brandlist" v-model="search.brand">
-                                                        <option value="0">全部</option>
-                                                        <option v-for="brand in categorys.brands" :key="brand.id" :value="brand.id">{{brand.name}}</option>
+                                                        <option value="0-全部">全部</option>
+                                                        <option v-for="brand in categorys.brands" :key="brand.id" :value="brand.id+'-'+brand.name">
+                                                            {{brand.name}}
+                                                        </option>
                                                     </select>
                                                     <input class="search-input" id="search-input" placeholder="搜索产品" v-model="search.specs">
                                                     <button class="search-btn" @click="getProduct(proIndex,catIndex)">搜索</button>
@@ -188,7 +193,7 @@
                                             暂无匹配产品，可手动添加！
                                         </div>
                                         <div class="product-box">
-                                            <div class="item" v-for="(goods, goodsIndex) in categorys2.productList" @click="productClick(proIndex, catIndex, goodsIndex)" :key="goods.id"
+                                            <div class="item" v-for="(goods, goodsIndex) in categorys2.productList" @click="productClick(goodsIndex, proIndex, catIndex, cat2Index)" :key="goods.id"
                                              :class="{'active check': goods.active}" 
                                             :data-id="goods.id" :data-num="goods.selectQuantity">
                                                 <!-- 商品信息 -->
@@ -223,7 +228,7 @@
                                                     <!-- 更换 -->
                                                     <div class="exchange">
                                                         <img src="/Content/img/selectproduct/v1exchange.png" alt="">
-                                                        <div class="info" @click="changeProduct($event, proIndex, catIndex, cat2Index)">更换</div>
+                                                        <div class="info" @click="changeProduct($event, goodsIndex, proIndex, catIndex, cat2Index)">更换</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,6 +356,7 @@ export default {
             isLoading: false,
             isSearching: false,      // 正在 搜索中
             changeOrAdd: '',         // 添加/更换商品
+            changeIndex: null,       // 需要被更换的商品索引
             query: {
                 userCarBindId: ''
             },
@@ -361,7 +367,7 @@ export default {
 
             search: {
                 specs: '',           // 添加商品 搜索框的数据
-                brand: '',           // 添加商品 下拉框的数据
+                brand: '0-全部',           // 添加商品 下拉框的数据
             },
             currentCategorys: '',    // 当前 打开的服务列表
             currentTiresSpecs: '',   // 当前 规格
@@ -417,6 +423,17 @@ export default {
                         }
                     })
                 })
+                let tiresSpecsArr = []
+                res.data.tiresSpecs.map((item, index) => {
+                    let obj = {
+                        selectProductNum: 0,
+                        value: item
+                    }
+                    tiresSpecsArr.push(obj)
+                })
+                res.data.tiresSpecs = tiresSpecsArr
+
+                // 套餐 
                 res.data.data[0].childCategorys[0].preferentialPolicys.map((item, index)=>{
                     res.data.data[0].childCategorys[0].preferentialPolicys[index].active = false
                 })
@@ -462,12 +479,17 @@ export default {
             this.GetCarServiceProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
         },
 
-        // 获取 总价
-        GetProductsTotal () {
-            api.GetProductsTotal({
-                UserCarBindId: 1
-            })
+        // 切换 规格
+        checkSpecs (specs) {
+            this.currentTiresSpecs = specs
         },
+
+        // 获取 总价
+        // GetProductsTotal () {
+        //     api.GetProductsTotal({
+        //         UserCarBindId: 1
+        //     })
+        // },
 
         // 商品 点击减 数量
         minus (event, proIndex, catIndex, goodsIndex) {
@@ -485,10 +507,34 @@ export default {
         },
 
         // 点击 商品 选中/取消选中 商品
-        productClick (proIndex, catIndex, goodsIndex) {
-            let active = this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active
-            this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active = !active
-            this.calculateTotal(proIndex, catIndex)
+        productClick (goodsIndex, proIndex, catIndex, cat2Index) {
+            console.log(this.productData.tiresSpecs)
+
+            // 如果是轮胎  在规格上添加  num记号
+            if (proIndex === 0 && catIndex === 0) {
+                this.productData.tiresSpecs.map((item, index) => {
+                    if (item.value === this.currentTiresSpecs) {
+                        if (!this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active) {
+                            this.productData.tiresSpecs[index].selectProductNum +=1
+                        } else {
+                            this.productData.tiresSpecs[index].selectProductNum -=1
+                        }
+                    }
+                })
+            }
+            if (cat2Index !== undefined) {
+                let active = this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[goodsIndex].active
+                this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[goodsIndex].active = !active
+                this.calculateTotal(proIndex, catIndex)
+            } else {
+                let active = this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active
+                this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active = !active
+                this.calculateTotal(proIndex, catIndex)
+            }
+
+            
+
+            
             
         },
 
@@ -530,9 +576,10 @@ export default {
         },
 
         // 点击 更换 商品
-        changeProduct (event,proIndex, catIndex, cat2Index) {
+        changeProduct (event, goodsIndex, proIndex, catIndex, cat2Index) {
             event.stopPropagation()
             this.changeOrAdd = 'change'
+            this.changeIndex = goodsIndex
             if (this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
                 this.search.specs = this.currentTiresSpecs
             } else {
@@ -578,22 +625,22 @@ export default {
 
         // 点击 搜索出来的商品 添加到列表
         addHideProTo (hidePro,proIndex,catIndex,cat2Index) {
-            
+            // 待更换商品索引
+            let i = this.changeIndex
             if (cat2Index!==undefined) {
                 let isInArr = false
-                let i = null
+                
                 this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.map((item, index) =>{
                     if (item.id === hidePro.id) {
                         isInArr = true
-                        i = index
                     }
                 })
-                if (this.changeOrAdd = 'add') {
+                if (this.changeOrAdd === 'add') {
                     if (!isInArr) {
-                        hidePro.active = true
+                        hidePro.active = true   // 把新添加的商品设为选中状态
                         this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.push(hidePro)
                     }
-                } else if (this.changeOrAdd = 'change') {
+                } else if (this.changeOrAdd === 'change') {
                     this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[i] = hidePro
                 }
                 
@@ -605,12 +652,12 @@ export default {
                         isInArr = true
                     }
                 })
-                if (this.changeOrAdd = 'add') {
+                if (this.changeOrAdd === 'add') {
                     if (!isInArr) {
-                        hidePro.active = true
+                        hidePro.active = true   // 把新添加的商品设为选中状态
                         this.productData.data[proIndex]['childCategorys'][catIndex].productList.push(hidePro)
                     }
-                } else if (this.changeOrAdd = 'change') {
+                } else if (this.changeOrAdd === 'change') {
                     this.productData.data[proIndex]['childCategorys'][catIndex].productList[i] = hidePro
                 }
                 
