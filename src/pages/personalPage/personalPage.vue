@@ -197,7 +197,6 @@
                 carId: '',
                 isShowKeyboard: false,  // 是否显示键盘
                 isInputDot: false,   	// 是否显示DOT键盘
-<<<<<<< HEAD
                 dotNo: '',   			// 当前选中DOT输入框
                 focusInp: '',           // 当前选中的输入框 （当前里程、月里程）
                 mask: false,			// 遮罩层
@@ -205,9 +204,6 @@
                 integralList: '',		// 积分列表
                 cardControl: false,		// 卡劵控制                
                 integraControl: false,		// 积分控制
-=======
-                focusInp: ''            // 当前选中的输入框 （当前里程、月里程）
->>>>>>> a0eff007d5737ae1ee732fa84565c0067bb4582f
 	        }
         },
         created () {

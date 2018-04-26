@@ -34,7 +34,7 @@
                 isLoading: true,  		// loading
                 uid: '',			    //获取userInfo时  传参
                 userDetails: '',		//用户信息
-                total: '0'				//总额
+                total: []				//总额
 	        }
 	    },
 	    created() {
