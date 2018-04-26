@@ -55,7 +55,7 @@
 			<!--选填信息-->
 			<div class="personalOptional">
 				<div class="optional-input">
-					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dot" @click="showDot($event, 'dot')">
+					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo" @click="showDot($event)">
 				</div>
 				<div class="optional-input">
 					<span>上次保养：</span><input type="text" placeholder="上次保养时间" v-model="updateInfo.lastTime">
@@ -123,7 +123,7 @@
 	        <!-- 数字键盘 -->
 	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 	        <!--DOT键盘-->
-			<keyboardDot :dot="isInputDot" @dotWords="dotWords"  @dotHides="isInputDot=false"></keyboardDot>
+			<keyboardDot :dot="isInputDot" @dotWords="dotWords" @dotSpaces="dotSpaces"  @dotbackWord="dotbackWord"></keyboardDot>
 		</div>
 	</div>
 </template>
@@ -149,7 +149,6 @@
                 carId: '',
                 isShowKeyboard: false,  // 是否显示键盘
                 isInputDot: false,   	// 是否显示DOT键盘
-                dotNo: '',   			// 当前选中DOT输入框
                 focusInp: ''            // 当前选中的输入框 （当前里程、月里程）
 	        }
         },
@@ -170,6 +169,11 @@
                     userCarBindId: this.userCarBindId,
                     uid: this.uid
                 }).then(res => {
+                    res.data.cars.map((item, index) => {
+                        if (!item.dotNo) {
+                            res.data.cars[index].dotNo = ''
+                        }
+                    })
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
                     this.updateInfo = this.carInfo
@@ -299,21 +303,20 @@
         // DOT显示键盘
             showDot (event, focus) {
             	event.target.blur()
-                this.dotNo = focus
             	this.isInputDot = true
             },
             // 点击键盘 开始输入
             dotWords (data) {
-            	this.updateInfo[this.dotNo] += data
-            	console.log(data)
+            	this.updateInfo['dotNo'] += data
             },
             //空格dotSpace
-            dotSpace () {
-            	console.log('dotSpace')
+            dotSpaces () {
+                this.updateInfo['dotNo'] += ' '
             },
             //删除 dotbackWord
-            dotBackWord () {
-            	console.log('dotBackWord')
+            dotbackWord () {
+                let length = this.updateInfo['dotNo'].length
+            	this.updateInfo['dotNo'] = this.updateInfo['dotNo'].substring(0, length - 1)
             }
 	    },
 	    components:{
