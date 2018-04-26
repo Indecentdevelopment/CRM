@@ -19,9 +19,13 @@
 						</div>
 					</div>
 					<p v-if="userInfo.memberCard" class="personal-userInfo">会员卡：{{userInfo.memberCard.cardType.typeName}}({{userInfo.memberCard.cardType.discount}})折</p>
-					<p class="personal-userInfo">卡券：<span >共{{userInfo.cardCoupons.length}}张 【查看】</span></p>
-					<p class="personal-userInfo">积分：<span >剩余{{userInfo.integralCount}} 【查看】</span></p>
-					<p class="personal-userInfo">可开发票订单：<span >【开票】</span></p>
+					<p class="personal-userInfo">卡券：<span @click="checkVoucher">共{{userInfo.cardCoupons.length}}张 【查看】</span></p>
+					<p class="personal-userInfo">积分：<span @click="checkIntegral">剩余{{userInfo.integralCount}} 【查看】</span></p>
+					<p class="personal-userInfo">可开发票订单：
+						<router-link :to="{path: 'invoice', query:{uid:uid}}">
+							<span @click="checkInvoice">【开票】</span>
+						</router-link>
+					</p>
 				</div>
 			</div>
 			
@@ -120,6 +124,50 @@
 	            </div>
 	        </div>
 	
+	        
+	       	<!--遮罩层-->
+	        <div class="mask" v-show="mask">
+	        	<!--卡劵-->
+	        	<div class="checkVoucher" v-show="cardControl">
+	        		<div class="closeCurrent" @click="checkClose">×</div>
+	        		<div class="headerList clearfix">
+	        			<span class="fl">序号</span>
+	        			<span class="fl">卡名</span>
+	        			<span class="fl">卡号</span>
+	        			<span class="fl">金额</span>
+	        			<span class="fl">卡类型</span>
+	        			<span class="fl">详情</span>
+	        		</div>
+	        		<div class="headerList" v-for="(item,index) in cardList">
+	        			<span class="fl">{{index}}</span>
+	        			<span class="fl">{{item.name}}</span>
+	        			<span class="fl">{{item.code}}</span>
+	        			<span class="fl">{{item.amount}}</span>
+	        			<span class="fl">{{item.cardType.typeName}}</span>
+	        			<span class="fl" @click="">查看</span>
+	        		</div>
+	        	</div>	
+	        	<!--积分-->
+	        	<div class="checkVoucher" v-show="integraControl">
+	        		<div class="closeCurrent" @click="checkClose">×</div>
+	        		<div class="headerList clearfix">
+	        			<span class="fl">序号</span>
+	        			<span class="fl">日期</span>
+	        			<span class="fl">门店</span>
+	        			<span class="fl">数量</span>
+	        			<span class="fl">说明</span>
+	        			<span class="fl">订单</span>
+	        		</div>
+	        		<div class="headerList" v-for="(item,index) in integralList">
+	        			<span class="fl">{{index}}</span>
+	        			<span class="fl">{{item.createDate}}</span>
+	        			<span class="fl">{{item.shop.name}}</span>
+	        			<span class="fl">{{item.amount}}</span>
+	        			<span class="fl">{{item.explain}}</span>
+	        			<span class="fl" @click="">查看</span>
+	        		</div>
+	        	</div>
+	        </div>
 	        <!-- 数字键盘 -->
 	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 	        <!--DOT键盘-->
@@ -150,7 +198,12 @@
                 isShowKeyboard: false,  // 是否显示键盘
                 isInputDot: false,   	// 是否显示DOT键盘
                 dotNo: '',   			// 当前选中DOT输入框
-                focusInp: ''            // 当前选中的输入框 （当前里程、月里程）
+                focusInp: '',           // 当前选中的输入框 （当前里程、月里程）
+                mask: false,			// 遮罩层
+                cardList: '',			// 卡劵列表
+                integralList: '',		// 积分列表
+                cardControl: false,		// 卡劵控制                
+                integraControl: false,		// 积分控制
 	        }
         },
         created () {
@@ -175,12 +228,43 @@
                     this.updateInfo = this.carInfo
                     this.carId = res.data.cars[0].carId
                     console.log(this.carId)
+                    this.cardList = res.data.cardCoupons
+                    this.integralList = res.data.integrals
+                    
                     // this.updateInfo.CarId = res.data.cars[0].carId
                     // this.updateInfo.Mileage = res.data.cars[0].mileage
                     // this.updateInfo.MileageMonth = res.data.cars[0].mileageMonth
                     // this.updateInfo.DotNo = res.data.cars[0].dotNo
                     // this.updateInfo.LastTime = res.data.cars[0].lastTime
                 })
+            },
+            // 查看卡劵
+            checkVoucher () {
+            	if(this.cardControl == true&&this.mask == true){
+            		this.cardControl = false
+            	}else{
+            		this.cardControl = true
+            		this.mask = true
+            	}
+            },
+            //关闭
+            checkClose(){
+            	this.cardControl = false
+            	this.integraControl = false
+            	this.mask = false
+            },
+            // 查看积分
+            checkIntegral () {
+            	if(this.integraControl == true&&this.mask == true){
+            		this.integraControl = false
+            	}else{
+            		this.integraControl = true
+            		this.mask = true
+            	}
+            },
+            // 发票订单
+            checkInvoice () {
+            	console.log(123)
             },
             // 点击换车
             changeCar (data) {
