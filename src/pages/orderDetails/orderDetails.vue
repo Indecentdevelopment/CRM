@@ -95,7 +95,7 @@
             </div>
             
             <!--增减工时：-->
-            <div class="worktimecalc clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
+            <div class="worktimecalc clearfix" v-if="orderInfo.status === '待付款'">
             	<p class="fl">增减工时：</p>
             	<div class="fr workOperation">
             		<span @click="reduceworktime">-</span><p>{{workingHours}}</p><span @click="addworktime">+</span><button @click="useit">使用</button>
@@ -123,8 +123,15 @@
                         <div class="title">useother-box</div>
                         <div class="info">¥123</div>
                     </div>
+                    <div class="item" id="kaquan" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)">
+                        <div class="title">卡券：</div>
+                        <div class="info">
+                            <input type="text" :placeholder="orderInfo.couponMsg">
+                            <div class="apply">使用</div>
+                        </div>
+                    </div>
                     <div class="item useother-box1" id="dvinvoice" 
-                     v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
+                     v-if="orderInfo.status==='已完成'&&orderInfo.status==='已作废'&&orderInfo.status==='已冲销'">
                         <div class="title">发票号：</div>
                         <div class="info">
                             <input type="text" placeholder="发票号">
@@ -165,63 +172,39 @@
             </div>
 
             <!-- 付款方式 -->
-            <div class="payment-box" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
-                <!-- ----------------------------此地注意 退款---------------------------------- -->
+            <div class="payment-box" v-if="orderInfo.status === '待付款'">
                 <div class="head">选择<span>付</span>款方式：</div>
                 <div class="pay-box">
-                    <div class="item">
+                    <label class="item" v-for="pay in orderInfo.paymentMethods" :key="pay.id" @click="inputLshval(pay)">
                         <div class="info">
-                            <i class="iconfont icon-weixinzhifu1"></i> 微信付款
+                            <i :class="'iconfont '+pay.className"></i> {{pay.name}}
                         </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-wallet"></i> 现金支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-zhifufangshi-huodaoshuaqia"></i> 刷卡支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-zhipiao2"></i> 刷卡支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-saoma"></i> 刷卡支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-yanshishuchulogo"></i> 刷卡支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <i class="iconfont icon-payduigong"></i> 刷卡支付
-                        </div>
-                        <input type="radio" name='pay'>
-                    </div>
-                    
+                        <input type="radio" name="pay" :value="pay.name" v-model="payInfo">
+                    </label>
                 </div>
 
                 <div class="btn-box">
-                    <button>立即付款</button>
+                    <button @click="paySubmit(false)">立即<span>{{orderInfo.total>0?'付':'退'}}</span>款</button>
                     <button>拆分付款</button>
                 </div>
+
+                <!-- 支票输入弹窗 -->
+                <div class="lshval-box" v-show="isOpenLshval">
+                    <div class="lshval">
+                        <div class="title">支票号：</div>
+                        <input placeholder="请输入支票号" v-model="lshvalNum">
+                        <div class="btn-box">
+                            <button class="sure">确认</button>
+                            <button class="cancel" @click="cancelLshval()">取消</button>
+                        </div>
+                    </div>
+                </div>
+                
+
             </div>
             
             <!--顾客签字-->
-            <div class="sign"  v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
+            <div class="sign"  v-if="orderInfo.status==='已预约'&&orderInfo.status==='待确认'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
@@ -234,7 +217,7 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'">
+            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -242,7 +225,7 @@
             </div>
 
             <div class="btn-box">
-                <div v-show="orderInfo.status === '服务中'">服务结束</div>
+                <div v-show="orderInfo.status === '服务中'" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'" @click="cancelOrder()">取消订单</div>
             </div>
@@ -275,7 +258,10 @@
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
                 },
-                workingHours: '0'			//工时
+                workingHours: '0',			//工时
+                isOpenLshval: false,        // 是否打开支票输入框
+                lshvalNum: '',              // 支票号码
+                payInfo: ''                 // 选择的支付方式
 	        	
 	        }
 	    },
@@ -533,6 +519,17 @@
                 })
             },
 
+            // 服务结束
+            serviceOver () {
+                api.serviceOver({
+                    orderId: this.query.orderId
+                }).then(res => {
+                    if (res.data.data = 'Ok') {
+                        this.$router.go(0)
+                    }
+                })
+            },
+
 
             // 取消 订单
             cancelOrder () {
@@ -547,6 +544,43 @@
                         }
                     })
                 }
+            },
+
+            // 点击支票支付   打开输入支票框
+            inputLshval (pay) {
+                if (pay.name === '支票支付') {
+                    this.isOpenLshval = true
+                }
+            },
+
+            // 取消支票支付
+            cancelLshval () {
+                this.isOpenLshval = false
+            },
+
+            // 付款 isSplit: 是否拆分付款
+            paySubmit (isSplit) {
+                if (!this.payInfo) {
+                    alert('请选择支付方式！')
+                    return
+                }
+                if (this.payInfo === '支票支付') {
+                    if (!this.lshvalNum) {
+                        alert('请输入正确的支票号！')
+                        return
+                    }
+                }
+                api.PreparedPay({
+                    orderId: this.query.orderId
+                }).then(res => {
+                    // 判断支付是否完成
+                    if (!res.data.allowPayment) {
+                        // swal(...)
+                    } else {
+                        // 根据是否拆分 判断本次需要支付的金额
+                        // let amount = isSplit ? 10 : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)
+                    }
+                })
             }
 	    },
 	    components:{

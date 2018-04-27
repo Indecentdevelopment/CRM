@@ -151,9 +151,23 @@ export default {
         })
     },
 
+    // 结束服务
+    serviceOver (data) {
+        return axios.get(url + 'api/order/serviceOver', {
+            params: data
+        })
+    },
+
     // 取消 订单
     CancelOrder (data) {
         return axios.get(url + 'api/order/CancelOrder', {
+            params: data
+        })
+    },
+
+    // 付款
+    PreparedPay (data) {
+        return axios.get(url + 'api/order/PreparedPay', {
             params: data
         })
     },
