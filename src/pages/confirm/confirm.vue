@@ -163,9 +163,9 @@
                                                 <div class="price-num">
                                                     <div class="price">￥{{service.price}}</div>
                                                     <div class="num">
-                                                        <div class="minus"></div>
+                                                        <div class="minus" @click="minusSerNum($event, serIndex, proIndex, catIndex)"></div>
                                                         <div class="num-info">{{service.selectQuantity}}</div>
-                                                        <div class="add"></div>
+                                                        <div class="add" @click="addSerNum($event, serIndex, proIndex, catIndex)"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -688,19 +688,56 @@ export default {
             this.calculateTotal(proIndex, catIndex)
         },
 
+        // 服务 减去数量
+        minusSerNum (event, serIndex, proIndex, catIndex, cat2Index) {
+            event.stopPropagation()
+            if (cat2Index !== undefined) {
+                if (this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].serviceList[serIndex].selectQuantity > 1) {
+                    this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].serviceList[serIndex].selectQuantity--
+                }
+            } else {
+                if (this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[serIndex].selectQuantity > 1) {
+                    this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[serIndex].selectQuantity--
+                }
+            }
+        },
+
+        // 服务 添加数量
+        addSerNum (event, serIndex, proIndex, catIndex, cat2Index) {
+            event.stopPropagation()
+            if (cat2Index !== undefined) {
+                let service = this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].serviceList[serIndex]
+                if (service.maxQuantity>0 && service.selectQuantity>=service.maxQuantity) {
+                    this.$message(`此产品最大可选数量为${service.maxQuantity}`)
+                } else {
+                    this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].serviceList[serIndex].selectQuantity++
+                }
+            } else {
+                let service = this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[serIndex]
+                if (service.maxQuantity>0 && service.selectQuantity>=service.maxQuantity) {
+                    this.$message(`此产品最大可选数量为${service.maxQuantity}`)
+                } else {
+                    this.productData.data[proIndex]['childCategorys'][catIndex].serviceList[serIndex].selectQuantity++
+                }
+            }
+
+            this.calculateTotal(proIndex, catIndex)
+        },
+
         // 算账
         calculateTotal (proIndex, catIndex) {
             // 处理 轮胎 携带服务
             let preferentialPolicys = this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys
             preferentialPolicys.map((item ,index) => {
                 var pids = item.productIds.split(',')
-                if (item.defaultChecked) {
-                    var thisq = 0
-                    this.productData.data[proIndex]['childCategorys'][catIndex].productList.map((item, index) => {
-                        if (item.active) {
-                            thisq = thisq + item.selectQuantity
-                        }
-                    })
+                var thisq = 0
+                this.productData.data[proIndex]['childCategorys'][catIndex].productList.map((item, index) => {
+                    if (item.active) {
+                        thisq = thisq + item.selectQuantity
+                    }
+                })
+                if (item.defaultChecked && thisq > 0) {
+                    
                     // 判断 当前是否已经选中套餐
                     let isCurPolicy = false
                     this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys.map(item => {
