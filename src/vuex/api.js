@@ -442,6 +442,10 @@ export default {
 			
 		})
 	},
+	//发送调拨申请
+	GetCreateApply(data){
+		return axios.post(url + 'api/ApplyRequire/CreateApply', querystring.stringify(data))
+	},
 	/****************************************他仓求助*****************************************/
 	GetMyApplyRequireList(){
 		return axios.get(url + 'api/applyrequire/MyApplyRequireList',{
@@ -456,7 +460,14 @@ export default {
 			}
 		})
 	},
-	
+	/************************************发票页***********************************************/
+	GetInvoiceLis(data){
+		return axios.get(url + 'api/order/InvoiceList',{
+			params:{
+				uid: data.uid
+			}
+		})
+	},
 }
 
     

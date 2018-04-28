@@ -24,6 +24,7 @@ import ApplyRequireList from '@/pages/applyRequireList/applyRequireList'
 import SeekHelp from '@/pages/seekHelp/seekHelp'
 import AllocationDetailed from '@/pages/allocationDetailed/allocationDetailed'
 import AllocationYes from '@/pages/allocationYes/allocationYes'
+import Invoice from '@/pages/invoice/invoice'
 
 
 Vue.use(Router)
@@ -111,6 +112,10 @@ const router = new Router({
                 {
                 	path: 'allocationYes',
                 	component: AllocationYes
+                },
+                {
+                	path: 'invoice',
+                	component: Invoice
                 }
             ]
         }
