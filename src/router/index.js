@@ -25,6 +25,7 @@ import SeekHelp from '@/pages/seekHelp/seekHelp'
 import AllocationDetailed from '@/pages/allocationDetailed/allocationDetailed'
 import AllocationYes from '@/pages/allocationYes/allocationYes'
 import Invoice from '@/pages/invoice/invoice'
+import InvoiceDetails from '@/pages/invoiceDetails/invoiceDetails'
 
 
 Vue.use(Router)
@@ -116,6 +117,10 @@ const router = new Router({
                 {
                 	path: 'invoice',
                 	component: Invoice
+                },
+                {
+                	path: 'invoiceDetails',
+                	component: InvoiceDetails
                 }
             ]
         }

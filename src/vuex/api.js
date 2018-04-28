@@ -450,6 +450,19 @@ export default {
 			}
 		})
 	},
+	//开票接口
+	GetUpdateInvoice(data){
+		return axios.get(url + 'api/order/UpdateInvoice',{
+			params:{
+				oids: data.total,
+                invoiceNo: data.invoiceNber
+			}
+		})
+	},
+	//发票信息页
+	GetCouponsDetails(data){
+		return axios.post(url + 'api/order/GetCardCouponDetalis', querystring.stringify(data))
+	},
 }
 
     
