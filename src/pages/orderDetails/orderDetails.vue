@@ -185,7 +185,7 @@
 
                 <div class="btn-box">
                     <button @click="paySubmit(false)">立即<span>{{orderInfo.total>0?'付':'退'}}</span>款</button>
-                    <button>拆分付款</button>
+                    <button @click="isOpenPaySplit = true">拆分付款</button>
                 </div>
 
                 <!-- 支票输入弹窗 -->
@@ -196,6 +196,22 @@
                         <div class="btn-box">
                             <button class="sure">确认</button>
                             <button class="cancel" @click="cancelLshval()">取消</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 拆分支付  弹窗 -->
+                <div class="splite-pay-box" v-show="isOpenPaySplit">
+                    <div class="splite-pay">
+                        <div class="close"></div>
+                        <div class="title">拆分付款</div>
+                        <div class="input-box">
+                            <div class="msg">使用金额</div>
+                            <input placeholder="请输入本次支付金额（最多55）" v-model="paySplitNum">
+                        </div>
+                        <div class="btn-box">
+                            <button @click="paySplitNum='';isOpenPaySplit=false">取消</button>
+                            <button @click="paySplit()">确定</button>
                         </div>
                     </div>
                 </div>
@@ -258,10 +274,12 @@
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
                 },
-                workingHours: '0',			//工时
+                workingHours: '0',			// 工时
                 isOpenLshval: false,        // 是否打开支票输入框
                 lshvalNum: '',              // 支票号码
-                payInfo: ''                 // 选择的支付方式
+                payInfo: '',                // 选择的支付方式
+                isOpenPaySplit: false,      // 是否打开拆分支付 弹窗
+                paySplitNum: ''             // 拆分支付 本次支付的金额
 	        	
 	        }
 	    },
@@ -558,6 +576,18 @@
                 this.isOpenLshval = false
             },
 
+            // 拆分付款
+            paySplit () {
+                if (!this.paySplitNum || this.paySplitNum < 0) {
+                    alert('请输入正确的金额！')
+                    return
+                } else if (this.paySplitNum > this.orderInfo.total - this.orderInfo.alreadyPaymentAmount) {
+                    this.paySplitNum = this.orderInfo.total - this.orderInfo.alreadyPaymentAmount
+                }
+                this.paySubmit(true)
+                this.isOpenPaySplit=false
+            },
+
             // 付款 isSplit: 是否拆分付款
             paySubmit (isSplit) {
                 if (!this.payInfo) {
@@ -578,7 +608,21 @@
                         // swal(...)
                     } else {
                         // 根据是否拆分 判断本次需要支付的金额
-                        // let amount = isSplit ? 10 : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)
+                        let amount = (isSplit ? this.paySplitNum : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
+
+                        switch (this.payInfo) {
+                            case '微信支付': 
+                                this.$router.push({
+                                    path: 'wechatpay',
+                                    query: {
+                                        otype: 10,
+                                        ono: this.query.orderId,
+                                        ptype: 2,
+                                        payAmount: 0
+                                    }
+                                })
+                        }
+
                     }
                 })
             }
