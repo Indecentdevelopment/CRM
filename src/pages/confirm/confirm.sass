@@ -106,18 +106,31 @@
                             display: flex
                             flex-wrap: wrap
                             align-items: center
-                            margin-top: 0.3rem
+                            margin-top: 1rem
                             padding: 0 0.3rem
                             .item
                                 width: auto
                                 height: auto
                                 min-height: auto
                                 padding: 0.2rem
-                                margin: 0
-                                margin-right: 0.5rem
+                                margin: 0.2rem 0.8rem 0.2rem 0
                                 border-radius: 0
                                 color: rgb(238, 83, 78)
                                 font-size: 0.8rem
+                                position: relative
+                                overflow: visible
+                                .num-info
+                                    position: absolute
+                                    top: -0.9rem
+                                    right: -0.9rem
+                                    height: 0.9rem
+                                    width: 0.9rem
+                                    background-color: #F57C33
+                                    color: #fff
+                                    border-radius: 100% 100% 100% 0px
+                                    text-align: center
+                                    line-height: 0.9rem
+                                    font-family: "Microsoft YaHei","Arial",'Glyphicons Halflings'
                                 &.active
                                     background-color: #ee534e
                                     color: #fff

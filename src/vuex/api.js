@@ -151,9 +151,23 @@ export default {
         })
     },
 
+    // 结束服务
+    serviceOver (data) {
+        return axios.get(url + 'api/order/serviceOver', {
+            params: data
+        })
+    },
+
     // 取消 订单
     CancelOrder (data) {
         return axios.get(url + 'api/order/CancelOrder', {
+            params: data
+        })
+    },
+
+    // 付款
+    PreparedPay (data) {
+        return axios.get(url + 'api/order/PreparedPay', {
             params: data
         })
     },
@@ -428,6 +442,10 @@ export default {
 			
 		})
 	},
+	//发送调拨申请
+	GetCreateApply(data){
+		return axios.post(url + 'api/ApplyRequire/CreateApply', querystring.stringify(data))
+	},
 	/****************************************他仓求助*****************************************/
 	GetMyApplyRequireList(){
 		return axios.get(url + 'api/applyrequire/MyApplyRequireList',{
@@ -442,7 +460,27 @@ export default {
 			}
 		})
 	},
-	
+	/************************************发票页***********************************************/
+	GetInvoiceLis(data){
+		return axios.get(url + 'api/order/InvoiceList',{
+			params:{
+				uid: data.uid
+			}
+		})
+	},
+	//开票接口
+	GetUpdateInvoice(data){
+		return axios.get(url + 'api/order/UpdateInvoice',{
+			params:{
+				oids: data.total,
+                invoiceNo: data.invoiceNber
+			}
+		})
+	},
+	//发票信息页
+	GetCouponsDetails(data){
+		return axios.post(url + 'api/order/GetCardCouponDetalis', querystring.stringify(data))
+	},
 }
 
     

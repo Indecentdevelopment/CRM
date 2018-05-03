@@ -115,10 +115,6 @@
 				        });
                     }
                 })
-//              console.log(this.keyword)
-//              console.log(this.productBrandId)
-//              console.log(this.productCategoyId)
-//              console.log(this.carNo)
         	},
         	//获取品牌列表
         	getThebrand () {

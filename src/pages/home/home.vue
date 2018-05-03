@@ -141,7 +141,9 @@
                 </div>
                 <ul class="ins-ul">
                     <li class="ins-li" v-for="item in serverList" :key="item.orderId"  v-show="inService">
-                        <span class="ins-span">{{item.carNo}}</span>
+                    	<router-link :to="{path: 'orderDetails', query:{OrderId:item.orderId}}">
+                        	<span class="ins-span">{{item.carNo}}</span>
+                		</router-link>
                     </li>
                 </ul>
             </div>

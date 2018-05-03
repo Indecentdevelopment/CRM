@@ -28,7 +28,7 @@
             </div>
             <div class="btn-box">
                 <button @click="submit()">开始服务</button>
-                <button>取消订单</button>
+                <button @click="cancelOrder()">取消订单</button>
             </div>
         </div>
     </div>
@@ -147,6 +147,21 @@ export default {
                     }
                 }
             })
+        },
+
+        // 取消订单
+        cancelOrder () {
+            if (confirm("确定取消此订单吗？")) {
+                api.CancelOrder({
+                    oid: this.query.OrderId
+                }).then(res => {
+                    if (res.data.success) {
+                        this.$router.push('/home')
+                    } else {
+                        alert(res.data.msg)
+                    }
+                })
+            }
         }
     },
     components: {

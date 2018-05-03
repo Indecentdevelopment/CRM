@@ -32,7 +32,7 @@
                 </div>
 			</div>
 			<!--消费记录-->
-			<div class="mask" v-show="detailOpend">
+			<div class="mask" v-show="detailOpend && usedDetailList !='' ">
 		        <div class="consumption">
 		        	<div class="fl clearfix conTop">
 			        	<p class="fl">消费时间</p>
