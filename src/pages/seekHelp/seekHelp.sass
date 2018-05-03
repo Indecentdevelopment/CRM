@@ -1,6 +1,7 @@
 .seekHelp
-    margin-top: 1.5rem
-    height: 100%
+    padding-top: 1.5rem
+    height: 100vh
+    box-sizing: border-box
     background: #696666
     overflow-y: auto
     .orderList
@@ -20,15 +21,52 @@
             height: 1.3rem
             line-height: 1.3rem
             font-size: 0.7rem
-        span
-            width: 40%
-            margin-right: 2%
+        .show-detail
+            width: 8rem
             height: 1.2rem
+            float: right
             line-height: 1.2rem
             text-align: center
             background: #fac800
             color: #333
             border-radius: 5px
+    .form
+        padding: 0.5rem
+        display: flex
+        flex-direction: column
+        align-items: center
+        color: #fac800
+        .title
+            width: 100%
+            padding: 0.2rem 0
+            text-align: center
+            font-size: 1.2rem
+            font-weight: 900
+            border-bottom: solid 2px #ddd
+        .form-box
+            width: 100%
+            display: flex
+            flex-direction: column
+            .form-item
+                display: flex
+                margin: 0.3rem 0
+                font-size: 0.8rem
+                .info
+                    min-width: 8rem
+                    text-align: right
+                input, textarea
+                    border-radius: 0.2rem
+            .btn-box
+                width: 100%
+                display: flex
+                justify-content: space-around
+                margin: 1rem 0
+                button
+                    width: 6rem
+                    background-color: #ffda01
+                    border: none
+                    border-radius: 0.2rem
+                    padding: 0.2rem 0
     .seekHelp-footer
         width: 100%
         text-align: center

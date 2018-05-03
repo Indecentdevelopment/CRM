@@ -14,7 +14,7 @@
             <div class="show-detail" @click="showDetail(item.serial)">详情</div>
 		</div>
         <div class="detailList" v-show="status==='detail'">
-            <div class="detail-item" v-for="item in detailList" :key="item.id">
+            <div class="detail-item" v-for="item in detailList.applyShopModels" :key="item.id">
                 <div class="shop-name">
                     {{item.shopType}}：{{item.shopName}}
                 </div>
@@ -25,44 +25,44 @@
             </div>
         </div>
 
-        <div class="form" v-show="status==='form'">
+        <div class="form" v-show="status==='form'" v-if="detailList.applyShopModels">
             <div class="title">调拨单明细</div>
             <div class="form-box">
                 <div class="form-item">
                     <div class="info">ID：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.applyShopModels[0].id}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">零采单号：</div>
-                    <div class="val">111</div>
+                    <div class="val">无</div>
                 </div>
                 <div class="form-item">
                     <div class="info">CRM服务单号：</div>
-                    <div class="val">111</div>
+                    <div class="val">不知</div>
                 </div>
                 <div class="form-item">
                     <div class="info">Serial号：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.applyShopModels[0].serial}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请门店：</div>
-                    <div class="val">111</div>
+                    <div class="val">不知</div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请产品：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.productName}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请数量：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.quantity}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请时间：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.applyCreateDateTime}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">被调拨方：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.applyShopModels[0].shopName}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">回复报价(单价)：</div>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="form-item">
                     <div class="info">加价率：</div>
-                    <div class="val">111</div>
+                    <div class="val">不知</div>
                 </div>
                 <div class="form-item">
                     <div class="info">销售价格(单价)：</div>
@@ -78,7 +78,11 @@
                 </div>
                 <div class="form-item">
                     <div class="info">税别：</div>
-                    <select></select>
+                    <select>
+                        <option value="">专票</option>
+                        <option value="">普票</option>
+                        <option value="">其他</option>
+                    </select>
                 </div>
                 <div class="form-item">
                     <div class="info">预估到店：</div>
@@ -86,11 +90,11 @@
                 </div>
                 <div class="form-item">
                     <div class="info">调拨状态：</div>
-                    <div class="val">111</div>
+                    <div class="val">{{detailList.applyShopModels[0].applyShopModels}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">收货状态：</div>
-                    <div class="val">111</div>
+                    <div class="val">不知</div>
                 </div>
                 <div class="form-item">
                     <div class="info">备注：</div>
@@ -153,7 +157,7 @@
                 api.GetApplyRequireDetail({
                     serial: serial
                 }).then(res => {
-                    this.detailList = res.data.applyShopModels
+                    this.detailList = res.data
                 })
             },
 
