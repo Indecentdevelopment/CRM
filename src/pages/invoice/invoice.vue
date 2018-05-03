@@ -5,8 +5,8 @@
         <my-header></my-header>
         <div class="userSelection clearfix">
         	<p class="fl">总金额：<b>{{totalTotal}}</b></p>
-        	<span class="fr">开票</span>
-        	<input type="text" class="fr" />
+        	<span class="fr" @click="ticketOpening">开票</span>
+        	<input type="text" class="fr" v-model="invoiceNber" />
         </div>
         
         <div class="userData clearfix" v-for="item in userDetails">
@@ -35,7 +35,9 @@
                 uid: '',			    //获取userInfo时  传参
                 userDetails: [],		//用户信息
                 total: [],				//总额数组
-                totalTotal: 0			//总额求和
+                totalTotal: 0,			//总额求和
+                oids: '',				//orderId
+                invoiceNber: ''			//发票号
 	        }
 	    },
 	    created() {
@@ -49,20 +51,9 @@
                     uid: this.uid
                 }).then(res => {
                 	this.userDetails = res.data.repairsModel
-                	console.log(res.data)
                 })
 	    	},
 	    	totalTotalFn(){
-	    		// if(i <= 0){
-	    		// 	if(this.total.length == 0){
-		    	// 		this.totalTotal = 0
-		    	// 	}
-		    	// 	if(this.totalTotal == 0){
-		    	// 		this.totalTotal = 0
-		    	// 	}
-	    		// }else{
-	    		// 	this.totalTotal = parseInt(this.totalTotal) + parseInt(this.total.slice(-1))
-                // }
                 this.totalTotal = 0
                 this.userDetails.map((item, index) => {
                     if (this.total.includes(item.orderId)) {
@@ -70,6 +61,26 @@
                     }
                 })
 	    		this.totalTotal = this.totalTotal.toFixed(3)
+	    	},
+	    	//开票
+	    	ticketOpening(){
+	    		console.log(this.invoiceNber)
+	    		console.log(this.total.join())
+	    		if(this.invoiceNber != ''){
+	    			api.GetUpdateInvoice({
+	                    oids: this.total.join(),
+	                    invoiceNo: this.invoiceNber
+	                }).then(res => {
+	                	console.log(res.data)
+//	                	if (res.data.success) {
+//							alert("开票成功")
+//						} else {
+//							alert(res.data.msg)
+//						}
+	                })
+	    		}else {
+		        	alert('请填写正确的发票号！')
+		      	}
 	    	}
 	    },
 	    components:{

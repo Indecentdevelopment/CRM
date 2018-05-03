@@ -144,7 +144,9 @@
 	        			<span class="fl">{{item.code}}</span>
 	        			<span class="fl">{{item.amount}}</span>
 	        			<span class="fl">{{item.cardType.typeName}}</span>
-	        			<span class="fl" @click="">查看</span>
+	        			<router-link :to="{path: 'invoiceDetails', query:{id:item.id}}">
+	        				<span class="fl">查看</span>
+						</router-link>
 	        		</div>
 	        	</div>	
 	        	<!--积分-->
