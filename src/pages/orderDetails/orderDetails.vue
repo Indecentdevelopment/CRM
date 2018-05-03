@@ -7,7 +7,7 @@
         <div class="loading" v-loading="isLoading">
             <!--顾客信息-->
             <div class="customerInfo clearfix">
-                <div class="pre-count" v-if="orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
+                <div class="pre-count" v-if="orderInfo.status==='已预约'">
                     您前边还有 {{orderInfo.preBeforeCount}} 位顾客正在排队
                 </div>
                 <p class="orderStyleOne orderColor-white fl">订单编号：{{new Date(orderInfo.datePlaced).toString('yyMMdd10' + orderInfo.id)}}</p>
@@ -50,7 +50,7 @@
             
             <!--订单内容-->
             <div class="orderContent" >
-                <p class="orderContentp fl">订单内容</p>
+                <p class="orderContentp fl">订单内容 <span v-show="orderInfo.evaluation">邀请用户评价</span></p>
                 <div class="orderConDetails" v-if="orderInfo.items" v-for="(item, index) in orderInfo.items" :key="item.id">
                     <div class="detailsImg fl">
                         <img :src="item.imgUrl"/>
@@ -118,12 +118,12 @@
                         <div class="title">合计金额：</div>
                         <div class="info">¥{{orderInfo.subtotal+orderInfo.serviceAmount}}</div>
                     </div>
-                    <div class="item useother-box" 
+                    <!-- <div class="item useother-box" 
                     v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'&&orderInfo.status!=='已取消'">
                         <div class="title">useother-box</div>
                         <div class="info">¥123</div>
-                    </div>
-                    <div class="item" id="kaquan" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status !== '待确认'&&orderInfo.status !== '已取消'&&orderInfo.status !== '已预约'&&orderInfo.status !== '服务中'">
+                    </div> -->
+                    <div class="item" id="kaquan" v-if="orderInfo.cardCouponLogs" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status === '待付款'">
                         <div class="title">卡券：</div>
                         <div class="info">
                             <input type="text" :placeholder="orderInfo.couponMsg">
@@ -131,14 +131,15 @@
                         </div>
                     </div>
                     <div class="item useother-box1" id="dvinvoice" 
-                     v-if="orderInfo.status==='已完成'&&orderInfo.status==='已作废'&&orderInfo.status==='已冲销'">
+                     v-if="orderInfo.status==='已完成'||orderInfo.status==='已作废'||orderInfo.status==='已冲销'">
                         <div class="title">发票号：</div>
                         <div class="info">
                             <input type="text" placeholder="发票号">
-                            <div class="apply">使用</div>
+                            <div class="apply">确定</div>
                         </div>
                     </div>
-                    <div class="item prefer">
+
+                    <div class="item prefer" v-if="orderInfo.orderPreferentialLogs" v-show="orderInfo.orderPreferentialLogs.length>0">
                         <div class="title">优惠项目：</div>
                         <div class="box">
                             <div v-for="item in orderInfo.orderPreferentialLogs" :key="item.id" class="info">
@@ -149,20 +150,37 @@
                         </div>
                         
                     </div>
-                    <div class="item">
+                    <div class="item" v-if="orderInfo.cardType" v-show="orderInfo.cardType.typeName&&(orderInfo.memberDiscountAmount>0||orderInfo.status==='待付款')">
                         <div class="title useother-box">会员折扣：</div>
-                        <div class="info" v-if="orderInfo.cardType">
-                            {{orderInfo.memberDiscountAmount>0?`-￥${orderInfo.memberDiscountAmount}元`:''}}
+                        <div class="info" >
+                            {{orderInfo.memberDiscountAmount>0?`-￥ ${orderInfo.memberDiscountAmount}元`:''}}
                             {{orderInfo.status==='待付款'?orderInfo.cardType.typeName+orderInfo.cardType.discount+'折':''}}
                         </div>
                     </div>
-                    <div class="item">
+                    <div class="item" v-show="orderInfo.discount>0">
                         <div class="title useother-box">优惠合计：</div>
                         <div class="info">¥{{orderInfo.discount}}</div>
                     </div>
                     <div class="item">
-                        <div class="title useother-box">应付总额：</div>
-                        <div class="info">¥{{orderInfo.total}}</div>
+                        <div class="title useother-box" v-if="orderInfo.payments">{{orderInfo.payments.length>0||orderInfo.total==0?'实付款：':'应付总额：'}}</div>
+                        <div class="info">
+                            <div class="should-pay">¥{{orderInfo.total}}</div>
+                            <div class="had-pay">
+                                {{orderInfo.alreadyPaymentAmount>0?`已付￥${orderInfo.alreadyPaymentAmount}${orderInfo.total-orderInfo.alreadyPaymentAmount>0?`剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:''}`:``}}
+                                <!-- {{orderInfo.total-orderInfo.alreadyPaymentAmount>0?`,剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:``}} -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item pay-msg" v-show="orderInfo.alreadyPaymentAmount>0">
+                        <div class="title">付款详情：</div>
+                        <div class="info">
+                            <div class="pay-info-item" v-for="item in orderInfo.payments" :key="item.id">
+                                <div class="amount">付款金额：￥{{item.amount}}</div>
+                                <div class="method">付款方式：{{item.paymentMethod.name}}</div>
+                                <div class="time">时间：{{new Date(item.date).toLocaleDateString()}}</div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -220,7 +238,7 @@
             </div>
             
             <!--顾客签字-->
-            <div class="sign"  v-if="orderInfo.status!='已取消'&&orderInfo.status!='待付款'&&orderInfo.status!=='服务中'">
+            <div class="sign"  v-if="orderInfo.status==='已预约'||orderInfo.status==='待确认'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
@@ -306,14 +324,6 @@
                 switch (data.status) {
                     case 12:
                         data.status = '已预约'
-                        // document.getElementsByClassName('sign')[0].style.display = 'block'
-                        // document.getElementsByClassName('pre-count')[0].style.display = 'block'
-                        // document.getElementsByClassName('payment-box')[0].style.display = 'none'
-                        // document.getElementsByClassName('customer-sign')[0].style.display = 'none'
-                        // document.getElementsByClassName('remark-info')[0].style.display = 'none'
-                        // document.getElementsByClassName('useother-box')[0].style.display = 'none'   // 尚未解决
-                        // document.getElementById('dvinvoice').style.display = 'none'
-                        
                         break
                     case 0:
                         data.status = '待确认'
@@ -360,19 +370,6 @@
                 } else {
                     document.getElementById('brand').innerHTML = `车型信息待完善`
                 }
-
-                // document.getElementById('average').innerHTML = `月均行驶：${data.userCarBind.carInfo.monthMileage}`
-                // document.getElementById('carNo').innerHTML = `车牌号：${data.userCarBind.carInfo.carNumber}`
-                // document.getElementById('itemPrice').innerHTML = `服务价格 ${data.items[0].itemPrice}`
-                // document.getElementById('reduce-num').innerHTML = (data.items[0].categoryName === '机油') ? `升数 X` : `数量 X`
-                // document.getElementById('current-num').innerHTML = data.items[0].quantity
-                // document.getElementById('current-num').setAttribute('stock', data.items[0].isService?'999':data.items[0].stock+data.items[0].quantity)
-                // document.getElementById('current-num').setAttribute('isser', data.items[0].isService)
-                // document.getElementById('current-num').setAttribute('cla', data.items[0].categoryName)
-
-                // 设置 免
-                // document.getElementById('free-button').className = data.items[0].isFree?'active':''
-
 
                 this.orderInfo = data
             },
@@ -637,12 +634,7 @@
 					                	console.log(res.data)
 					                	if (res.data.data == "Ok") {
                 							alert("支付成功！")
-                							this.$router.push({
-			                                    path: 'orderDetails',
-			                                    query: {
-			                                        orderId: this.orderId
-			                                    }
-			                                })
+                                            this.GetOrderInfo()
                 						}else{
                 							alert("支付失败！");
                 						}
