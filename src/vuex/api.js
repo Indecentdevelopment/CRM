@@ -171,7 +171,10 @@ export default {
             params: data
         })
     },
-
+	//现金支付
+    PayOrder (data) {
+        return axios.post(url + 'api/order/PayOrder', querystring.stringify(data))
+    },
     
     /***************************选择技师**********************************/
     // 获取技师信息

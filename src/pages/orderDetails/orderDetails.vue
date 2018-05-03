@@ -42,7 +42,7 @@
             </div>
             
             <!--编辑 + 添加 按钮-->
-            <div class="editAdd clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'&&orderInfo.status !== '待付款'">
+            <div class="editAdd clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'&&orderInfo.status !== '待付款'">
                 <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
@@ -87,7 +87,7 @@
             </div>
 
             <!-- 技师备注 -->
-            <div class="remark-info" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'">
+            <div class="remark-info" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '待确认'&&orderInfo.status !== '已取消'">
                 <div class="head">技师备注</div>
                 <textarea name="" id="technician-remark" rows="2" v-model="orderInfo.staffComments"></textarea>
                 <!-- --------------------------------此地注意  ----------------------------------------- -->
@@ -119,11 +119,11 @@
                         <div class="info">¥{{orderInfo.subtotal+orderInfo.serviceAmount}}</div>
                     </div>
                     <div class="item useother-box" 
-                    v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'">
+                    v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='服务中'&&orderInfo.status!=='已取消'">
                         <div class="title">useother-box</div>
                         <div class="info">¥123</div>
                     </div>
-                    <div class="item" id="kaquan" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)">
+                    <div class="item" id="kaquan" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status !== '待确认'&&orderInfo.status !== '已取消'&&orderInfo.status !== '已预约'&&orderInfo.status !== '服务中'">
                         <div class="title">卡券：</div>
                         <div class="info">
                             <input type="text" :placeholder="orderInfo.couponMsg">
@@ -220,7 +220,7 @@
             </div>
             
             <!--顾客签字-->
-            <div class="sign"  v-if="orderInfo.status==='已预约'&&orderInfo.status==='待确认'">
+            <div class="sign"  v-if="orderInfo.status!='已取消'&&orderInfo.status!='待付款'&&orderInfo.status!=='服务中'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
@@ -233,7 +233,7 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
+            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='待付款'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -590,6 +590,8 @@
 
             // 付款 isSplit: 是否拆分付款
             paySubmit (isSplit) {
+            	console.log(isSplit)
+            	console.log(this.payInfo)
                 if (!this.payInfo) {
                     alert('请选择支付方式！')
                     return
@@ -606,12 +608,12 @@
                     // 判断支付是否完成
                     if (!res.data.allowPayment) {
                         // swal(...)
+//                      console.log(res.data.allowPayment)
                     } else {
                         // 根据是否拆分 判断本次需要支付的金额
                         let amount = (isSplit ? this.paySplitNum : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
-
                         switch (this.payInfo) {
-                            case '微信支付': 
+                            case '微信支付': {
                                 this.$router.push({
                                     path: 'wechatpay',
                                     query: {
@@ -621,6 +623,34 @@
                                         payAmount: 0
                                     }
                                 })
+                            } break
+                            //现金支付
+		                    default: {
+		                        if (confirm("确定使用[ " + this.payInfo + " ]付款吗？")) {
+		                        	api.PayOrder({
+					                    orderId: this.query.orderId,
+							            paymentMethod: this.payInfo,
+							            lsh: '',
+							            payAmount: amount,
+							            payInfo: ''
+					                }).then(res => {
+					                	console.log(res.data)
+					                	if (res.data.data == "Ok") {
+                							alert("支付成功！")
+                							this.$router.push({
+			                                    path: 'orderDetails',
+			                                    query: {
+			                                        orderId: this.orderId
+			                                    }
+			                                })
+                						}else{
+                							alert("支付失败！");
+                						}
+					                })
+		                        }
+		
+		                    } break
+                            
                         }
 
                     }
