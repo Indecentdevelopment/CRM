@@ -8,7 +8,9 @@
             <div class="inputbox">
                 <!--设置按钮-->
                 <div class="setup">
-                    <img src="../../assets/images/home/hc-Setup.png" class="setup-img"/>
+                	<router-link to="personal">
+                    	<img src="../../assets/images/home/hc-Setup.png" class="setup-img"/>
+                   	</router-link>
                 </div>
                 <div class="inputarr">
                     <!--手机号输入框-->

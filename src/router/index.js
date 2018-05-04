@@ -26,6 +26,8 @@ import AllocationDetailed from '@/pages/allocationDetailed/allocationDetailed'
 import AllocationYes from '@/pages/allocationYes/allocationYes'
 import Invoice from '@/pages/invoice/invoice'
 import InvoiceDetails from '@/pages/invoiceDetails/invoiceDetails'
+import Personal from '@/pages/personal/personal'
+import Wechatpay from '@/pages/wechatpay/wechatpay'
 
 
 Vue.use(Router)
@@ -121,6 +123,14 @@ const router = new Router({
                 {
                 	path: 'invoiceDetails',
                 	component: InvoiceDetails
+                },
+                {
+                	path: 'personal',
+                	component: Personal
+                },
+                {
+                	path: 'wechatpay',
+                	component: Wechatpay
                 }
             ]
         }

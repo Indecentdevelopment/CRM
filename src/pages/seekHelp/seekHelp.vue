@@ -66,7 +66,10 @@
                 
                 <div class="form-item">
                     <div class="info">预估到店：</div>
-                    <input>
+                    <div class="block">
+						<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+						</el-date-picker>
+					</div>
                 </div>
                 <div class="form-item">
                     <div class="info">调拨状态：</div>
@@ -102,11 +105,31 @@
 	export default {
 		data() {
 			return {
+				pickerOptions1: {
+					disabledDate(time) {
+						return time.getTime < Date.now();
+					},
+					shortcuts: [{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', new Date());
+						}
+					}, {
+						text: '昨天',
+						onClick(picker) {
+							const date = new Date();
+							date.setTime(date.getTime() - 3600 * 1000 * 24);
+							picker.$emit('pick', date);
+						}
+
+					}]
+				},
                 status: 'order',         // 当前显示的页面
 				isLoading: true,
                 orderLists: {},		    // 产品详情
                 orderData: {},          // 当前查看的订单
-				orderParameter: ''		// 产品参数
+				orderParameter: '',		// 产品参数
+				value1: '',						//调拨时间
 			}
 		},
 		created() {

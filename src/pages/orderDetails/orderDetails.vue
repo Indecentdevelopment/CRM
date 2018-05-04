@@ -610,14 +610,15 @@
                         // 根据是否拆分 判断本次需要支付的金额
                         let amount = (isSplit ? this.paySplitNum : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
                         switch (this.payInfo) {
+                        	//微信扫码支付
                             case '微信支付': {
                                 this.$router.push({
                                     path: 'wechatpay',
                                     query: {
                                         otype: 10,
                                         ono: this.query.orderId,
-                                        ptype: 2,
-                                        payAmount: 0
+//                                      ptype: 2,
+//                                      payAmount: 0
                                     }
                                 })
                             } break

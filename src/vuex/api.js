@@ -484,6 +484,27 @@ export default {
 	GetCouponsDetails(data){
 		return axios.post(url + 'api/order/GetCardCouponDetalis', querystring.stringify(data))
 	},
+	//微信扫码支付
+//	GetWechatpay(data){
+//		return axios.get(url + 'payment/WeChatPays',{
+//			params:{
+//				otype: data.otype,
+//				ono: data.ono
+//			}
+//		})
+//	},
+	GetWechatpay(data){
+		return axios.post(url + 'payment/WeChatPays', querystring.stringify(data))
+	},
+	/************************************个人信息设置页******************************************/
+	GetUserInformation(data){
+		return axios.get(url + 'Api/Car/GetMyStaffInfos',{
+			params:{
+				
+			}
+		})
+	},
+	
 }
 
     

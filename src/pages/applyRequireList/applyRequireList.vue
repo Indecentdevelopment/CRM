@@ -21,7 +21,7 @@
                 <div class="action">
                     订单状态：{{item.providerStatus}}
                 </div>
-                <div class="show-detail2" @click="showDetail2()">详情</div>
+                <div class="show-detail2" @click="showDetail2(item.deliverDateTime)">详情</div>
             </div>
         </div>
 
@@ -86,7 +86,10 @@
                 </div>
                 <div class="form-item">
                     <div class="info">预估到店：</div>
-                    <input>
+                    <div class="block">
+						<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+						</el-date-picker>
+					</div>
                 </div>
                 <div class="form-item">
                     <div class="info">调拨状态：</div>
@@ -125,10 +128,30 @@
 	export default {
 		data() {
 			return {
+				pickerOptions1: {
+					disabledDate(time) {
+						return time.getTime < Date.now();
+					},
+					shortcuts: [{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', new Date());
+						}
+					}, {
+						text: '昨天',
+						onClick(picker) {
+							const date = new Date();
+							date.setTime(date.getTime() - 3600 * 1000 * 24);
+							picker.$emit('pick', date);
+						}
+
+					}]
+				},
                 status: 'order',       // 当前显示的页面
                 isLoading: true,
                 orderList: [],        // 订单列表
-                detailList: []        // 详情列表
+                detailList: [],        // 详情列表
+				value1: '',						//调拨时间
             }
        },
         created () {
@@ -162,8 +185,9 @@
             },
 
             // 再点击详情
-            showDetail2 () {
+            showDetail2 (item) {
                 this.status = 'form'
+        		this.value1 = item
             }
         },
 		components: {
