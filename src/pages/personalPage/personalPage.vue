@@ -166,7 +166,9 @@
 	        			<span class="fl">{{item.shop.name}}</span>
 	        			<span class="fl">{{item.amount}}</span>
 	        			<span class="fl">{{item.explain}}</span>
-	        			<span class="fl" @click="">查看</span>
+	        			<router-link :to="{path: 'orderDetails', query:{OrderId:item.orderId}}">
+	        				<span class="fl">查看</span>
+	        			</router-link>
 	        		</div>
 	        	</div>
 	        </div>
@@ -237,7 +239,6 @@
                     console.log(this.carId)
                     this.cardList = res.data.cardCoupons
                     this.integralList = res.data.integrals
-                    
                     // this.updateInfo.CarId = res.data.cars[0].carId
                     // this.updateInfo.Mileage = res.data.cars[0].mileage
                     // this.updateInfo.MileageMonth = res.data.cars[0].mileageMonth

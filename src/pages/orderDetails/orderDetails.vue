@@ -261,7 +261,7 @@
             <div class="btn-box">
                 <div v-show="orderInfo.status === '服务中'" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
-                <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'" @click="cancelOrder()">取消订单</div>
+                <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>
         </div>
         

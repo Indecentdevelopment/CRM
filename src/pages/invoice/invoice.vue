@@ -19,7 +19,11 @@
         		<p class="fl">车牌号：{{item.carNo}}</p>
         		<p class="fl">实付款：{{item.price}}</p>
         		<p class="fl">{{item.status == '已预约'?'预约时间：':'下单时间：'}}{{item.preDate}}</p>
-        		<p class="fl clearfix"><span class="fr">详情</span></p>
+        		<p class="fl clearfix">
+        			<router-link :to="{path: 'orderDetails', query:{OrderId:item.orderId}}">
+        			<span class="fr">详情</span>
+        			</router-link>
+        		</p>
         	</div>
         </div>
     </div>

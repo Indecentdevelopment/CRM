@@ -482,17 +482,13 @@ export default {
 	},
 	//发票信息页
 	GetCouponsDetails(data){
-		return axios.post(url + 'api/order/GetCardCouponDetalis', querystring.stringify(data))
+		return axios.get(url + 'api/order/GetCardCouponDetalis',{
+			params:{
+				CardCouponId: data.CardCouponId + ""
+			}
+		})
 	},
 	//微信扫码支付
-//	GetWechatpay(data){
-//		return axios.get(url + 'payment/WeChatPays',{
-//			params:{
-//				otype: data.otype,
-//				ono: data.ono
-//			}
-//		})
-//	},
 	GetWechatpay(data){
 		return axios.post(url + 'payment/WeChatPays', querystring.stringify(data))
 	},
