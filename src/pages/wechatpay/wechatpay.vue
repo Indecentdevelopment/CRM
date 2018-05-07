@@ -6,12 +6,11 @@
 		<div class="code">
 			<div class="codeTwoImg">
 				<img src="http://www.guo-wei.xin/images/1.png"/>
-				<p>请使用微信扫描<br />二维码以完成支付</p>
-				<p>请您及时付款，以便订单尽快处理！</p>
-				<p>请您在提交订单后及时完成支付，否则订单会自动取消！</p>
-				<p>交易单号</p>
-				<p>创建时间</p>
+				<p class="colorStyle">请使用微信扫描<br />二维码以完成支付</p>
 			</div>
+			<div class="codeStyleOne">¥ {{transactionData.totalFee}}</div>
+			<div class="codeStyleTwo">请您及时付款，以便订单尽快处理！<br /><span>请您在提交订单后及时完成支</span><br />付，否则订单会自动取消！</div>
+			<div class="codeStyleThree">交易单号：{{transactionData.orderNo}}<br />创建时间：{{currentTime}}</div>
 		</div>
         
 	</div>
@@ -29,20 +28,16 @@
 	        	ono: '',
 	        	ptype: '',
 	        	payAmount: '',
+	        	transactionData: '',	//交易信息
+	        	currentTime: ''			//当前时间
 	        }
 	    },
 	    created() {
 	    	let route = this.$route
-	    	
-	    	
 	    	this.otype = route.query.otype
 	    	this.ono = route.query.ono
-	    	
 	    	this.GetWechatpay()
-	    	console.log(this.otype)
-	    	console.log(this.ono)
-//	    	this.query.ptype = this.$route.query.ptype
-//	    	this.query.payAmount = this.$route.query.payAmount
+	    	this.getNowFormatDate()
 	    },
         mounted () {
         	
@@ -51,10 +46,27 @@
 	    	GetWechatpay(){
 	    		api.GetWechatpay({
 	    			otype: this.otype,
-	    			ono: '888888'
+	    			ono: this.ono
 	    		}).then(res => {
-//	    			console.log(res.data)
+	    			this.transactionData = res.data
 	    		})
+	    	},
+	    	//获取当前时间
+	    	getNowFormatDate(){
+	    		var date = new Date();
+			    var seperator1 = "-";
+			    var seperator2 = ":";
+			    var month = date.getMonth() + 1;
+			    var strDate = date.getDate();
+			    if (month >= 1 && month <= 9) {
+			        month = "0" + month;
+			    }
+			    if (strDate >= 0 && strDate <= 9) {
+			        strDate = "0" + strDate;
+			    }
+			    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes()
+			    console.log(currentdate)
+			    this.currentTime = currentdate
 	    	}
 	    },
 	    components:{
