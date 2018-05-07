@@ -495,7 +495,14 @@ export default {
 //	},
 	GetWechatpay(data){
 		return axios.post(url + 'payment/WeChatPays', querystring.stringify(data))
-	},
+    },
+
+    // 获取支付状态  是否支付成功
+    GetOrderStatus(data) {
+        return axios.get(url + 'Payment/GetOrderStatus', {
+            params: data
+        })
+    },
 	/************************************个人信息设置页******************************************/
 	GetUserInformation(data){
 		return axios.get(url + 'Api/Car/GetMyStaffInfos',{
