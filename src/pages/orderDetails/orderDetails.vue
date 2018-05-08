@@ -233,6 +233,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 第三方转账 选择器 -->
+                <div class="suppliers">
+                    <vue-pickers :show="isSuppliers"
+                        :selectData="suppliers"
+                        v-on:cancel="isSuppliers = false"
+                        v-on:confirm="sureSuppliers"
+                        >
+                    </vue-pickers>
+                </div>
                 
 
             </div>
@@ -271,7 +281,8 @@
 </template>
 
 <script>
-	import Header from '@/components/header'
+    import Header from '@/components/header'
+    import VuePickers from 'vue-pickers'
 	import "./orderDetails.sass"
 	import api from '@/vuex/api'
 	export default {
@@ -297,7 +308,12 @@
                 lshvalNum: '',              // 支票号码
                 payInfo: '',                // 选择的支付方式
                 isOpenPaySplit: false,      // 是否打开拆分支付 弹窗
-                paySplitNum: ''             // 拆分支付 本次支付的金额
+                paySplitNum: '',            // 拆分支付 本次支付的金额
+                amount: '',                 // 本次支付应该支付的金额
+
+                isSuppliers: false,         // 是否显示第三方挂账选择器
+                suppliersId: '',            // 当前选中的第三方支付方式的id
+                suppliers: {},              // 第三方挂账 信息
 	        	
 	        }
 	    },
@@ -347,6 +363,8 @@
                         data.status = '已冲销'
                         break
                 }
+
+                // 订阅的产品数据
                 data.items.map((item, index) => {
                     if (!item.product.primaryPhotoId) {
                         if (item.product.isService) {
@@ -359,10 +377,16 @@
                     }
                     
                 })
+
+                // 预约时间处理
                 data.preDate = (data.preDate.match(/\d{4}-\d{2}-\d{2}[a-zA-Z]\d{2}:\d{2}/)).toString().replace(/[a-zA-Z]/ig, " ")
+                // 订单编号处理
                 data.datePlaced = data.datePlaced.match(/\d{4}-\d{2}-\d{2}/)
 
+                // 车辆图片
                 document.getElementById('car-img-warp').setAttribute('src', data.userCarBind.carInfo.carType.carSeries.seriesMinImage)
+
+                // 车辆信息处理
                 let carType = data.userCarBind.carInfo.carType
                 if (carType.carSeries.brandName !== '其他') {
                     document.getElementById('brand').innerHTML = `${carType.carSeries.brandName} ${carType.carSeries.brandType} 
@@ -370,6 +394,20 @@
                 } else {
                     document.getElementById('brand').innerHTML = `车型信息待完善`
                 }
+
+                // 第三方挂账信息数据处理
+                let suppliersTem = {
+                    columns: 1,
+                    pData1: []
+                }
+                data.suppliers.map((item, index) => {
+                    let obj = {
+                        text: item.value,
+                        value: item.id
+                    }
+                    suppliersTem.pData1.push(obj)
+                })
+                this.suppliers = suppliersTem
 
                 this.orderInfo = data
             },
@@ -609,6 +647,7 @@
                     } else {
                         // 根据是否拆分 判断本次需要支付的金额
                         let amount = (isSplit ? this.paySplitNum * 1 : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
+                        this.amount = amount
                         switch (this.payInfo) {
                         	//微信扫码支付
                             case '微信支付': 
@@ -644,26 +683,13 @@
                                 }
 
                             case '第三方挂账':
-                                console.log('不知所以')
+                                this.isSuppliers = true
+                                break
                             
                             //其他支付 （现金支付 支票支付 延时出单 对公转账）
 		                    default: {
 		                        if (confirm("确定使用[ " + this.payInfo + " ]付款吗？")) {
-		                        	api.PayOrder({
-					                    orderId: this.query.orderId,
-							            paymentMethod: this.payInfo,
-							            lsh: '',
-							            payAmount: amount,
-							            payInfo: ''
-					                }).then(res => {
-					                	console.log(res.data)
-					                	if (res.data.data == "Ok") {
-                							alert("支付成功！")
-                                            this.GetOrderInfo()
-                						}else{
-                							alert("支付失败！");
-                						}
-					                })
+                                    this.payDirect(this.payInfo, this.lshvalNum, amount)
 		                        }
 		
 		                    } break
@@ -672,10 +698,37 @@
 
                     }
                 })
+            },
+
+            // 第三方挂账  选择完毕
+            sureSuppliers (data) {
+                this.suppliersId = data.select1.value
+                this.payDirect(this.payInfo, this.suppliersId, this.amount)
+                this.isSuppliers = false
+            },
+
+            // 其他支付 （现金支付 支票支付 延时出单 对公转账）
+            payDirect(payMethod, lsh, amount, payInfo) {
+                api.PayOrder({
+                    orderId: this.query.orderId,
+                    paymentMethod: payMethod,              // 支付方式
+                    lsh: lsh,                              // 支票号、第三方挂账id
+                    payAmount: amount,                     // 支付金额
+                    payInfo: payInfo                       // 支付备注信息
+                }).then(res => {
+                    console.log(res.data)
+                    if (res.data.data == "Ok") {
+                        alert("支付成功！")
+                        this.GetOrderInfo()
+                    }else{
+                        alert("支付失败！");
+                    }
+                })
             }
 	    },
 	    components:{
-	        myHeader: Header
+            myHeader: Header,
+            VuePickers: VuePickers
 	    }
 	}
 </script>
