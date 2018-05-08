@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  onclick="window.history.go(-1)"/>
+        <img v-show="isShowGoBack" src="../assets/images/header/back.png" class="h-back"  @click="back"/>
         <router-link to="home">
         	<img v-show="isShowGoBack" src="../assets/images/header/home-btn.png" class="h-home" />
        	</router-link>
@@ -39,6 +39,9 @@ export default {
         },
         home(){
         	console.log('123')
+        },
+        back() {
+            this.$router.go(-1)
         }
     }
 }
