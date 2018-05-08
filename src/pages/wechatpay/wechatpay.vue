@@ -5,7 +5,7 @@
         <my-header></my-header>
 		<div class="code">
 			<div class="codeTwoImg">
-				<img src="http://www.guo-wei.xin/images/1.png"/>
+				<img :src="'payment/GetQR?qrstr='+transactionData.qrstr"/>
 				<p class="colorStyle">请使用微信扫描<br />二维码以完成支付</p>
 			</div>
 			<div class="codeStyleOne">¥ {{transactionData.totalFee}}</div>
@@ -37,12 +37,15 @@
 	    	this.otype = route.query.otype
 	    	this.ono = route.query.ono
 	    	this.GetWechatpay()
-	    	this.getNowFormatDate()
+            this.getNowFormatDate()
+
+            this.GetOrderStatus()
 	    },
         mounted () {
         	
         },
 	    methods: {
+            // 获取支付信息  二维码 金额...
 	    	GetWechatpay(){
 	    		api.GetWechatpay({
 	    			otype: this.otype,
@@ -50,7 +53,27 @@
 	    		}).then(res => {
 	    			this.transactionData = res.data
 	    		})
-	    	},
+            },
+            // 获取是否支付成功
+            GetOrderStatus() {
+                let timer = setInterval(()=> {
+                    api.GetOrderStatus({
+                        orderno: this.transactionData.orderNo
+                    }).then(res => {
+                        if (res.data.success) {
+                            clearInterval(timer)
+                            alert(res.data.msg)
+                            this.$router.push({
+                                path: 'orderDetails',
+                                query: {
+                                    orderId: this.$route.query.ono
+                                }
+                            })
+                        }
+                    })
+                }, 2000)
+                
+            },
 	    	//获取当前时间
 	    	getNowFormatDate(){
 	    		var date = new Date();
@@ -65,7 +88,6 @@
 			        strDate = "0" + strDate;
 			    }
 			    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes()
-			    console.log(currentdate)
 			    this.currentTime = currentdate
 	    	}
 	    },

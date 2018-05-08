@@ -212,7 +212,7 @@
                         <div class="title">支票号：</div>
                         <input placeholder="请输入支票号" v-model="lshvalNum">
                         <div class="btn-box">
-                            <button class="sure">确认</button>
+                            <button class="sure" @click="isOpenLshval = false">确认</button>
                             <button class="cancel" @click="cancelLshval()">取消</button>
                         </div>
                     </div>
@@ -251,7 +251,7 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='待付款'">
+            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -608,10 +608,15 @@
 //                      console.log(res.data.allowPayment)
                     } else {
                         // 根据是否拆分 判断本次需要支付的金额
-                        let amount = (isSplit ? this.paySplitNum : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
+                        let amount = (isSplit ? this.paySplitNum * 1 : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
                         switch (this.payInfo) {
                         	//微信扫码支付
-                            case '微信支付': {
+                            case '微信支付': 
+                                let payments = JSON.stringify(this.orderInfo.payments)
+                                if (payments.includes(this.payInfo)) {
+                                    alert("每张订单每个支付方式只能使用一次！")
+                                    return
+                                }
                                 this.$router.push({
                                     path: 'wechatpay',
                                     query: {
@@ -621,8 +626,27 @@
 //                                      payAmount: 0
                                     }
                                 })
-                            } break
-                            //现金支付
+                                break
+
+                            case '扫码支付':
+                                if (window.LakalaJSWebPay !== undefined) {
+                                    lklPay.payWithCode(payObj, "lklCallBack");
+                                } else {
+                                    alert('请使用拉卡拉POS机进行后续操作！')
+                                }
+                                break
+                            
+                            case '刷卡支付':
+                                if (window.LakalaJSWebPay !== undefined) {
+                                    lklPay.payWithCard(payObj, "lklCallBack")
+                                } else {
+                                    alert('请使用拉卡拉POS机进行后续操作！')
+                                }
+
+                            case '第三方挂账':
+                                console.log('不知所以')
+                            
+                            //其他支付 （现金支付 支票支付 延时出单 对公转账）
 		                    default: {
 		                        if (confirm("确定使用[ " + this.payInfo + " ]付款吗？")) {
 		                        	api.PayOrder({
