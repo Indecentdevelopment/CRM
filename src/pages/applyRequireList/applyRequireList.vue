@@ -21,7 +21,7 @@
                 <div class="action">
                     订单状态：{{item.providerStatus}}
                 </div>
-                <div class="show-detail2" @click="showDetail2(item.deliverDateTime)">详情</div>
+                <div class="show-detail2" @click="showDetail2(item.deliverDateTime,item.shopId)">详情</div>
             </div>
         </div>
 
@@ -34,11 +34,11 @@
                 </div>
                 <div class="form-item">
                     <div class="info">零采单号：</div>
-                    <div class="val">无</div>
+                    <div class="val"><span>{{crmData.ebeln}}</span></div>
                 </div>
                 <div class="form-item">
                     <div class="info">CRM服务单号：</div>
-                    <div class="val">不知</div>
+                    <div class="val"><span>{{crmData.orderNum}}</span></div>
                 </div>
                 <div class="form-item">
                     <div class="info">Serial号：</div>
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-item">
                     <div class="info">申请门店：</div>
-                    <div class="val">不知</div>
+                    <div class="val"><span>{{crmData.applyShopName}}</span></div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请产品：</div>
@@ -147,11 +147,13 @@
 
 					}]
 				},
-                status: 'order',       // 当前显示的页面
+                status: 'order',        // 当前显示的页面
                 isLoading: true,
-                orderList: [],        // 订单列表
-                detailList: [],        // 详情列表
-				value1: '',						//调拨时间
+                orderList: [],          // 订单列表
+                detailList: [],         // 详情列表
+				value1: '',				//调拨时间
+				serial: '',
+				crmData:{}				//CRM剩余参数
             }
        },
         created () {
@@ -172,22 +174,38 @@
                     this.orderList = res.data.applyRequires
                     this.isLoading = false
                 })
-            },
-            
+           },
             // 点击详情
             showDetail (serial) {
+            	this.serial = serial
                 this.status = 'detail'
                 api.GetApplyRequireDetail({
                     serial: serial
                 }).then(res => {
                     this.detailList = res.data
                 })
+                //获取订单详情
+                api.GetRequireAppDetails({
+            		serial: serial
+            	}).then(res =>{
+            		console.log(res.data)
+            	})
+            	
             },
 
             // 再点击详情
-            showDetail2 (item) {
+            showDetail2 (item,shopId) {
                 this.status = 'form'
         		this.value1 = item
+        		
+        		console.log(shopId)
+            	api.GetApplyShopAppInfo({
+            		serial: this.serial,
+            		shopId: shopId
+            	}).then(res =>{
+            		this.crmData = res.data
+            		console.log(res.data)
+            	})
             }
         },
 		components: {

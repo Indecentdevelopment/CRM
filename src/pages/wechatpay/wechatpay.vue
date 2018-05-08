@@ -38,7 +38,6 @@
 	    	this.ono = route.query.ono
 	    	this.GetWechatpay()
             this.getNowFormatDate()
-
             this.GetOrderStatus()
 	    },
         mounted () {
@@ -52,6 +51,7 @@
 	    			ono: this.ono
 	    		}).then(res => {
 	    			this.transactionData = res.data
+	    			console.log(this.transactionData.orderNo)
 	    		})
             },
             // 获取是否支付成功

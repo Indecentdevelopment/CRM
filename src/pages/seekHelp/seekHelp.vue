@@ -19,7 +19,7 @@
 				}">
 					<span class="fr" @click="details">详情</span>
 				</router-link> -->
-                <div class="show-detail" @click="showDetails(item)">详情</div>
+                <div class="show-detail" @click="showDetails(item,item.serial,item.shopId)">详情</div>
 			</div>
 			<div class="seekHelp-footer">如需要查看更多调拨信息请在crm后台调拨列表查看</div>
 		</div>
@@ -49,11 +49,11 @@
                 </div>
                 <div class="form-item">
                     <div class="info">申请产品：</div>
-                    <div class="val">不知</div>
+                    <div class="val"><span>{{crmData.productName}}</span></div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请数量：</div>
-                    <div class="val">不知</div>
+                    <div class="val"><span>{{crmData.quantity}}</span></div>
                 </div>
                 <div class="form-item">
                     <div class="info">申请时间：</div>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="form-item">
                     <div class="info">被调拨方：</div>
-                    <div class="val">不知</div>
+                    <div class="val">{{crmData.shopName}}</div>
                 </div>
                 
                 <div class="form-item">
@@ -77,7 +77,7 @@
                 </div>
                 <div class="form-item">
                     <div class="info">收货状态：</div>
-                    <div class="val">不知</div>
+                    <div class="val">{{crmData.deliveryStatus}}</div>
                 </div>
                 <div class="form-item">
                     <div class="info">备注：</div>
@@ -89,8 +89,13 @@
                 </div>
 
                 <div class="btn-box">
-                    <button>接受申请</button>
-                    <button>拒绝申请</button>
+                    <button v-if="">接受申请</button>
+                    <button v-if="">拒绝申请</button>
+                    <button v-if="">接受报价</button>
+                    <button v-if="">拒绝报价</button>
+                    <button v-if="">退回</button>
+                    <button v-if="">撤销</button>
+                    <button v-if="">商品出库</button>
                 </div>
             </div>
         </div>
@@ -129,7 +134,8 @@
                 orderLists: {},		    // 产品详情
                 orderData: {},          // 当前查看的订单
 				orderParameter: '',		// 产品参数
-				value1: '',						//调拨时间
+				value1: '',				//调拨时间
+				crmData: {}
 			}
 		},
 		created() {
@@ -148,12 +154,22 @@
 				).then( res =>{
 					this.orderLists = res.data
 					this.orderParameter = res.data
+					console.log(res.data.applyShopModels)
 				})
 			},
-			showDetails(item){
+			showDetails(item,serial,shopId){
                 this.status = 'form'
                 this.orderData = item
-			}
+                //获取数据详情
+                api.GetApplyShopAppInfo({
+					serial: serial,
+					shopId: shopId
+				}).then(res=>{
+					this.crmData = res.data
+					console.log(res.data)
+				})
+			},
+			
 		},
 		components: {
 			myHeader: Header
