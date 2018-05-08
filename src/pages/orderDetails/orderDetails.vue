@@ -123,13 +123,119 @@
                         <div class="title">useother-box</div>
                         <div class="info">¥123</div>
                     </div> -->
+
+                    <!-- 积分 -->
+                    <div class="item integral" v-if="orderInfo.user&&orderInfo.userIntegralConfig" v-show="orderInfo.status==='待付款'&&(orderInfo.user.userIntegralCount>0||orderInfo.useIntegralCount<0)">
+                        <div class="title">
+                            积分：
+                        </div>
+                        <div class="info">
+                            <div class="integral-num">
+                                <!-- {{orderInfo.useIntegralCount < 0 ? 'a':'b'}} -->
+                                本次使用（{{Math.abs(0 > orderInfo.useIntegralCount ? orderInfo.useIntegralCount : 
+                                ((orderInfo.subtotal+orderInfo.serviceAmount)>(orderInfo.user.userIntegralCount*orderInfo.userIntegralConfig.toAmountRate)?
+                                (orderInfo.total*orderInfo.userIntegralConfig.toIntegralRate*orderInfo.userIntegralConfig.minGiveIntegralAmount):
+                                orderInfo.user.userIntegralCount)).toFixed(0)}}）
+                            </div>
+                            <button class="useIntegral" @click="useIntegral()">{{isUseIntegral?'取消':'使用'}}</button>
+                        </div>
+                    </div>
+
+                    <!-- 卡券 -->
                     <div class="item" id="kaquan" v-if="orderInfo.cardCouponLogs" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status === '待付款'">
                         <div class="title">卡券：</div>
                         <div class="info">
-                            <input type="text" :placeholder="orderInfo.couponMsg">
-                            <div class="apply">使用</div>
+                            <input type="text" :placeholder="orderInfo.couponMsg" v-model="currentKaquan.code">
+                            <div class="select-down" @click="isChooseKaquan = !isChooseKaquan"></div>
+                            <ul class="kaquan-box" v-show="isChooseKaquan">
+                                <li class="kaquan-item" v-if="orderInfo.user" v-for="item in orderInfo.user.cardCoupons" 
+                                :key="item.id" @click="chooseKaquan(item)">
+                                    <div class="title">{{item.name}}</div>
+                                    <div class="kaquan-num-price">
+                                        <div class="kaquan-num">{{item.code}}</div>
+                                        <div class="kaquan-price">￥{{item.amount}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="apply" @click="useKaquan()">使用</div>
+                        </div>
+
+                        <!-- 使用卡券 弹窗 -->
+                        <div class="kaquan-dialog-box">
+                            <div class="kaquan-dialog">
+                                <div class="head">使用卡券</div>
+                                <div class="content">
+                                    <div class="item">
+                                        <div class="title">卡号：</div>
+                                        <div class="info">123</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">卡券名字：</div>
+                                        <div class="info">123</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">剩余金额：</div>
+                                        <div class="info">123</div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">使用记录：</div>
+                                        <div class="info">
+                                            <div class="record-th">
+                                                <span>说明</span>
+                                                <span>金额</span>
+                                                <span>时间</span>
+                                            </div>
+                                            <div class="record-tr">
+                                                <span>951</span>
+                                                <span>20</span>
+                                                <span>2018-4-6</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">使用金额：</div>
+                                        <div class="info">
+                                            <input >
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">冲抵金额：</div>
+                                        <div class="info">
+                                            <input >
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="title">备注：</div>
+                                        <div class="info">
+                                            <textarea></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="message">
+                                        *注意：套餐卡与会员卡优惠不同享，使用套餐卡后将自动取消会员卡折扣
+                                    </div>
+
+                                    <div class="totalbalance">
+                                        <span class="info">
+                                            订单可扣减最大金额：
+                                        </span>
+                                        <span class="price">
+                                            ￥100
+                                        </span>
+                                    </div>
+
+                                    <div class="btn-box">
+                                        <button class="cancel">取消</button>
+                                        <button class="sure">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
+                    
+
+                    <!-- 发票号 -->
                     <div class="item useother-box1" id="dvinvoice" 
                      v-if="orderInfo.status==='已完成'||orderInfo.status==='已作废'||orderInfo.status==='已冲销'">
                         <div class="title">发票号：</div>
@@ -303,6 +409,11 @@
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
                 },
+
+                isUseIntegral: false,       // 是否使用积分
+                isChooseKaquan: false,      // 是否打开选择卡券弹窗
+                currentKaquan: {},          // 当前选中的卡券
+                kaquanDialog: false,        // 使用卡券 弹窗
                 workingHours: '0',			// 工时
                 isOpenLshval: false,        // 是否打开支票输入框
                 lshvalNum: '',              // 支票号码
@@ -475,7 +586,7 @@
 				}
 				console.log('-')
 			},
-				//使用
+		    // 使用工时
 			useit(){
 				let hours = Number(this.workingHours)
 		        let reg = /^[\d\-]+$/
@@ -496,8 +607,13 @@
 		        } else {
 		            console.log('false')
 		        }
-				
-			},
+            },
+            
+            // 使用积分
+            useIntegral() {
+                this.isUseIntegral = !this.isUseIntegral
+
+            },
             // 店家 添加产品
             addProduct () {
                 this.$router.push({
@@ -609,6 +725,47 @@
             // 取消支票支付
             cancelLshval () {
                 this.isOpenLshval = false
+            },
+
+            // 选择卡券
+            chooseKaquan (data) {
+                this.currentKaquan = data
+                this.isChooseKaquan = !this.isChooseKaquan
+            },
+            // 使用卡券
+            useKaquan () {
+                if (!this.currentKaquan.code) {
+                    alert('卡券不能为空！')
+                    return
+                }
+                if (this.currentKaquan.cardTypeId + '' === '1015') {
+                    api.GetCardCouponVerif({
+                        code: this.currentKaquan.code,
+                        orderId: this.query.orderId
+                    }).then(res => {
+                        if (res.dta.isok) {
+                            if (res.data.orderInfo) {
+                                this.kaquanDialog = true
+                            }
+                        } else {
+                            alert(res.data.message)
+                            return
+                        }
+                    })
+                } else {
+                    api.GetCardCoupon({
+                        code: this.currentKaquan.code,
+                        orderId: this.query.orderId
+                    }).then(res => {
+                        if (res.data.isok) {
+                            if (res.data.orderInfo) {
+                                this.kaquanDialog = true
+                            }
+                        } else {
+                            alert('使用异常！')
+                        }
+                    })
+                }
             },
 
             // 拆分付款

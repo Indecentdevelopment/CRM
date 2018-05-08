@@ -305,6 +305,77 @@
                         background-color: #FFD900
                         border-top-right-radius: 5px
                         border-bottom-right-radius: 5px
+                    .select-down
+                        background-color: #FFD900
+                        width: 2rem
+                        height: 1.8rem
+                        margin-right: 5px
+                        text-align: center
+                        &:before
+                            content: "\25BC"
+                            line-height: 1.8rem
+            .item#kaquan
+                position: relative
+                .kaquan-box
+                    position: absolute
+                    top: 2rem
+                    left: 0
+                    width: 100%
+                    height: 14rem
+                    padding: 0
+                    margin: 0
+                    border: solid 1px #ccc
+                    border-radius: 5px
+                    box-shadow: 0 6px 12px rgba(0,0,0,.175)
+                    background-color: #fff
+                    z-index: 1
+                    .kaquan-item
+                        padding: 0.3rem
+                        border-bottom: solid 1px #999
+                        .title
+                            color: #333333
+                            font-weight: 900
+                            font-size: 14px
+                        .kaquan-num-price
+                            margin-top: 0.6rem
+                            display: flex
+                            justify-content: space-between
+                            font-size: 14px
+                            .kaquan-price
+                                font-weight: 900
+                .kaquan-dialog-box
+                    position: fixed
+                    top: 1.4rem
+                    bottom: 0
+                    left: 0
+                    right: 0
+                    padding: 0.6rem
+                    background-color: rgba(0,0,0,0.5)
+                    box-sizing: border-box
+                    overflow: auto
+                    z-index: 10
+                    .kaquan-dialog
+                        width: 100%
+                        height: 100%
+                        background-color: #ffffff
+                        border-radius: 10px
+                        .head
+                            padding: 1rem 0.6rem
+                            font-size: 26px
+                            font-weight: 100
+                            text-align: center
+                            border-bottom: solid 1px #ddd
+                        .content
+                            padding: 1rem 2rem
+                            .item
+                                margin-top: 0.2rem
+                                display: flex
+                                justify-content: flex-start
+                                border: none
+                                .title
+                                    width: 6rem
+                                    font-weight: 900
+                    
             .item.prefer .box
                 display: flex
                 flex-direction: column
@@ -322,6 +393,11 @@
                             line-height: 0.7rem
                         .method,.time
                             font-weight: 300
+            .item.integral
+                .info
+                    color: #666666
+                    font-weight: 100
+                    
 
                 
 
