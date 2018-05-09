@@ -165,6 +165,30 @@ export default {
         })
     },
 
+    // 使用积分
+    useIntegralCard (data) {
+        return axios.post(url + 'api/order/useIntegralCard', querystring.stringify(data))
+    },
+
+    // 使用卡券 GetCardCoupon
+    GetCardCoupon (data) {
+        return axios.get(url + 'api/order/GetCardCoupon', {
+            params: data
+        })
+    },
+
+    // 提交使用卡券
+    usePackageCard (data) {
+        return axios.get(url + 'api/order/usePackageCard', {
+            params: data
+        })
+    },
+    
+    // 取消使用卡券
+    CancelCardUse (data) {
+        return axios.post(url + `api/order/CancelCardUse?id=${data.id}`)
+    },
+
     // 付款
     PreparedPay (data) {
         return axios.get(url + 'api/order/PreparedPay', {

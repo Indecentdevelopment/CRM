@@ -352,13 +352,14 @@
                     padding: 0.6rem
                     background-color: rgba(0,0,0,0.5)
                     box-sizing: border-box
-                    overflow: auto
+                    
                     z-index: 10
                     .kaquan-dialog
                         width: 100%
                         height: 100%
                         background-color: #ffffff
                         border-radius: 10px
+                        overflow: auto
                         .head
                             padding: 1rem 0.6rem
                             font-size: 26px
@@ -366,15 +367,100 @@
                             text-align: center
                             border-bottom: solid 1px #ddd
                         .content
-                            padding: 1rem 2rem
+                            padding: 1rem 0
                             .item
                                 margin-top: 0.2rem
+                                padding: 0.3rem 1.5rem
                                 display: flex
                                 justify-content: flex-start
+                                align-items: flex-start
                                 border: none
+                                
                                 .title
                                     width: 6rem
                                     font-weight: 900
+                                .info
+                                    flex: 1
+                                input
+                                    border-radius: 5px
+                                    width: 100%
+                                    padding: 0.2rem
+                                    &:focus
+                                        border-color: #66afe9
+                                        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)
+                                textarea
+                                    width: 100%
+                                    height: 3rem
+                                    padding: 0.2rem
+                                    border: solid 1px #ccc
+                                    box-shadow: inser 0 0 1px rgba(0,0,0,0.1)
+                                    border-radius: 5px
+                                    &:focus
+                                        border-color: #66afe9
+                                        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6)
+                            .item.record
+                                .info
+                                    height: 8.5rem
+                                    overflow: auto
+                                    border: solid 1px #ddd
+                                    align-items: flex-start
+                                    table
+                                        width: 100%
+                                        tr
+                                            border-top: solid 1px #ddd
+                                            td,th
+                                                padding: 0.4rem 0.2rem
+                                                text-align: center
+                                        tr.th
+                                            font-weight: 900
+                                        tr:nth-child(odd)
+                                            background-color: #f9f9f9
+                            .item.message
+                                padding: 0 0.8rem
+                                color: red
+                            .item.totalbalance
+                                width: 90%
+                                margin: 1rem 0.8rem
+                                padding: 1rem
+                                border: 1px solid #ccc
+                                box-shadow: 0 1px 1px rgba(0,0,0,.05)
+                                border-radius: 5px
+                                box-sizing: border-box
+                                .title
+                                    width: 4rem
+                                .info
+                                    margin-left: 2rem
+                            .btn-box
+                                width: 100%
+                                padding: 0.5rem
+                                margin: 0
+                                margin-top: 1rem
+                                display: flex
+                                justify-content: flex-end
+                                border-top: solid 1px #ddd
+                                box-sizing: border-box
+                                button
+                                    @include yellow-btn 
+                                    padding: 0.4rem 0.8rem
+                                    margin: 0 5px
+            .item.kaquan-discont
+                .info
+                    display: flex
+                    flex-direction: column
+                    .kaquan-dis-item
+                        width: 5rem
+                        padding: 0.2rem
+                        display: flex
+                        flex-direction: column
+                        align-items: center
+                        border: dashed 1px #666
+                        box-sizing: border-box
+                        text-align: right
+                        line-height: 1.2rem
+                        button
+                            @include yellow-btn 
+                            padding: 0.3rem 0.6rem
+                                        
                     
             .item.prefer .box
                 display: flex
@@ -397,6 +483,12 @@
                 .info
                     color: #666666
                     font-weight: 100
+                    display: flex
+                    flex-direction: column
+                    align-items: flex-end
+                    button
+                        @include yellow-btn
+                        padding: 0.3rem 0.6rem
                     
 
                 

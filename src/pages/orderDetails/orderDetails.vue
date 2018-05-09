@@ -135,7 +135,7 @@
                                 本次使用（{{Math.abs(0 > orderInfo.useIntegralCount ? orderInfo.useIntegralCount : 
                                 ((orderInfo.subtotal+orderInfo.serviceAmount)>(orderInfo.user.userIntegralCount*orderInfo.userIntegralConfig.toAmountRate)?
                                 (orderInfo.total*orderInfo.userIntegralConfig.toIntegralRate*orderInfo.userIntegralConfig.minGiveIntegralAmount):
-                                orderInfo.user.userIntegralCount)).toFixed(0)}}）
+                                orderInfo.user.userIntegralCount)).toFixed(0)}}）分支付
                             </div>
                             <button class="useIntegral" @click="useIntegral()">{{isUseIntegral?'取消':'使用'}}</button>
                         </div>
@@ -161,72 +161,75 @@
                         </div>
 
                         <!-- 使用卡券 弹窗 -->
-                        <div class="kaquan-dialog-box">
+                        <div class="kaquan-dialog-box" v-if="cardCoupon.card" v-show="kaquanDialog">
                             <div class="kaquan-dialog">
                                 <div class="head">使用卡券</div>
                                 <div class="content">
                                     <div class="item">
                                         <div class="title">卡号：</div>
-                                        <div class="info">123</div>
+                                        <div class="info">{{cardCoupon.card.code}}</div>
                                     </div>
                                     <div class="item">
                                         <div class="title">卡券名字：</div>
-                                        <div class="info">123</div>
+                                        <div class="info">{{cardCoupon.card.name}}</div>
                                     </div>
                                     <div class="item">
                                         <div class="title">剩余金额：</div>
-                                        <div class="info">123</div>
+                                        <div class="info">{{cardCoupon.card.amount}}</div>
                                     </div>
-                                    <div class="item">
+                                    <div class="item record">
                                         <div class="title">使用记录：</div>
                                         <div class="info">
-                                            <div class="record-th">
-                                                <span>说明</span>
-                                                <span>金额</span>
-                                                <span>时间</span>
-                                            </div>
-                                            <div class="record-tr">
-                                                <span>951</span>
-                                                <span>20</span>
-                                                <span>2018-4-6</span>
-                                            </div>
+                                            <table>
+                                                <tr class="th">
+                                                    <th width="30%">说明</th>
+                                                    <th width="25%">金额</th>
+                                                    <th width="45%">时间</th>
+                                                </tr>
+                                                <tr v-for="item in cardCoupon.card.cardCouponLogs" :key="item.id">
+                                                    <td >{{item.remark?item.remark:'使用套餐卡'}}</td>
+                                                    <td >{{item.useAmount}}</td>
+                                                    <td >{{item.createDate}}</td>
+                                                </tr>
+                                                
+                                            </table>
                                         </div>
                                     </div>
                                     <div class="item">
                                         <div class="title">使用金额：</div>
                                         <div class="info">
-                                            <input >
+                                            <input placeholder="请输入本次使用金额" v-model="cardCouponUseAmount">
                                         </div>
                                     </div>
                                     <div class="item">
                                         <div class="title">冲抵金额：</div>
                                         <div class="info">
-                                            <input >
+                                            <input placeholder="请输入本次冲抵金额" v-model="deductionAmount">
                                         </div>
                                     </div>
                                     <div class="item">
                                         <div class="title">备注：</div>
                                         <div class="info">
-                                            <textarea></textarea>
+                                            <textarea placeholder="使用备注" v-model="carduseremark"></textarea>
                                         </div>
                                     </div>
 
-                                    <div class="message">
+                                    <div class="item message">
                                         *注意：套餐卡与会员卡优惠不同享，使用套餐卡后将自动取消会员卡折扣
                                     </div>
 
-                                    <div class="totalbalance">
-                                        <span class="info">
+                                    <div class="item totalbalance">
+                                        <span class="title">
                                             订单可扣减最大金额：
                                         </span>
-                                        <span class="price">
-                                            ￥100
+                                        <span class="info">
+                                            ￥{{cardCoupon.orderInfo.total - cardCoupon.orderInfo.alreadyPaymentAmount - cardCoupon.orderInfo.memberDiscountAmount}}
                                         </span>
                                     </div>
 
                                     <div class="btn-box">
                                         <button class="cancel">取消</button>
-                                        <button class="sure">确定</button>
+                                        <button class="sure" @click="usePackageCard()">确定</button>
                                     </div>
                                 </div>
                             </div>
@@ -234,6 +237,16 @@
                         </div>
                     </div>
                     
+                    <!-- 卡券抵扣 -->
+                    <div class="item kaquan-discont" v-show="orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0">
+                        <div class="title">卡券抵扣</div>
+                        <div class="info">
+                            <div class="kaquan-dis-item" v-for="item in orderInfo.cardCouponLogs" :key="item.id">
+                                <div class="text">{{item.cardCouponName}}￥{{item.useAmount}}元</div>
+                                <button @click="cancelUseCard(item.id)">取消</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- 发票号 -->
                     <div class="item useother-box1" id="dvinvoice" 
@@ -410,6 +423,11 @@
                     backgroundColor:"#E4E4E4"
                 },
 
+                cardCoupon: {},             // 使用卡券 弹窗信息
+                cardCouponUseAmount: '',    // 使用卡券 本次使用金额
+                deductionAmount: '',        // 使用卡券 冲抵金额
+                carduseremark: '',          // 使用卡券 备注
+
                 isUseIntegral: false,       // 是否使用积分
                 isChooseKaquan: false,      // 是否打开选择卡券弹窗
                 currentKaquan: {},          // 当前选中的卡券
@@ -504,6 +522,13 @@
                     ${carType.carSeries.seriesName} ${carType.displacement} ${carType.productiveYear}年生产` 
                 } else {
                     document.getElementById('brand').innerHTML = `车型信息待完善`
+                }
+
+                // 是否正在使用积分
+                if (data.useIntegralCount < 0) {
+                    this.isUseIntegral = true
+                } else {
+                    this.isUseIntegral = false
                 }
 
                 // 第三方挂账信息数据处理
@@ -609,11 +634,7 @@
 		        }
             },
             
-            // 使用积分
-            useIntegral() {
-                this.isUseIntegral = !this.isUseIntegral
-
-            },
+            
             // 店家 添加产品
             addProduct () {
                 this.$router.push({
@@ -727,6 +748,25 @@
                 this.isOpenLshval = false
             },
 
+            // 使用积分
+            useIntegral() {
+                this.isUseIntegral = !this.isUseIntegral
+                this.isLoading = true
+                api.useIntegralCard({
+                    orderId: this.query.orderId,
+                    useIntegral: this.isUseIntegral,
+                    cardCouponCode: '',
+                    useWashCard: '',
+                    buyTireInsurance: '',
+                    deductionAmount: '',
+                    cardCouponUseAmount: '',
+                    cardUseRemark: ''
+                }).then(res => {
+                    this.GetOrderInfo()
+                })
+
+            },
+
             // 选择卡券
             chooseKaquan (data) {
                 this.currentKaquan = data
@@ -734,15 +774,18 @@
             },
             // 使用卡券
             useKaquan () {
+                
                 if (!this.currentKaquan.code) {
                     alert('卡券不能为空！')
                     return
                 }
+                this.isLoading = true
                 if (this.currentKaquan.cardTypeId + '' === '1015') {
                     api.GetCardCouponVerif({
                         code: this.currentKaquan.code,
                         orderId: this.query.orderId
                     }).then(res => {
+                        this.isLoading = false
                         if (res.dta.isok) {
                             if (res.data.orderInfo) {
                                 this.kaquanDialog = true
@@ -757,15 +800,69 @@
                         code: this.currentKaquan.code,
                         orderId: this.query.orderId
                     }).then(res => {
+                        this.isLoading = false
                         if (res.data.isok) {
                             if (res.data.orderInfo) {
                                 this.kaquanDialog = true
+                                res.data.card.cardCouponLogs.map((item, index) => {
+                                    console.log(item)
+                                    res.data.card.cardCouponLogs[index].createDate = new Date(item.createDate).toString("yyyy-MM-dd")
+                                })
+                                this.cardCoupon = res.data
+
                             }
                         } else {
                             alert('使用异常！')
                         }
                     })
                 }
+            },
+
+            // 提交使用卡券
+            usePackageCard () {
+                if (!this.cardCouponUseAmount) {
+                    alert('请输入使用金额!')
+                    return
+                }
+                if (!this.deductionAmount) {
+                    alert('请输入冲抵金额!')
+                    return
+                }
+                if (!this.carduseremark) {
+                    alert('请输入备注!')
+                    return
+                }
+                this.isLoading = true
+                api.usePackageCard({
+                    code: this.cardCoupon.card.code,
+                    orderId: this.query.orderId,
+                    amount: this.cardCouponUseAmount,       // 使用金额
+                    deductionAmount: this.deductionAmount,  // 冲抵金额
+                    carduseremark: this.carduseremark       // 备注
+                }).then(res => {
+                    this.isLoading = false
+                    if (res.data.isok) {
+                        this.kaquanDialog = false
+                        this.GetOrderInfo()
+                    } else {
+                        alert(res.data.msg)
+                    }
+                })
+            },
+
+            // 取消使用卡券
+            cancelUseCard (id) {
+                this.isLoading = true
+                api.CancelCardUse({
+                    id: id
+                }).then(res => {
+                    this.isLoading = false
+                    if (res.data.success) {
+                        this.GetOrderInfo()
+                    } else {
+                        alert(res.data.msg)
+                    }
+                })
             },
 
             // 拆分付款
