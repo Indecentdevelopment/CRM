@@ -894,6 +894,7 @@
                 api.PreparedPay({
                     orderId: this.query.orderId
                 }).then(res => {
+                	console.log(res.data.appId)
                     // 判断支付是否完成
                     if (!res.data.allowPayment) {
                         // swal(...)

@@ -49,7 +49,7 @@
 						</router-link>	
 			        </div>
 		        </div>
-		   </div>
+		    </div>
 		   
 		</div>
 	</div>
@@ -63,7 +63,7 @@
 	export default {
 		data() {
 			return {
-                isLoading: false,
+                isLoading: true,
                 cardsNo: '', // 卡券号
                 cardlist: [],  // 最下方 服务列表
                 detailOpend:false,
@@ -71,20 +71,27 @@
             }
        },
         created () {
+        	Promise.all([]).then(res => {
+                setTimeout(() => {
+                    this.isLoading = false
+                }, 500)
+            })
+        	
         },
         mounted () {
         },
         methods: {
         	searchCardsList(){
-        		api.GetCardsList(
-        			{
+        		if(this.cardsNo.length < 4){
+        			alert("请输入四位以上的卡号!")
+        		}else{
+        			api.GetCardsList({
         				cardsNo:this.cardsNo
-        			}
-        		)
-                .then(res => {
-                    this.cardlist = res.data.items
-                })
-                .catch(err => Promise.reject(err))
+        			}).then(res => {
+	                    this.cardlist = res.data.items
+	                })
+	                .catch(err => Promise.reject(err))
+        		}
         	},
         	showUsedRecord(index){
         		this.detailOpend = true;
