@@ -6,16 +6,20 @@ import router from './router'
 
 import store from './vuex/index'
 //import login from './pages/login/login'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
+import vueSignature from "vue-signature"             // 用户签名插件
 
 import './config/index'
 
-import vueSignature from "vue-signature"
+
+
 Vue.use(vueSignature)
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
-Vue.use(ElementUI);
+
 new Vue({
   el: '#app',
   router,
