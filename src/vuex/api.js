@@ -471,6 +471,10 @@ export default {
 	GetApplyShopAppInfo(data){
 		return axios.post(url + 'home/GetApplyShopAppInfo', querystring.stringify(data))
 	},
+	//接受申请
+	GetReplyPriceForShop(data){
+		return axios.post(url + 'Apply/ReplyPriceForShop', querystring.stringify(data))
+	},
 	/************************************发票页***********************************************/
 	GetInvoiceLis(data){
 		return axios.get(url + 'api/order/InvoiceList',{
