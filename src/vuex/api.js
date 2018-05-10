@@ -24,7 +24,7 @@ axios.interceptors.response.use(
     res => {
         if (res.data.code === 401) { // 验证失败
             localStorage.removeItem('currentUser_token')
-            console.log('here')
+            store.dispatch('loginOut')
             router.push('/')
             // window.tip('请重新登录')
             return
@@ -34,9 +34,9 @@ axios.interceptors.response.use(
     },
     err => {
         console.log(err.response)
-        if (err.response.status === 500) {
-            return err.response
-        }
+        // if (err.response.status === 500) {
+        //     return err.response
+        // }
         store.dispatch('loginOut')
         router.push('/login')
         return Promise.reject(err)
