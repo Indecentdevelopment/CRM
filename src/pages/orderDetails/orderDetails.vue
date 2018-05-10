@@ -21,7 +21,7 @@
                 <p class="orderStyleOne orderColor-white fl">预约时间：{{orderInfo.preDate}}</p>
                 <div class="orderVehicleInfo fl clearfix">
                     <div class="vehicleImg fl">
-                        <img id="car-img-warp" src=""/>
+                        <img id="car-img-warp" src="../../assets/images/orderDetails/defaultcar.jpg"/>
                     </div>
                     <p class="vehicleP fl">
                         <span id="brand"></span>
@@ -129,15 +129,15 @@
                         <div class="title">
                             积分：
                         </div>
-                        <div class="info">
-                            <div class="integral-num">
+                        <div class="info clearfix">
+                            <div class="integral-num fl">
                                 <!-- {{orderInfo.useIntegralCount < 0 ? 'a':'b'}} -->
                                 本次使用（{{Math.abs(0 > orderInfo.useIntegralCount ? orderInfo.useIntegralCount : 
                                 ((orderInfo.subtotal+orderInfo.serviceAmount)>(orderInfo.user.userIntegralCount*orderInfo.userIntegralConfig.toAmountRate)?
                                 (orderInfo.total*orderInfo.userIntegralConfig.toIntegralRate*orderInfo.userIntegralConfig.minGiveIntegralAmount):
                                 orderInfo.user.userIntegralCount)).toFixed(0)}}）分支付
                             </div>
-                            <button class="useIntegral" @click="useIntegral()">{{isUseIntegral?'取消':'使用'}}</button>
+                            <button class="useIntegral fr" @click="useIntegral()">{{isUseIntegral?'取消':'使用'}}</button>
                         </div>
                     </div>
 
@@ -344,7 +344,7 @@
                         <div class="title">拆分付款</div>
                         <div class="input-box">
                             <div class="msg">使用金额</div>
-                            <input placeholder="请输入本次支付金额（最多55）" v-model="paySplitNum">
+							<input placeholder="请输入本次支付金额（最多55）" v-model="paySplitNum">
                         </div>
                         <div class="btn-box">
                             <button @click="paySplitNum='';isOpenPaySplit=false">取消</button>
@@ -388,7 +388,7 @@
             </div>
 
             <div class="btn-box">
-                <div v-show="orderInfo.status === '服务中'" @click="serviceOver">服务结束</div>
+                <div v-show="orderInfo.status !== '服务中'&&orderInfo.status!=='已完成'" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>

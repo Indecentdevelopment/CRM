@@ -499,6 +499,27 @@ export default {
 	GetReplyPriceForShop(data){
 		return axios.post(url + 'Apply/ReplyPriceForShop', querystring.stringify(data))
 	},
+	//拒绝申请
+	GetReplyReject(data){
+		return axios.post(url + 'Apply/ReplyReject', querystring.stringify(data))
+	},
+	//接受报价
+	GetUpdatePurchaseStatus(data){
+		return axios.post(url + 'Apply/UpdatePurchaseStatus', querystring.stringify(data))
+	},
+	//退回申请
+	GetSendBack(data){
+		return axios.post(url + 'Apply/SendBack', querystring.stringify(data))
+	},
+	//撤销申请
+	GetCheXiao(data){
+		return axios.post(url + 'Apply/CheXiao', querystring.stringify(data))
+	},
+	//商品出库
+	GetStore(data){
+		return axios.post(url + 'Apply/Store', querystring.stringify(data))
+	},
+	
 	/************************************发票页***********************************************/
 	GetInvoiceLis(data){
 		return axios.get(url + 'api/order/InvoiceList',{

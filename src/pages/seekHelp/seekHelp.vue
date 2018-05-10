@@ -112,13 +112,13 @@
                 </div>
 
                 <div class="btn-box">
-                    <button v-if="btnAccept">接受申请</button>
-                    <button v-if="btnReject">拒绝申请</button>
-                    <button v-if="btnAcceptPrice">接受报价</button>
-                    <button v-if="btnRejectPrice">拒绝报价</button>
-                    <button v-if="btnSendBack">退回</button>
-                    <button v-if="btnCheXiao">撤销</button>
-                    <button v-if="btnOutStore">商品出库</button>
+                    <button v-if="btnAccept" @click="acceptApply">接受申请</button>
+                    <button v-if="btnReject" @click="returnList">拒绝申请</button>
+                    <button v-if="btnAcceptPrice" @click="acceptOffer">接受报价</button>
+                    <button v-if="btnRejectPrice" @click="refuseOffer">拒绝报价</button>
+                    <button v-if="btnSendBack" @click="returnList">退回</button>
+                    <button v-if="btnCheXiao" @click="revokeList">撤销</button>
+                    <button v-if="btnOutStore" @click="commodity">商品出库</button>
                 </div>
             </div>
         </div>
@@ -206,12 +206,14 @@
 				}).then(res=>{
 					this.crmData = res.data
 //					console.log(res.data)
-					this.ifState()
+					this.ifState(shopId)
 				})
 			},
-			ifState(){
+			ifState(isShowBtn){
 				//门店撤销
-		        if (this.crmData.applyType == "同城门店") {
+				console.log(isShowBtn)
+				console.log(this.crmData.applyType)
+		        if (this.crmData.applyType == "同城门店" && isShowBtn != 1) {
 		            if (this.crmData.isShowCheXiao == 1) {
 		                this.btnCheXiao = true
 		            } else {
@@ -224,6 +226,15 @@
 		        } else {
 		            this.btnSendBack = false
 		        }
+		        //提交需求单
+		        if (this.crmData.isProvider < 1) {
+		            this.btnAccept = true
+					this.btnReject = true
+		            this.rejectDiv = true
+		        }else if (this.crmData.isProvider < 3  && isShowBtn == 1){//供应商回复报价
+		            this.btnAcceptPrice = true
+					this.btnRejectPrice = true
+		        }
 		        //如果是拒绝状态
 		        if (this.crmData.isProvider == 2 || this.crmData.isProvider == 4 || this.crmData.isProvider == 6) {
 					this.btnAccept = false
@@ -234,20 +245,181 @@
 					this.btnOutStore = false
 					this.rejectDiv = false
 		        }
+		        //同城不显示报价、销售价格和订单号
+		        if (this.crmData.applyType == "同城门店") {
+		            this.replyPriceDiv = false
+		            this.salePriceDiv = false
+		            this.addsalelv = false
+		            this.invoiceDiv = false
+		        }
 		        if (this.crmData.applyType == "同城门店" && this.crmData.isProvider > 2) {
 		        	this.deliverSerialDiv = true
 		        	this.oddNumbers = '出库单号：'
 		        }
 		        //非本店操作
-		        if (this.crmData.applyType == "同城门店") {
+		        if (this.crmData.applyType == "同城门店" && isShowBtn == 1) {
 		            this.btnAccept = false
 					this.btnReject = false
 					this.btnAcceptPrice = false
 					this.btnRejectPrice = false
 		            this.btnOutStore = false
 		        }
-			}
-			
+			},
+			//接受申请
+        	acceptApply(){
+        		let applyType = this.crmData.applyType			//供应商或同城门店
+        		let price = this.crmData.replyPrice				//回复报价
+        		let salePrice = this.crmData.salePrice			//销售价格
+        		let deliverDateTime = this.value1				//日期
+        		let serial = this.crmData.serial				//订单号
+        		let invoice = this.crmData.invoice				//发票
+        		let shopId = this.shopId						//shopId
+        		let remarks = this.remarks						//备注
+        		let addPriceLv = this.crmData.addPriceLv		//加价率
+//      		console.log(deliverDateTime)
+//      		console.log(applyType,price,salePrice)
+        		if (applyType == "供应商" && (price == "" || price == "0")) {
+	                alert("请输入您的报价！")
+	            }else if (applyType == "供应商" && (salePrice == "" || salePrice == "0")) {
+	                alert("请输入销售价格！")
+	            }else if (applyType == "供应商") {
+	                let lv = addPriceLv
+	                lv = lv / 100
+	                let spnic = Math.ceil(parseFloat(price) / (1 - lv) / 0.9)
+	                if (parseFloat(salePrice) < parseFloat(spnic)) {
+	                    alert("销售价格最低为" + spnic + "")
+	                    return false
+	                }
+	            }else if (deliverDateTime == null && deliverDateTime == '') {
+	            	console.log(deliverDateTime)
+	                alert("请输入您的交期！")
+	            }else if(this.flag == true){
+        			console.log('提交')
+	        		this.flag = false
+        			api.GetReplyPriceForShop({
+        				Serial: serial,
+		                ShopId: shopId,
+		                Price: price,
+		                SalePrice: salePrice,
+		                Invoice: invoice,
+		                DeliverDateTime: deliverDateTime,
+		                Remark: remarks
+	        		}).then(res=>{
+	        			console.log(res.data)
+	        		})
+        		} else {
+	                alert('请勿重复点击')
+	            }
+        	},
+        	//拒绝
+        	returnList(){
+        		let rejMsg = this.refuseReason					//拒绝原因
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (rejMsg == "") {
+	                alert("请输入您拒绝的原因！")
+	                return false
+	            }
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetReplyReject({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    RejectMessage: rejMsg
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//接受报价
+        	acceptOffer(){
+        		let price = this.crmData.replyPrice				//回复报价
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (price == "") {
+	                alert("请输入报价！")
+	                return false
+	            }
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetUpdatePurchaseStatus({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    Price: price,
+	                    IsProvider: 3
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//拒绝报价
+        	refuseOffer(){
+        		let price = this.crmData.replyPrice				//回复报价
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetUpdatePurchaseStatus({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    Price: price,
+	                    IsProvider: 4
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//退回
+        	returnList(){
+        		let ihrez = this.crmData.ihrez
+	        	if (ihrez != "" && ihrez != null) {
+	        		if(confirm("确定退回?")){
+	                    api.GetSendBack({
+	                    	IHREZ: ihrez
+	                    }).then(res=>{
+	                    	console.log(res.data)
+	                    })
+	                }
+        		}
+        	},
+        	//撤销
+        	revokeList(){
+        		let serial = this.crmData.serial				//订单号
+	        	if (serial != "" && serial != null) {
+	        		if(confirm("确定撤销?")){
+	                    api.GetCheXiao({
+	                    	Serial: serial
+	                    }).then(res=>{
+	                    	console.log(res.data)
+	                    })
+	                }
+        		}
+        	},
+        	//商品出库
+        	commodity(){
+        		let serial = this.crmData.serial				//订单号
+        		let deliverSerial = this.crmData.deliverSerial	//订单流水号
+        		let shopId = this.shopId						//shopId
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetStore({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    DeliverSerial: deliverSerial,
+	                    IsProvider: 5
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	}
 		},
 		components: {
 			myHeader: Header
