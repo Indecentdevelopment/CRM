@@ -31,13 +31,13 @@
                         <div class="item" v-for="(categorys, catIndex) in product.childCategorys" :key="categorys.id">
                             
                             <div v-if="categorys.childCategorys.length===0">
-                                <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
+                                <div class="oparation" @click="showProductList($event, proIndex, catIndex, categorys)">
                                     <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
                                     <div class="info">
                                         <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
                                     </div>
                                 </div>
-                                <div class="productList" v-show="categorys.active">
+                                <div class="productList" :class="{active: categorys.active}" v-show="categorys.active">
                                     <div class="tiresSpecs" v-if="categorys.name === '轮胎'">
                                         <!-- 规格 -->
                                         <i class="item" v-for="(tires, tiresIndex) in productData.tiresSpecs" :key="tiresIndex" 
@@ -177,7 +177,7 @@
 
                             <div v-else>
 
-                                <div class="oparation" @click="showProductList(proIndex, catIndex, categorys)">
+                                <div class="oparation" @click="showProductList($event, proIndex, catIndex, categorys)">
                                     <img class="iconfont" src="../../assets/images/confirm/confirm.gif">
                                     <div class="info">
                                         <div class="name">{{categorys.name}}<span class="promotion">{{categorys.promotionInfo}}</span></div>
@@ -186,7 +186,7 @@
 
                                 <div class="" v-for="(categorys2, cat2Index) in categorys.childCategorys" :key="categorys2.id">
 
-                                    <div class="productList" v-show="categorys.active">
+                                    <div class="productList" :class="{active: categorys.active}" v-show="categorys.active">
                                         <div class="proTitle">{{categorys2.name}}</div>
 
                                         <div class="noProduct" v-show="categorys2.productList.length === 0">
@@ -471,12 +471,24 @@ export default {
             })
         },
         // 点击某一条服务  显示服务列表
-        showProductList (proIndex, catIndex, categorys) {
-            this.productData.data[proIndex]['childCategorys'][catIndex].active = !this.productData.data[proIndex]['childCategorys'][catIndex].active
-            // 获取 商品列表
-            this.GetCarProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
-            // 获取服务列表
-            this.GetCarServiceProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
+        showProductList (event, proIndex, catIndex, categorys) {
+
+            var active = this.productData.data[proIndex]['childCategorys'][catIndex].active
+            this.productData.data[proIndex]['childCategorys'][catIndex].active = !active
+
+            if (!active) {
+                if (this.productData.data[proIndex]['childCategorys'][catIndex].productList.length === 0) {
+                    // 获取 商品列表
+                    this.GetCarProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
+                    // 获取服务列表
+                    this.GetCarServiceProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
+                }
+            }
+            this.calculateTotal(proIndex, catIndex)
+            
+            
+
+            
         },
 
         // 切换 规格
@@ -777,7 +789,8 @@ export default {
                 if (this.$route.query.OrderId) {
                     obj.OrderId = this.$route.query.OrderId
                 }
-                var check = $('.check')
+                var check = $('.productList.active').find('.check')
+                
                 $.each(check, (index, item) => {
                     obj[`OrderProducts[${index}][key]`] = $(item)[0].dataset.id
                     obj[`OrderProducts[${index}][value]`] = $(item)[0].dataset.num
@@ -786,6 +799,10 @@ export default {
                     api.GetProductsTotal(obj).then(res => {
                         this.total = res.data
                     })
+                } else if (check.length === 0) {
+                    for (let item in this.total) {
+                        this.total[item] = 0
+                    }
                 }
                 
             })
