@@ -472,6 +472,7 @@ export default {
         },
         // 点击某一条服务  显示服务列表
         showProductList (proIndex, catIndex, categorys) {
+        	console.log(proIndex, catIndex, categorys)
             this.productData.data[proIndex]['childCategorys'][catIndex].active = !this.productData.data[proIndex]['childCategorys'][catIndex].active
             // 获取 商品列表
             this.GetCarProduct(categorys.id, this.productData.userCarBind.carInfo.carTypeId, proIndex, catIndex)
