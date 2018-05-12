@@ -62,7 +62,7 @@
                                                     <div class="btn-box">
                                                         <button>优点</button>
                                                         <button>存：{{goods.stock}}</button>
-                                                        <button>他店求助</button>
+                                                        <button @click="help($event, goodsIndex, proIndex, catIndex)">他店求助</button>
                                                     </div>
                                                 </div>
                                                 <!-- 价格 -->
@@ -543,11 +543,21 @@ export default {
                 this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].active = !active
                 this.calculateTotal(proIndex, catIndex)
             }
+        },
 
-            
+        // 他店求组
+        help(event, goodsIndex, proIndex, catIndex) {
+            event.stopPropagation()
 
-            
-            
+            let productId = this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].productId
+            this.$router.push({
+                path: 'allocationSingle',
+                query: {
+                    productId: productId,
+                    shopId: localStorage.getItem('shopId'),
+                    ShowShopType: 1
+                }
+            })
         },
 
         // 点击 选择套餐
