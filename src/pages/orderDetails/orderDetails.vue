@@ -21,7 +21,7 @@
                 <p class="orderStyleOne orderColor-white fl">预约时间：{{orderInfo.preDate}}</p>
                 <div class="orderVehicleInfo fl clearfix">
                     <div class="vehicleImg fl">
-                        <img id="car-img-warp" src=""/>
+                        <img id="car-img-warp" src="" onerror="this.src = 'http://act.tirecool.net/Content/img/defaultcar.jpg'">
                     </div>
                     <p class="vehicleP fl">
                         <span id="brand"></span>
@@ -312,7 +312,8 @@
             <div class="payment-box" v-if="orderInfo.status === '待付款'">
                 <div class="head">选择<span>付</span>款方式：</div>
                 <div class="pay-box">
-                    <label class="item" v-for="pay in orderInfo.paymentMethods" :key="pay.id" @click="inputLshval(pay)">
+                    <label class="item" v-for="pay in orderInfo.paymentMethods" :key="pay.id" @click="inputLshval(pay)" 
+                    v-if="pay.name!=='刷卡支付'&&pay.name!=='扫码支付'">
                         <div class="info">
                             <i :class="'iconfont '+pay.className"></i> {{pay.name}}
                         </div>
@@ -344,7 +345,7 @@
                         <div class="title">拆分付款</div>
                         <div class="input-box">
                             <div class="msg">使用金额</div>
-                            <input placeholder="请输入本次支付金额（最多55）" v-model="paySplitNum">
+                            <input :placeholder="'请输入本次支付金额（最多'+(orderInfo.total-orderInfo.alreadyPaymentAmount)+'）'" v-model="paySplitNum">
                         </div>
                         <div class="btn-box">
                             <button @click="paySplitNum='';isOpenPaySplit=false">取消</button>

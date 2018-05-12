@@ -5,7 +5,7 @@
         <div class="loading" v-loading="isLoading">
             <!-- 车辆信息 -->
             <div class="car-info" v-if="carInfo.carType">
-                <img class="head-img" id="head-img" :src="carInfo.carType.carSeries.seriesMinImage">
+                <img class="head-img" id="head-img" :src="carInfo.carType.carSeries.seriesMinImage" onerror="this.src = 'http://act.tirecool.net/Content/img/defaultcar.jpg'">
                 <div class="info">
                     <div class="name">
                         {{carInfo.carType.carSeries.brandName.replace(/^[A-Z] - /g,'')}}
@@ -567,6 +567,8 @@ export default {
                 }
                 
             })
+
+            this.calculateTotal(proIndex, catIndex)
 
         },
 
