@@ -31,7 +31,8 @@
 						<ul class="clearfix">
 							<li class="fl clearfix">
 								<span class="fl fontSize">{{item.name}}</span>
-								<span class="fr price">¥{{item.price}}</span>
+								<span class="fr price" v-if="item.price < 0 ">--</span>
+								<span class="fr price" v-else>¥ {{item.price}}</span>
 							</li>
 							<li class="fl clearfix">
 								<router-link class="fl btnStyle" :to="{path: 'allocationSingle', 
@@ -39,8 +40,8 @@
 									<span>求助</span>
 								</router-link>	
 								<span class="fl btnStyle btnStyles">星级{{item.starLevel}}</span>
-								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
-									<div class="stock" v-show="item.id == productId">
+								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.productId)">存：{{item.stock}}
+									<div class="stock" v-show="item.productId == productId">
 										<div class="triangle"></div>
 										<p class="storeName" v-for="(items, j) in storeStock" :key="j">
                                             {{items.name}} - {{items.stock}}

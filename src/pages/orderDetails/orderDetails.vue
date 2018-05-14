@@ -162,6 +162,8 @@
 
                         <!-- 使用卡券 弹窗 -->
                         <div class="kaquan-dialog-box" v-if="cardCoupon.card" v-show="kaquanDialog">
+                        	<!--关闭按钮-->
+                        	<div class="closeCurrent" @click="kaquanDialog = false">×</div>
                             <div class="kaquan-dialog">
                                 <div class="head">使用卡券</div>
                                 <div class="content">
@@ -179,7 +181,7 @@
                                     </div>
                                     <div class="item record">
                                         <div class="title">使用记录：</div>
-                                        <div class="info">
+                                        <div class="info" v-if="cardCoupon.card.cardCouponLogs.length > 0">
                                             <table>
                                                 <tr class="th">
                                                     <th width="30%">说明</th>
@@ -194,6 +196,7 @@
                                                 
                                             </table>
                                         </div>
+                                        <div v-else>暂无！</div>
                                     </div>
                                     <div class="item">
                                         <div class="title">使用金额：</div>
@@ -201,7 +204,7 @@
                                             <input placeholder="请输入本次使用金额" v-model="cardCouponUseAmount">
                                         </div>
                                     </div>
-                                    <div class="item">
+                                    <div class="item" v-if="cardCoupon.orderInfo != ''">
                                         <div class="title">冲抵金额：</div>
                                         <div class="info">
                                             <input placeholder="请输入本次冲抵金额" v-model="deductionAmount">
@@ -218,7 +221,7 @@
                                         *注意：套餐卡与会员卡优惠不同享，使用套餐卡后将自动取消会员卡折扣
                                     </div>
 
-                                    <div class="item totalbalance">
+                                    <div class="item totalbalance" v-if="cardCoupon.orderInfo != ''">
                                         <span class="title">
                                             订单可扣减最大金额：
                                         </span>
@@ -228,12 +231,11 @@
                                     </div>
 
                                     <div class="btn-box">
-                                        <button class="cancel">取消</button>
+                                        <button class="cancel" @click="kaquanDialog = false">取消</button>
                                         <button class="sure" @click="usePackageCard()">确定</button>
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     
@@ -283,14 +285,13 @@
                     <div class="item">
                         <div class="title useother-box" v-if="orderInfo.payments">{{orderInfo.payments.length>0||orderInfo.total==0?'实付款：':'应付总额：'}}</div>
                         <div class="info">
-                            <div class="should-pay">¥{{orderInfo.total}}</div>
+                            <div class="should-pay">¥{{orderInfo.total}} <img @click="judgeMoling" class="smearZero" src="../../assets/images/orderDetails/moneya.png"/></div>
                             <div class="had-pay">
                                 {{orderInfo.alreadyPaymentAmount>0?`已付￥${orderInfo.alreadyPaymentAmount}${orderInfo.total-orderInfo.alreadyPaymentAmount>0?`剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:''}`:``}}
                                 <!-- {{orderInfo.total-orderInfo.alreadyPaymentAmount>0?`,剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:``}} -->
                             </div>
                         </div>
                     </div>
-
                     <div class="item pay-msg" v-show="orderInfo.alreadyPaymentAmount>0">
                         <div class="title">付款详情：</div>
                         <div class="info">
@@ -301,11 +302,7 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-                
-                
             </div>
 
             <!-- 付款方式 -->
@@ -389,7 +386,7 @@
             </div>
 
             <div class="btn-box">
-                <div v-show="orderInfo.status !== '服务中'&&orderInfo.status!=='已完成'" @click="serviceOver">服务结束</div>
+                <div v-show="orderInfo.status !== '服务中'&&orderInfo.status!=='已完成' && orderInfo.status!=='待付款'" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>
@@ -440,7 +437,7 @@
                 isOpenPaySplit: false,      // 是否打开拆分支付 弹窗
                 paySplitNum: '',            // 拆分支付 本次支付的金额
                 amount: '',                 // 本次支付应该支付的金额
-
+				isMoLing: false,			// 是否抹零
                 isSuppliers: false,         // 是否显示第三方挂账选择器
                 suppliersId: '',            // 当前选中的第三方支付方式的id
                 suppliers: {},              // 第三方挂账 信息
@@ -462,6 +459,7 @@
                 api.GetOrderInfo({orderId: this.query.orderId}).then(res => {
                     this.isLoading = false
                     this.drawingData(res.data)
+                    this.isMoLing = res.data.isMoLing
                 })
             },
 
@@ -548,7 +546,7 @@
 
                 this.orderInfo = data
             },
-
+			
             // date tostring
             toString() {
                 Date.prototype.toString = function (fmt) { //author: meizz 
@@ -775,18 +773,20 @@
             },
             // 使用卡券
             useKaquan () {
-                
                 if (!this.currentKaquan.code) {
                     alert('卡券不能为空！')
                     return
                 }
+                
                 this.isLoading = true
+                    	
                 if (this.currentKaquan.cardTypeId + '' === '1015') {
                     api.GetCardCouponVerif({
                         code: this.currentKaquan.code,
                         orderId: this.query.orderId
                     }).then(res => {
                         this.isLoading = false
+                        console.log(res.data)
                         if (res.dta.isok) {
                             if (res.data.orderInfo) {
                                 this.kaquanDialog = true
@@ -801,9 +801,10 @@
                         code: this.currentKaquan.code,
                         orderId: this.query.orderId
                     }).then(res => {
+                    	console.log(res.data.orderInfo)
                         this.isLoading = false
                         if (res.data.isok) {
-                            if (res.data.orderInfo) {
+                            if (res.data.orderInfo != "") {
                                 this.kaquanDialog = true
                                 res.data.card.cardCouponLogs.map((item, index) => {
                                     console.log(item)
@@ -811,6 +812,14 @@
                                 })
                                 this.cardCoupon = res.data
 
+                            }
+                            if(res.data.card.cardType == null || !res.data.card.cardType.isAllowAnyDiscount){
+                            	this.kaquanDialog = true
+                                res.data.card.cardCouponLogs.map((item, index) => {
+                                    console.log(item)
+                                    res.data.card.cardCouponLogs[index].createDate = new Date(item.createDate).toString("yyyy-MM-dd")
+                                })
+                                this.cardCoupon = res.data
                             }
                         } else {
                             alert('使用异常！')
@@ -866,6 +875,19 @@
                 })
             },
 
+            //抹零优惠
+            judgeMoling(){
+            	console.log(this.query.orderId)
+            	console.log(this.isMoLing)
+            	let orderId = this.query.orderId
+            	api.judgeMoling({
+                    orderId: orderId,
+					isMoLing: true
+                }).then(res => {
+                    console.log(res.data)
+                })
+            },
+            
             // 拆分付款
             paySplit () {
                 if (!this.paySplitNum || this.paySplitNum < 0) {

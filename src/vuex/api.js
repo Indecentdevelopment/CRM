@@ -188,7 +188,12 @@ export default {
     CancelCardUse (data) {
         return axios.post(url + `api/order/CancelCardUse?id=${data.id}`)
     },
-
+    
+	// 抹零优惠
+    judgeMoling (data) {
+    	return axios.post(url + 'api/order/moling', querystring.stringify(data))
+    },
+    
     // 付款
     PreparedPay (data) {
         return axios.get(url + 'api/order/PreparedPay', {

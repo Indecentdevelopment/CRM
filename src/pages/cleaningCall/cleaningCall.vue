@@ -209,18 +209,18 @@
 
             // 下一位
             GetCleanNext () {
-                api.GetCleanNext({loctime: this.loctime}).then(res => {
-                    if (res.data.data == "0") {
-                        this.$message('当前没有已预约的下一位洗车订单!')
-                    } else {
-                        this.$message({
-                            message: '呼号成功！',
-                            type: 'success'
-                        });
-                        this.loctime = res.data.data
-                        this.getCleanList()
-                    }
-                })
+//              api.GetCleanNext({loctime: this.loctime}).then(res => {
+//                  if (res.data.data == "0") {
+//                      this.$message('当前没有已预约的下一位洗车订单!')
+//                  } else {
+//                      this.$message({
+//                          message: '呼号成功！',
+//                          type: 'success'
+//                      });
+//                      this.loctime = res.data.data
+//                      this.getCleanList()
+//                  }
+//              })
             },
 
             // 点击voice
