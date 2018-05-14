@@ -106,17 +106,17 @@
                 </div>
                 <div class="form-item" v-if="rejectDiv">
                     <div class="info">拒绝原因：</div>
-                    <textarea ></textarea>
+                    <textarea v-model="refuseReason"></textarea>
                 </div>
 
                 <div class="btn-box">
                     <button v-if="btnAccept" @click="acceptApply">接受申请</button>
-                    <button v-if="btnReject">拒绝申请</button>
-                    <button v-if="btnAcceptPrice">接受报价</button>
-                    <button v-if="btnRejectPrice">拒绝报价</button>
-                    <button v-if="btnSendBack">退回</button>
-                    <button v-if="btnCheXiao">撤销</button>
-                    <button v-if="btnOutStore">商品出库</button>
+                    <button v-if="btnReject" @click="returnList">拒绝申请</button>
+                    <button v-if="btnAcceptPrice" @click="acceptOffer">接受报价</button>
+                    <button v-if="btnRejectPrice" @click="refuseOffer">拒绝报价</button>
+                    <button v-if="btnSendBack" @click="returnList">退回</button>
+                    <button v-if="btnCheXiao" @click="revokeList">撤销</button>
+                    <button v-if="btnOutStore" @click="commodity">商品出库</button>
                 </div>
                 
             </div>
@@ -156,7 +156,8 @@
                 status: 'order',        // 当前显示的页面
                 isLoading: true,
                 remarks: '',			//备注
-                shopId: '',
+                shopId: '',				//shopid
+                refuseReason: '',		//拒绝原因
                 orderList: [],          // 订单列表
                 detailList: [],         // 详情列表
 				value1: '',				//调拨时间
@@ -175,7 +176,7 @@
 				invoiceDiv: true,
 				deliverSerialDiv: false,
 				rejectDiv: false,
-				flag: true,
+				flags: true,
             }
        },
         created () {
@@ -333,6 +334,115 @@
 	                alert('请勿重复点击')
 	            }
         	},
+        	//拒绝
+        	returnList(){
+        		let rejMsg = this.refuseReason					//拒绝原因
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (rejMsg == "") {
+	                alert("请输入您拒绝的原因！")
+	                return false
+	            }
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetReplyReject({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    RejectMessage: rejMsg
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//接受报价
+        	acceptOffer(){
+        		let price = this.crmData.replyPrice				//回复报价
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (price == "") {
+	                alert("请输入报价！")
+	                return false
+	            }
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetUpdatePurchaseStatus({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    Price: price,
+	                    IsProvider: 3
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//拒绝报价
+        	refuseOffer(){
+        		let price = this.crmData.replyPrice				//回复报价
+        		let serial = this.crmData.serial				//订单号
+        		let shopId = this.shopId						//shopId
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetUpdatePurchaseStatus({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    Price: price,
+	                    IsProvider: 4
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	},
+        	//退回
+        	returnList(){
+        		let ihrez = this.crmData.ihrez
+	        	if (ihrez != "" && ihrez != null) {
+	        		if(confirm("确定退回?")){
+	                    api.GetSendBack({
+	                    	IHREZ: ihrez
+	                    }).then(res=>{
+	                    	console.log(res.data)
+	                    })
+	                }
+        		}
+        	},
+        	//撤销
+        	revokeList(){
+        		let serial = this.crmData.serial				//订单号
+	        	if (serial != "" && serial != null) {
+	        		if(confirm("确定撤销?")){
+	                    api.GetCheXiao({
+	                    	Serial: serial
+	                    }).then(res=>{
+	                    	console.log(res.data)
+	                    })
+	                }
+        		}
+        	},
+        	//商品出库
+        	commodity(){
+        		let serial = this.crmData.serial				//订单号
+        		let deliverSerial = this.crmData.deliverSerial	//订单流水号
+        		let shopId = this.shopId						//shopId
+        		if (this.flags == true) {
+	                this.flags = false;
+	                api.GetStore({
+	                    Serial: serial,
+	                    ShopId: shopId,
+	                    DeliverSerial: deliverSerial,
+	                    IsProvider: 5
+                    }).then(res=>{
+                    	console.log(res.data)
+                    })
+	            } else {
+	                alert('请勿重复点击');
+	            }
+        	}
         },
 		components: {
             myHeader: Header

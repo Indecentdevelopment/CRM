@@ -38,6 +38,7 @@
                                 query:{ productId:item.productId,shopId:item.shopId, ShowShopType: 1}}">
 									<span>求助</span>
 								</router-link>	
+								<span class="fl btnStyle btnStyles">星级{{item.starLevel}}</span>
 								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.id)">存：{{item.stock}}
 									<div class="stock" v-show="item.id == productId">
 										<div class="triangle"></div>
