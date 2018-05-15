@@ -49,6 +49,7 @@
 
             <!-- 车牌号 -->
             <div class="carNum">
+                
                 <select class="prov" v-model="initData.prov">
                     <option value="京">京</option>
                     <option value="津">津</option>
@@ -228,6 +229,8 @@ export default {
                     this.initData.displacement = '其他'
                     this.initData.year = '其他'
                 }
+
+                this.initData.prov = this.$route.query.carnumber
                 
             })
         },

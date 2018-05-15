@@ -609,7 +609,8 @@ export default {
             event.stopPropagation()
             this.changeOrAdd = 'change'
             this.changeIndex = goodsIndex
-            console.log(goodsIndex, proIndex, catIndex, cat2Index)
+
+            // 规格初始化
             if (this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
                 this.search.specs = this.currentTiresSpecs
             } else {
@@ -662,6 +663,7 @@ export default {
                 
                 this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.map((item, index) =>{
                     if (item.id === hidePro.id) {
+                        console.log(item.id, hidePro.id)
                         isInArr = true
                     }
                 })
@@ -671,14 +673,18 @@ export default {
                         this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.push(hidePro)
                     }
                 } else if (this.changeOrAdd === 'change') {
-                    this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[i] = hidePro
+                    if (!isInArr) {
+                        this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[i] = hidePro
+                    }
                 }
                 
                 this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].isHideProduct = false
             } else {
                 let isInArr = false
                 this.productData.data[proIndex]['childCategorys'][catIndex].productList.map((item, index) => {
+                    
                     if(item.id === hidePro.id) {
+                        console.log(item.id, hidePro.id)
                         isInArr = true
                     }
                 })
@@ -688,7 +694,10 @@ export default {
                         this.productData.data[proIndex]['childCategorys'][catIndex].productList.push(hidePro)
                     }
                 } else if (this.changeOrAdd === 'change') {
-                    this.productData.data[proIndex]['childCategorys'][catIndex].productList[i] = hidePro
+                    if (!isInArr) {
+                        this.productData.data[proIndex]['childCategorys'][catIndex].productList[i] = hidePro
+                    }
+                    
                 }
                 
                 this.productData.data[proIndex]['childCategorys'][catIndex].isHideProduct = false

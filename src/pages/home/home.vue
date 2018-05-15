@@ -62,7 +62,7 @@
                     <!--搜索按钮-->
                     <div class="inp-search" @click="search">搜索</div>
 
-                    <div class="carInfo" v-show="isOpencarInfo">
+                    <div class="carInfo" v-show="isOpencarInfo && carInfoList.length>0">
                         <router-link v-for="item in carInfoList" :to="{path: 'personalPage', query:{userCarBindId:item.id,uid:item.userId}}" class="item" :key="item.id">
                             <div class="left">
                                 <div class="img">
@@ -224,6 +224,17 @@
                     .then( res => {
                         this.isOpencarInfo = true
                         this.carInfoList = res.data
+                        if (this.carInfoList.length === 0) {
+                            this.$rputer.push({
+                                path: 'impCarInfo',
+                                query: {
+                                    opera: 'new',
+                                    id: '0',
+                                    Phone: this.phone,
+                                    carnumber: this.shopProv
+                                }
+                            })
+                        }
                     })
         		}
         	},
