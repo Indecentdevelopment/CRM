@@ -60,7 +60,7 @@
                     <!--车牌输入框-->
                     <input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" @click="showKeyboard($event)" />
                     <!--搜索按钮-->
-                    <div class="inp-search">搜索</div>
+                    <div class="inp-search" @click="search">搜索</div>
 
                     <div class="carInfo" v-show="isOpencarInfo">
                         <router-link v-for="item in carInfoList" :to="{path: 'personalPage', query:{userCarBindId:item.id,uid:item.userId}}" class="item" :key="item.id">
@@ -202,6 +202,31 @@
             })
         },
         methods: {
+        	// 通过手机号获取信息列表
+        	search(){
+        		if(this.phone == ""){
+        			this.$router.push({
+        				path: 'impCarinfo',
+        				query: {
+        					opera: 'new',
+							id: '0',
+							Phone: this.phone,
+							carnumber: this.shopProv
+        				}
+        			})
+        		}else{
+        			api.getCarInfo({
+                        CarNo: this.shopProv + this.carNo + '',
+                        Phone: this.phone,
+                        cardName: this.cardName + '_储值卡',
+                        shopId: this.shopData.id
+                    })
+                    .then( res => {
+                        this.isOpencarInfo = true
+                        this.carInfoList = res.data
+                    })
+        		}
+        	},
             // 获取省 简称
             getShopProv () {
                 api.getShopProv(this.shopData.id)

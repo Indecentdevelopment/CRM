@@ -17,8 +17,8 @@
 
             <!-- 用户信息 -->
             <div class="user" v-if="queryOpera === 'new'">
-                <input class="name" v-model="initData.name">
-                <input class="mobile" v-model="initData.mobile">
+                <input class="name" v-model="initData.name" placeholder="客户姓名">
+                <input class="mobile" v-model="initData.mobile" placeholder="客户电话">
             </div>
 
             <!-- 车辆信息选择 -->
@@ -83,7 +83,7 @@
                     <option value="琼">琼</option>
                     <option value="其他">其他</option>
                 </select>
-                <input class="carNo" v-model="initData.carNo">
+                <input class="carNo" v-model="initData.carNo" placeholder="车牌号">
                 <i class="fa fa-camera-retro fa-3x"></i>
             </div>
             <!-- 补充车型 -->
@@ -177,6 +177,9 @@ export default {
     created () {
         this.queryId = this.$route.query.id
         this.queryOpera = this.$route.query.opera || 'new'
+        
+        this.initData.prov = this.$route.query.carnumber
+        
         this.getQueryOperaZh()
         this.InitializeRegister()
         
