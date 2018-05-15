@@ -60,7 +60,7 @@
                                                 <div class="info">
                                                     <div class="name">{{goods.name}}</div>
                                                     <div class="btn-box">
-                                                        <button>优点</button>
+                                                        <button @click="advantage">优点</button>
                                                         <button>存：{{goods.stock}}</button>
                                                         <button @click="help($event, goodsIndex, proIndex, catIndex)">他店求助</button>
                                                     </div>
@@ -598,12 +598,18 @@ export default {
             }
             
         },
-
+		
+		// 点击 展示优点
+		advantage(event){
+			console.log('优点！')
+		},
+		
         // 点击 更换 商品
         changeProduct (event, goodsIndex, proIndex, catIndex, cat2Index) {
             event.stopPropagation()
             this.changeOrAdd = 'change'
             this.changeIndex = goodsIndex
+            console.log(goodsIndex, proIndex, catIndex, cat2Index)
             if (this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
                 this.search.specs = this.currentTiresSpecs
             } else {
@@ -691,7 +697,7 @@ export default {
             this.calculateTotal(proIndex,catIndex)
 
         },
-
+		
         // 点击 服务
         serviceClick(proIndex, catIndex, serIndex) {
             let preferentialPolicys = this.productData.data[proIndex]['childCategorys'][catIndex].preferentialPolicys

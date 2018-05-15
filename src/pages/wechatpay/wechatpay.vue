@@ -12,7 +12,7 @@
 			<div class="codeStyleTwo">请您及时付款，以便订单尽快处理！<br /><span>请您在提交订单后及时完成支</span><br />付，否则订单会自动取消！</div>
 			<div class="codeStyleThree">交易单号：{{transactionData.orderNo}}<br />创建时间：{{currentTime}}</div>
 		</div>
-        
+        <div></div>
 	</div>
 </template>
 

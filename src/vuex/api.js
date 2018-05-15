@@ -191,7 +191,7 @@ export default {
     
 	// 抹零优惠
     judgeMoling (data) {
-    	return axios.post(url + 'api/order/moling', querystring.stringify(data))
+    	return axios.post(url + `api/order/moling?orderId=${data.orderId}&isMoLing=${data.isMoLing}`)
     },
     
     // 付款

@@ -882,9 +882,9 @@
             	let orderId = this.query.orderId
             	api.judgeMoling({
                     orderId: orderId,
-					isMoLing: true
+					isMoLing: this.isMoLing
                 }).then(res => {
-                    console.log(res.data)
+                    alert(res.data.message)
                 })
             },
             
