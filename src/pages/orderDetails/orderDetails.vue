@@ -649,13 +649,31 @@
             minusCurrentNum (index) {
                 if (this.orderInfo.items[index].quantity > 1) {
                     this.orderInfo.items[index].quantity--
-                    // document.getElementById('current-num').innerHTML = this.orderInfo.items[index].quantity
+
+                    var currentNum = this.orderInfo.items[index].quantity
+                    var products = this.orderInfo.items
+                    if (products[index].categoryName === '轮胎' && !products[index].isService) {
+                        products.map((item, i) => {
+                            if (item.categoryName === '轮胎' && item.isService) {
+                                this.orderInfo.items[i].quantity = currentNum
+                            }
+                        })
+                    }
                 }
+                
             },
             // 点击加号 
 	    	addCurrentNum (index) {
                 this.orderInfo.items[index].quantity++
-                // document.getElementById('current-num').innerHTML = this.orderInfo.items[index].quantity
+                var currentNum = this.orderInfo.items[index].quantity
+                var products = this.orderInfo.items
+                if (products[index].categoryName === '轮胎' && !products[index].isService) {
+                    products.map((item, i) => {
+                        if (item.categoryName === '轮胎' && item.isService) {
+                            this.orderInfo.items[i].quantity = currentNum
+                        }
+                    })
+                }
             },
 
             // 清除签名
