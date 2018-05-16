@@ -378,7 +378,7 @@
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'">
+            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='待付款'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -386,7 +386,7 @@
             </div>
 
             <div class="btn-box">
-                <div v-show="orderInfo.status==='服务中'" @click="serviceOver">服务结束</div>
+                <div v-show="picking && orderInfo.status != '待付款'" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>
@@ -441,6 +441,7 @@
                 isSuppliers: false,         // 是否显示第三方挂账选择器
                 suppliersId: '',            // 当前选中的第三方支付方式的id
                 suppliers: {},              // 第三方挂账 信息
+                picking: '',                // 第三方挂账 信息
 	        	
 	        }
 	    },
@@ -545,6 +546,8 @@
                 this.suppliers = suppliersTem
 
                 this.orderInfo = data
+                
+                this.picking = this.orderInfo.items[0].isHave
             },
 			
             // date tostring
