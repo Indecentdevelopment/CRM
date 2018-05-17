@@ -66,7 +66,7 @@
                     <input v-model="crmData.replyPrice">
                 </div>
                 <div class="form-item" v-if="addsalelv">
-                    <div class="info">加价率：</div>
+                    <div class="info">毛利率：</div>
                     <div class="val">{{crmData.addPriceLv}}%</div>
                 </div>
                 <div class="form-item" v-if="salePriceDiv">

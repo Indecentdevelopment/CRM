@@ -562,8 +562,25 @@ export default {
         })
     },
 	/************************************个人信息设置页******************************************/
+	//店员信息
 	GetUserInformation(data){
 		return axios.get(url + 'Api/Car/GetMyStaffInfos',{
+			params:{
+				
+			}
+		})
+	},
+	//获取店铺信息
+	GetMyShopInfo(data){
+		return axios.get(url + 'Api/Car/GetMyShopInfo',{
+			params:{
+				
+			}
+		})
+	},
+	/*************************************获取APP版本号*******************************************/
+	GetVersion(){
+		return axios.get(url + 'api/Account/GetVersion',{
 			params:{
 				
 			}

@@ -28,6 +28,7 @@ import Invoice from '@/pages/invoice/invoice'
 import InvoiceDetails from '@/pages/invoiceDetails/invoiceDetails'
 import Personal from '@/pages/personal/personal'
 import Wechatpay from '@/pages/wechatpay/wechatpay'
+import PersonalDataPage from '@/pages/personalDataPage/personalDataPage'
 
 
 Vue.use(Router)
@@ -131,6 +132,10 @@ const router = new Router({
                 {
                 	path: 'wechatpay',
                 	component: Wechatpay
+                },
+                {
+                	path: 'personalDataPage',
+                	component: PersonalDataPage
                 }
             ]
         }
