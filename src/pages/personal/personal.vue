@@ -5,7 +5,9 @@
 		<!--头像框-->
 		<div class="headImage">
 			<!--设置按钮-->
-			<img src="../../assets/images/home/hc-Setup.png" class="head-img"/>
+			<router-link :to="{path: 'personalDataPage',query:{ExhibitionName:'个人设置',name: uesrData.name,mobile: uesrData.mobile,job: uesrData.job,}}">
+				<img src="../../assets/images/home/hc-Setup.png" class="head-img"/>
+			</router-link>
 			<!--头像-->
 			<div class="headImg">
 				<img src="../../assets/images/index/user-img.png"/>
@@ -33,9 +35,11 @@
 				<img src="../../assets/images/personal/lock1.png"/><span>修改密码</span>
 			</div>
 		</router-link>
-		<div class="operationFun">
-			<img src="../../assets/images/personal/keliuliang.png"/><span>报表</span>
-		</div>
+		<router-link :to="{path: 'reportForm'}" class="colorBlack">
+			<div class="operationFun">
+				<img src="../../assets/images/personal/keliuliang.png"/><span>报表</span>
+			</div>
+		</router-link>
 	</div>
 </template>
 <script>

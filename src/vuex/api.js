@@ -578,11 +578,48 @@ export default {
 			}
 		})
 	},
+	//确定密码
+	ComparePwd(data){
+		return axios.get(url + 'Api/Account/ComparePwd',{
+			params:{
+				oldPwd: data.oldPwd
+			}
+		})
+	},
+	//确定修改密码
+	ChangePwd(data){
+		return axios.get(url + 'Api/Account/ChangePwd',{
+			params:{
+				oldpwd: data.oldpwd,
+				newpwd: data.newpwd
+			}
+		})
+	},
+	//修改个人信息
+	ChangeStaffInfo(data){
+		return axios.get(url + 'Api/Account/ChangeStaffInfo',{
+			params:{
+				Name: data.Name,
+                Phone: data.Phone
+			}
+		})
+	},
+	//报表
+	GetReportData(data){
+		return axios.get(url + 'Api/Car/GetReportData',{
+			params:{
+				Name: data.Name,
+                Phone: data.Phone
+			}
+		})
+	},
+	
 	/*************************************获取APP版本号*******************************************/
 	GetVersion(){
 		return axios.get(url + 'api/Account/GetVersion',{
 			params:{
-				
+				oldpwd: data.oldPwd,
+				newpwd: data.newpwd
 			}
 		})
 	},
