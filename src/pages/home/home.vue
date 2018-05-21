@@ -195,7 +195,7 @@
             // this.getShopProv()
             // this.getTheService()
             // this.getMyApplyRequireCount()
-            this.GetVersion()
+            // this.GetVersion()
         },
         mounted () {
             document.addEventListener('click', (event) => {
@@ -303,12 +303,6 @@
             backWord () {
                 let length = this.carNo.length
                 this.carNo = this.carNo.substring(0, length - 1)
-            },
-            GetVersion(){
-            	api.GetVersion().then(res => {
-                    console.log(res.data)
-                })
-            	
             }
         },
 		components: {
