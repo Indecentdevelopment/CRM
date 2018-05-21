@@ -601,22 +601,27 @@ export default {
             params: {
                 Name: data.Name,
                 Phone: data.Phone
-            }
-        })
-    },
-    //报表
-    GetReportData(data) {
-        return axios.get(url + 'Api/Car/GetReportData', {
-            params: {
-                Name: data.Name,
-                Phone: data.Phone
-            }
-        })
-    },
-
-    /*************************************获取APP版本号*******************************************/
-    getVersion() {
+			}
+		})
+	},
+	//报表
+	GetReportData(data){
+		return axios.get(url + 'Api/Car/GetReportData',{
+			params:{
+				shopId: data.shopId,
+				start: data.start,
+				end: data.end,
+				status: data.status,
+				source: data.source
+			}
+		})
+	},
+	
+	/*************************************获取APP版本号*******************************************/
+	getVersion() {
         return axios.get(url + 'api/Account/GetVersion')
     }
-
+	
 }
+
+    
