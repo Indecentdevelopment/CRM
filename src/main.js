@@ -13,10 +13,11 @@ import vueSignature from "vue-signature"             // 用户签名插件
 
 import './config/index'
 
-
+import echarts from 'echarts'
 
 Vue.use(vueSignature)
 Vue.use(ElementUI)
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 
