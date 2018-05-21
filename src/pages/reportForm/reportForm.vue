@@ -60,7 +60,7 @@
             }
         },
         mounted(){
-		    this.drawLine();
+		    
 		},
         created () {
         	this.GetReportData()
@@ -88,7 +88,8 @@
 	        			this.arrdate.push(item.date)
 	        			this.arrcount.push(item.count)
 	        			this.arrtotal.push(item.total)
-					});
+                    });
+                    this.drawLine()
 //					console.log(this.arrdate)
 //					console.log(this.arrcount)
 //					console.log(this.arrtotal)
