@@ -608,8 +608,11 @@ export default {
 	GetReportData(data){
 		return axios.get(url + 'Api/Car/GetReportData',{
 			params:{
-				Name: data.Name,
-                Phone: data.Phone
+				shopId: data.shopId,
+				start: data.start,
+				end: data.end,
+				status: data.status,
+				source: data.source
 			}
 		})
 	},
@@ -618,8 +621,8 @@ export default {
 	GetVersion(){
 		return axios.get(url + 'api/Account/GetVersion',{
 			params:{
-				oldpwd: data.oldPwd,
-				newpwd: data.newpwd
+//				oldpwd: data.oldPwd,
+//				newpwd: data.newpwd
 			}
 		})
 	},
