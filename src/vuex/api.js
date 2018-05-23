@@ -616,7 +616,19 @@ export default {
 			}
 		})
 	},
-	
+	// 获取报表用户列表
+	GetReportDataList(data){
+		return axios.get(url + 'Api/Car/GetReportDataList',{
+			params:{
+				shopId: data.shopId,
+				start: data.start,
+				end: data.end,
+				status: data.status,
+				curpage: data.curpage,
+				source: data.source
+			}
+		})
+	},
 	/*************************************获取APP版本号*******************************************/
 	GetVersion(){
 		return axios.get(url + 'api/Account/GetVersion',{
