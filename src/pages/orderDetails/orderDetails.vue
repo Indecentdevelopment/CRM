@@ -386,7 +386,7 @@
             </div>
 
             <div class="btn-box">
-                <div v-show="picking && orderInfo.status != '待付款'" @click="serviceOver">服务结束</div>
+                <div v-show="isServiceEnd" @click="serviceOver">服务结束</div>
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>
@@ -442,6 +442,7 @@
                 suppliersId: '',            // 当前选中的第三方支付方式的id
                 suppliers: {},              // 第三方挂账 信息
                 picking: '',                // 第三方挂账 信息
+                isServiceEnd: '',           // if是否服务结束
 	        	
 	        }
 	    },
@@ -548,6 +549,28 @@
                 this.orderInfo = data
                 
                 this.picking = this.orderInfo.items[0].isHave
+                
+				// 1、判断是不是服务中
+				if(this.orderInfo.status == '服务中'){
+					// 2、判断服务类型  （产品/服务）
+					if(this.orderInfo.items[0].isService){
+						this.isServiceEnd = true
+					}else{
+						//3、判断是否领料
+						if(this.orderInfo.items[0].isHave){
+							this.isServiceEnd = true
+						}else{
+							
+						}
+					}
+				}else{
+					this.isServiceEnd = false
+				}
+//              this.isService = this.orderInfo.items[0].isService
+//              console.log(this.orderInfo.status + ' 服务状态')
+//              console.log(this.orderInfo.isHidden + ' isHidden')
+//              console.log(this.orderInfo.items[0].isService + ' isService')
+//              console.log(this.orderInfo.items[0].isHave + ' isHave')
             },
 			
             // date tostring
