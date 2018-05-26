@@ -53,7 +53,7 @@
                     </div>
                     <i class="sign"></i>
                 </div>
-                <div v-if="activeGroup===index" class="shop-bg">
+                <div v-show="activeGroup===index" class="shop-bg">
                     <div v-for="(item, index) in shopStaffInfos" :key="index" class="item" @click="login($event, item.userName)">
                         <div class="user-name">{{item.firstName}}</div>
                     </div>
@@ -107,6 +107,7 @@ export default {
         },
         // 选择城市
         citySwitch (event) {
+            this.activeGroup = -1
             this.currentCity = event.target.innerHTML
             this.isSwitchCity = false
             this.getShopName()
@@ -131,6 +132,7 @@ export default {
         },
         // 点击shopName 获取shopStaffInfo数据
         getShopStaffInfos (event, index, shopId, shopName) {
+            this.shopStaffInfos = []
             this.activeItem = shopId
             this.activeGroup = index
             this.$store.dispatch('getShopStaffInfos', shopId)

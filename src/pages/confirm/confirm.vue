@@ -56,7 +56,7 @@
                                         :data-id="goods.id" :data-num="goods.selectQuantity">
                                             <!-- 商品信息 -->
                                             <div class="goods">
-                                                <img class="head" src="/Content/img/images/1_c.jpg">
+                                                <img class="head" src="http://act.tirecool.net/Content/img/images/1_c.jpg">
                                                 <div class="info">
                                                     <div class="name">{{goods.name}}</div>
                                                     <div class="btn-box">
@@ -85,7 +85,7 @@
                                                 </div>
                                                 <!-- 更换 -->
                                                 <div class="exchange" @click="changeProduct($event, goodsIndex, proIndex, catIndex)">
-                                                    <img src="/Content/img/selectproduct/v1exchange.png" alt="">
+                                                    <img src="http://act.tirecool.net/Content/img/selectproduct/v1exchange.png" alt="">
                                                     <div class="info">更换</div>
                                                 </div>
                                             </div>
