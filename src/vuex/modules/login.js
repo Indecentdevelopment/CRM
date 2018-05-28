@@ -70,6 +70,8 @@ const actions = {
                 commit(type.SET_ISLOGIN, true)
                 commit(type.SET_SHOPDATA, data.shopData)
                 router.push('/home')
+            }else{
+            	console.log("报错了！")
             }
         })
     }

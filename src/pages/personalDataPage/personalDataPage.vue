@@ -108,10 +108,10 @@
         	newPas(){
         		if(this.usedPassword == ''){
         			this.usedpas = true
-        			console.log(this.usedPassword)
+//      			console.log(this.usedPassword)
         		}else{
         			this.usedpas = false
-        			console.log(this.usedPassword)
+//      			console.log(this.usedPassword)
         		}
         	},
         	conPas(){
@@ -185,10 +185,14 @@
 	        					oldpwd: old,
 								newpwd: pass
 	        				}).then(res=>{
-	        					alert("修改成功")
-	        					this.$router.push({path: 'personal'})
+	        					if(res.data.success){
+	        						alert("修改成功")
+	        						this.$router.push({path: 'personal'})
+	        						this.isModify = false
+	        					}else{
+	        						alert(res.data.errMsg)
+	        					}
 	        				})
-	        				this.isModify = false
 	        			}else{
 	        				alert("旧密码输入不正确")
 	        				this.isModify = true

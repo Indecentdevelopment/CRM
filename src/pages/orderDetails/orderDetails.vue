@@ -509,6 +509,8 @@
                 })
 
                 // 预约时间处理
+                console.log(data)
+                console.log(data.preDate)
                 data.preDate = (data.preDate.match(/\d{4}-\d{2}-\d{2}[a-zA-Z]\d{2}:\d{2}/)).toString().replace(/[a-zA-Z]/ig, " ")
                 // 订单编号处理
                 data.datePlaced = data.datePlaced.match(/\d{4}-\d{2}-\d{2}/)
@@ -921,13 +923,13 @@
 
             //抹零优惠
             judgeMoling(){
-            	console.log(this.query.orderId)
-            	console.log(this.isMoLing)
             	let orderId = this.query.orderId
             	api.judgeMoling({
                     orderId: orderId,
-					isMoLing: this.isMoLing
+					isMoLing: true
                 }).then(res => {
+                	console.log(res.data)
+                	console.log(res.data.message)
                     alert(res.data.message)
                 })
             },

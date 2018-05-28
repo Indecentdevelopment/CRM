@@ -115,17 +115,25 @@ export default {
         login (event, userName) {
             this.openLogin = true
             this.userName = userName
+            this.password = ""
         },
         toClose(){
         	this.openLogin = false
         },
+        //登陆
         toLogin () {
-            this.openLogin = false
-            this.$store.dispatch('toLogin', {
-                userName: this.userName,
-                password: this.password,
-                shopData: this.shopData  // 如果登录成功  就把shopData信息保存至vuex login
-            })
+        	if(this.password == null || this.password == ""){
+        		alert("密码不能为空")
+                return false
+        	}else{
+	            this.$store.dispatch('toLogin', {
+	                userName: this.userName,
+	                password: this.password,
+	                shopData: this.shopData  // 如果登录成功  就把shopData信息保存至vuex login
+	            })
+//      		this.openLogin = false
+        	}
+            
         },
         getShopName () {
             this.$store.dispatch('getShopName', this.currentCity)

@@ -33,13 +33,20 @@ axios.interceptors.response.use(
         }
     },
     err => {
-        console.log(err.response)
-        // if (err.response.status === 500) {
-        //     return err.response
-        // }
-        store.dispatch('loginOut')
-        router.push('/login')
-        return Promise.reject(err)
+    	console.log(err.response.status)
+    	if(err.response.status == 400){
+    		alert(err.response.data.error_description)
+    		console.log(err.response.data.error_description)
+    	}else{
+	        console.log(err.response)
+	        // if (err.response.status === 500) {
+	        //     return err.response
+	        // }
+	        store.dispatch('loginOut')
+	        router.push('/login')
+	        return Promise.reject(err)
+    	}
+    	
     }
 )
 
