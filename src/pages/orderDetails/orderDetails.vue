@@ -269,7 +269,6 @@
                             </div>
                             
                         </div>
-                        
                     </div>
                     <div class="item" v-if="orderInfo.cardType" v-show="orderInfo.cardType.typeName&&(orderInfo.memberDiscountAmount>0||orderInfo.status==='待付款')">
                         <div class="title useother-box">会员折扣：</div>
@@ -441,7 +440,7 @@
                 isOpenPaySplit: false,      // 是否打开拆分支付 弹窗
                 paySplitNum: '',            // 拆分支付 本次支付的金额
                 amount: '',                 // 本次支付应该支付的金额
-				isMoLing: false,			// 是否抹零
+				isMoLing: true,			// 是否抹零
                 isSuppliers: false,         // 是否显示第三方挂账选择器
                 suppliersId: '',            // 当前选中的第三方支付方式的id
                 suppliers: {},              // 第三方挂账 信息
@@ -513,8 +512,8 @@
                 })
 
                 // 预约时间处理
-                console.log(data)
-                console.log(data.preDate)
+//              console.log(data)
+//              console.log(data.preDate)
                 data.preDate = (data.preDate.match(/\d{4}-\d{2}-\d{2}[a-zA-Z]\d{2}:\d{2}/)).toString().replace(/[a-zA-Z]/ig, " ")
                 // 订单编号处理
                 data.datePlaced = data.datePlaced.match(/\d{4}-\d{2}-\d{2}/)
@@ -661,7 +660,7 @@
 		                }
 	                })
 		        } else {
-		            console.log('false')
+//		            console.log('false')
 		        }
             },
             
@@ -836,7 +835,7 @@
                         orderId: this.query.orderId
                     }).then(res => {
                         this.isLoading = false
-                        console.log(res.data)
+//                      console.log(res.data)
                         if (res.dta.isok) {
                             if (res.data.orderInfo) {
                                 this.kaquanDialog = true
@@ -928,24 +927,33 @@
             //抹零优惠
             judgeMoling(){
             	let orderId = this.query.orderId
-            	api.judgeMoling({
-                    orderId: orderId,
-					isMoLing: this.isMoLing
-               }).then(res => {
-                    if (res.data.isok) {
-                    	this.GetOrderInfo()
-                        alert(res.data.message)
-                        this.isMoLing = true
-//	                    api.GetOrderInfo({orderId: this.query.orderId}).then(res => {
-//		                    this.isLoading = false
-//		                    this.drawingData(res.data)
-//		                    this.isMoLing = res.data.isMoLing
-//		                })
-	                } else {
-                        alert(res.data.message)
-                        this.isMoLing = false
-	                }
-                })
+            	let smearZero = this.orderInfo.total - this.orderInfo.alreadyPaymentAmount
+            	
+            	if(smearZero <= 10){
+            		this.isMoLing = true
+					api.judgeMoling({
+	                  	orderId: orderId,
+						isMoLing: this.isMoLing
+	              	}).then(res => {
+	               		console.log(res.data.isok)
+	                  	if (res.data.isok) {
+	                  		api.GetOrderInfo({
+		                    	orderId: this.query.orderId
+		                    }).then(res => {
+			                    console.log(res.data)
+			                    alert("抹零成功！")
+			                })
+		                } else {
+	                      alert(res.data.message)
+	                      this.isMoLing = false
+		                }
+                	})
+                    
+            	}else{
+            		this.isMoLing = false
+            		alert("抹零仅限于小于10的金额，请先支付剩余金额!")
+            	}
+
             },
             
             // 拆分付款
