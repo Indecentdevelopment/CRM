@@ -285,7 +285,11 @@
                     <div class="item">
                         <div class="title useother-box" v-if="orderInfo.payments">{{orderInfo.payments.length>0||orderInfo.total==0?'实付款：':'应付总额：'}}</div>
                         <div class="info">
-                            <div class="should-pay">¥{{orderInfo.total}} <img @click="judgeMoling" class="smearZero" src="../../assets/images/orderDetails/moneya.png"/></div>
+                            <div class="should-pay">
+                                ¥{{orderInfo.total}}
+                                <img v-show="isMoLing" @click="judgeMoling" class="smearZero" src="../../assets/images/orderDetails/moneyb.png"/> 
+                                <img v-show="!isMoLing" @click="judgeMoling" class="smearZero" src="../../assets/images/orderDetails/moneya.png"/>
+                            </div>
                             <div class="had-pay">
                                 {{orderInfo.alreadyPaymentAmount>0?`已付￥${orderInfo.alreadyPaymentAmount}${orderInfo.total-orderInfo.alreadyPaymentAmount>0?`剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:''}`:``}}
                                 <!-- {{orderInfo.total-orderInfo.alreadyPaymentAmount>0?`,剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:``}} -->
