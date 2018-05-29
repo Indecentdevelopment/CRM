@@ -926,11 +926,21 @@
             	let orderId = this.query.orderId
             	api.judgeMoling({
                     orderId: orderId,
-					isMoLing: true
-                }).then(res => {
-                	console.log(res.data)
-                	console.log(res.data.message)
-                    alert(res.data.message)
+					isMoLing: false
+               }).then(res => {
+                    if (res.data.isok) {
+                    	this.GetOrderInfo()
+                    	alert(res.data.message)
+//	                    api.GetOrderInfo({orderId: this.query.orderId}).then(res => {
+//		                    this.isLoading = false
+//		                    this.drawingData(res.data)
+//		                    this.isMoLing = res.data.isMoLing
+//		                })
+	                } else {
+	                    console.log(res.data)
+	                	console.log(res.data.message)
+	                    alert(res.data.message)
+	                }
                 })
             },
             
