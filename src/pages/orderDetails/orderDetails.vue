@@ -290,7 +290,7 @@
                                 <img v-show="!isMoLing" @click="judgeMoling" class="smearZero" src="../../assets/images/orderDetails/moneya.png"/>
                             </div>
                             <div class="had-pay">
-                                {{orderInfo.alreadyPaymentAmount>0?`已付￥${orderInfo.alreadyPaymentAmount}${orderInfo.total-orderInfo.alreadyPaymentAmount>0?`剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:''}`:``}}
+                                {{orderInfo.alreadyPaymentAmount>0?`已付￥${orderInfo.alreadyPaymentAmount}${orderInfo.total-orderInfo.alreadyPaymentAmount>0?` 剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:''}`:``}}
                                 <!-- {{orderInfo.total-orderInfo.alreadyPaymentAmount>0?`,剩余￥${orderInfo.total-orderInfo.alreadyPaymentAmount}`:``}} -->
                             </div>
                         </div>
@@ -927,33 +927,24 @@
             //抹零优惠
             judgeMoling(){
             	let orderId = this.query.orderId
-            	let smearZero = this.orderInfo.total - this.orderInfo.alreadyPaymentAmount
-            	
-            	if(smearZero <= 10){
-            		this.isMoLing = true
-					api.judgeMoling({
-	                  	orderId: orderId,
-						isMoLing: this.isMoLing
-	              	}).then(res => {
-	               		console.log(res.data.isok)
-	                  	if (res.data.isok) {
-	                  		api.GetOrderInfo({
-		                    	orderId: this.query.orderId
-		                    }).then(res => {
-			                    console.log(res.data)
-			                    alert("抹零成功！")
-			                })
-		                } else {
-	                      alert(res.data.message)
-	                      this.isMoLing = false
-		                }
-                	})
+            	api.judgeMoling({
+                    orderId: orderId,
+					isMoLing: !this.isMoLing
+               }).then(res => {
                     
-            	}else{
-            		this.isMoLing = false
-            		alert("抹零仅限于小于10的金额，请先支付剩余金额!")
-            	}
-
+                    if (res.data.isok) {
+                    	this.GetOrderInfo()
+                        this.isMoLing = true
+//	                    api.GetOrderInfo({orderId: this.query.orderId}).then(res => {
+//		                    this.isLoading = false
+//		                    this.drawingData(res.data)
+//		                    this.isMoLing = res.data.isMoLing
+//		                })
+	                } else {
+                        this.isMoLing = false
+                        alert(res.data.message)
+	                }
+                })
             },
             
             // 拆分付款

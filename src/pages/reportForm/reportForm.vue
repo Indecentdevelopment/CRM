@@ -10,11 +10,17 @@
 		<!--功能输入区域-->
 		<div class="start">
 			<span>开始时间：</span>
-			<input type="date" v-model="startDate" />
+			<div class="block">
+				<el-date-picker v-model="startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+				</el-date-picker>
+			</div>
 		</div>
 		<div class="start">
 			<span>结束时间：</span>
-			<input type="date" v-model="endDate" />
+			<div class="block">
+				<el-date-picker v-model="endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+				</el-date-picker>
+			</div>
 		</div>
 		<div class="control clearfix">
 		    <p class="fl">状态:</p>
@@ -40,32 +46,28 @@
 		</div>
 		<!--用户列表-->
 		<div class="userList" v-show="userList">
-			<div class="userData clearfix">
+			<div class="userData clearfix" v-for="item in reports">
 	        	<div class="useRighr fr">
-	        		<p class="fl">姓名：</p>
-	        		<p class="fl">手机号：</p>
-	        		<p class="fl">车牌号：</p>
-	        		<p class="fl">工作状态：</p>
-	        		<p class="fl">时间：</p>
+	        		<p class="fl">姓名：{{item.name}}</p>
+	        		<p class="fl">手机号：{{item.mobile}}</p>
+	        		<p class="fl">车牌号：{{item.carNo}}</p>
+	        		<p class="fl">工作状态：{{item.orderStatus}}</p>
+	        		<p class="fl">时间：{{item.date}}</p>
 	        		<p class="fl clearfix">
-	        			<!--<router-link :to="{path: 'orderDetails', query:{}}">-->
-	        			<span class="fr">详情</span>
-	        			<!--</router-link>-->
+	        			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
+	        				<span class="fr">详情</span>
+	        			</router-link>
 	        		</p>
 	        	</div>
 	        </div>
 	        
 	        <!--分页-->
-	        <div class="block">
-			    <el-pagination
-			      @size-change="handleSizeChange"
-			      @current-change="handleCurrentChange"
-			      :current-page.sync="currentPage3"
-			      :page-size="1"
-			      layout="prev, pager, next, jumper"
-			      :total="10"
-			      pager-count="3">
-			    </el-pagination>
+	        <div class="paging">
+	        	<p @click="before">上一页</p>
+	        	<p><span v-model="initial">{{initial}}</span>/<span v-model="endPage">{{endPage}}</span></p>
+	        	<p @click="next">下一页</p>
+	        	<input type="text" v-model="conPage" />
+	        	<p @click="gotxt">转到</p>
 			</div>
 		</div>
 	</div>
@@ -79,6 +81,25 @@
 	export default {
 		data() {
 			return {
+				pickerOptions1: {
+					disabledDate(time) {
+						return time.getTime < Date.now();
+					},
+					shortcuts: [{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', new Date());
+						}
+					}, {
+						text: '昨天',
+						onClick(picker) {
+							const date = new Date();
+							date.setTime(date.getTime() - 3600 * 1000 * 24);
+							picker.$emit('pick', date);
+						}
+
+					}]
+				},
                 isLoading: true,
                 shopId: '',
                 startDate: '',				// 开始时间
@@ -93,25 +114,128 @@
                 userList: false,			// 用户列表
                 currentPage3: 1,
                 curpage: '1',				// 页数
+                reports: [],				// 客户列表
+                initial: '1',				// 初始页
+                endPage: '',				// 结束页
+                conPage: '',				// 跳转页数
             }
         },
         mounted(){
-		    
+		    this.getNowFormatDate()
+		    this.getBeforeWeek()
 		},
         created () {
         	
         },
         methods: {
+        	//上一页
+        	before(){
+        		if(this.initial == 1){
+        			
+        		}else{
+        			this.initial --
+        			console.log(this.initial)
+        			let shopid = this.shopId = window.localStorage.getItem('shopId')
+	        		this.dataSheet = false
+	        		this.userList = true
+	        		api.GetReportDataList({
+		        		shopId: shopid,
+						start: this.startDate,
+						end: this.endDate,
+						status: this.status,
+						curpage: this.initial,
+						source: this.source
+	        		}).then(res=>{
+	        			this.reports = res.data.reports
+	        		})
+        		}
+        	},
+        	//下一页
+        	next(){
+        		if(this.initial == this.endPage){
+        			
+        		}else{
+        			this.initial ++
+        			let shopid = this.shopId = window.localStorage.getItem('shopId')
+	        		this.dataSheet = false
+	        		this.userList = true
+	        		api.GetReportDataList({
+		        		shopId: shopid,
+						start: this.startDate,
+						end: this.endDate,
+						status: this.status,
+						curpage: this.initial,
+						source: this.source
+	        		}).then(res=>{
+	        			this.reports = res.data.reports
+	        		})
+        		}
+        	},
+        	//跳转
+        	gotxt(){
+        		let shopid = this.shopId = window.localStorage.getItem('shopId')
+        		
+        		if( this.conPage > this.endPage){
+        			alert("超出页码范围!")
+        		}else{
+        			this.initial = this.conPage
+        			api.GetReportDataList({
+		        		shopId: shopid,
+						start: this.startDate,
+						end: this.endDate,
+						status: this.status,
+						curpage: this.conPage,
+						source: this.source
+	        		}).then(res=>{
+	        			this.reports = res.data.reports
+	        		})
+        		}
+        		
+        	},
+        	//获取当前时间，格式YYYY-MM-DD
+			getNowFormatDate() {
+			    var date = new Date();
+			    let seperator1 = "-";
+			    let year = date.getFullYear();
+			    let month = date.getMonth() + 1;
+			    let strDate = date.getDate();
+			    if (month >= 1 && month <= 9) {
+			        month = "0" + month;
+			    }
+			    if (strDate >= 0 && strDate <= 9) {
+			        strDate = "0" + strDate;
+			    }
+			    var currentdate = year + seperator1 + month + seperator1 + strDate;
+			    this.endDate = currentdate
+			},
+			// 获取上周时间
+			getBeforeWeek(){
+				let now = new Date();
+				let date = new Date(now.getTime() - 7 * 24 * 3600 * 1000);
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+				this.startDate = year + '-' + month + '-' + day;
+			},
+			// 获取当前客户信息列表
         	controlImg(){
+        		let shopid = this.shopId = window.localStorage.getItem('shopId')
         		this.dataSheet = false
         		this.userList = true
+        		api.GetReportDataList({
+	        		shopId: shopid,
+					start: this.startDate,
+					end: this.endDate,
+					status: this.status,
+					curpage: this.curpage,
+					source: this.source
+        		}).then(res=>{
+        			
+	        		this.endPage = res.data.pageCount //赋值当前总页数
+        			this.reports = res.data.reports
+        		})
         	},
-        	handleSizeChange(val) {
-		        console.log(`每页 ${val} 条`);
-	      	},
-	      	handleCurrentChange(val) {
-	        	console.log(`当前页: ${val}`);
-	      	},
+        	// 获取数据然后赋值
         	GetReportData(){
         		let shopid = this.shopId = window.localStorage.getItem('shopId')
         		if(this.startDate == ''){
@@ -149,12 +273,12 @@
 	        	})
 		        
         	},
-        	// echarts图表
+        	// 将数据生成echarts图表
         	drawLine(el){
 		        // 基于准备好的dom，初始化echarts实例
 		        let myChart = this.$echarts.init(document.getElementById('myChart'))
 		        let colors = ['#ffda01', '#bfbfbf']
-		        console.log(this.arrdate)
+		        //console.log(this.arrdate)
 		        // 绘制图表
 		        myChart.setOption({
 		            color: colors,
@@ -231,17 +355,7 @@
         	getUserList(){
         		this.dataSheet = true
         		this.userList = false
-        		let shopid = this.shopId = window.localStorage.getItem('shopId')
-        		api.GetReportDataList({
-	        		shopId: shopid,
-					start: this.startDate,
-					end: this.endDate,
-					status: this.status,
-					curpage: this.curpage,
-					source: this.source
-        		}).then(res=>{
-        			
-        		})
+        		
         	}
         },
 		components: {

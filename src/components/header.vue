@@ -6,10 +6,10 @@
        	</router-link>
         <img src="../assets/images/header/refresh.png" class="h-refresh" onclick="window.location.reload();"/>
         <img src="../assets/images/header/logo-black-constant.png" class="h-logo"/>
-        <span class="h-landingstate" v-show="isLogin">
+        <div class="h-landingstate" v-show="isLogin">
         	<span id="passCity" class="passCity">{{shopDataName}}</span>
 			<span id="cancellation" class="cancellation" @click="loginOut">注销</span>
-        </span>
+        </div>
     </div>
 </template>
 <script>
@@ -41,7 +41,9 @@ export default {
         	console.log('123')
         },
         back() {
-            this.$router.go(-1)
+//          this.$router.go(-1)
+            history.go(-1)
+            return false
         }
     }
 }
