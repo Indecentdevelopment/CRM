@@ -12,7 +12,13 @@ const actions = {
     checkToken ({commit}) {
         api.getMyApplyRequireCount()
         .then(res => {
-            commit(type.SET_ISLOGIN, true)
+            console.log(res)
+            if (typeof res.data === Number) {
+                commit(type.SET_ISLOGIN, true)
+            } else {
+                commit(type.SET_ISLOGIN, false)
+            }
+            
         })
         .catch(err => {
             commit(type.SET_ISLOGIN, false)
