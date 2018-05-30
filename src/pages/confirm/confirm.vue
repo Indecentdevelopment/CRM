@@ -116,7 +116,7 @@
                                                 <div class="hideProList">
                                                     <div class="hide-item" :class="hidePro.active?'active':''" v-for="hidePro in categorys.hideProductList"
                                                         :key="hidePro.id" @click="addHideProTo(hidePro,proIndex,catIndex)">
-                                                        <img class="imgBg" :src="hidePro.productImg">
+                                                        <img class="imgBg" :src="'http://act.tirecool.net' + hidePro.productImg">
                                                         <div class="info">
                                                             <div class="name">{{hidePro.name}}</div>
                                                             <div class="btn-box">

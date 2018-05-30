@@ -23,15 +23,16 @@ export default {
         return {}
     },
     created () {
-        
+        this.$store.dispatch('checkToken')
         document.addEventListener('plusready', () => {
             var oldVersion = plus.runtime.version
             this.$store.dispatch('setOldVersion', oldVersion)
             this.$store.dispatch('getNewVersion')
             
+            // this.$store.dispatch('checkToken')
         });
 
-        this.$store.dispatch('checkToken')
+        
         // var oldVersion = '0.0'
         // this.$store.dispatch('setOldVersion', oldVersion)
         // this.$store.dispatch('getNewVersion')
