@@ -3,16 +3,18 @@
 		
 		<!-- 头部 顶部 -->
         <my-header></my-header>
-		<div class="code" v-show="err">
-			<div class="codeTwoImg">
-				<img :src="'payment/GetQR?qrstr='+transactionData.qrstr"/>
-				<p class="colorStyle">请使用微信扫描<br />二维码以完成支付</p>
+        <div class="loading" v-loading="isLoading">
+			<div class="code" v-show="err">
+				<div class="codeTwoImg">
+					<img :src="'payment/GetQR?qrstr='+transactionData.qrstr"/>
+					<p class="colorStyle">请使用微信扫描<br />二维码以完成支付</p>
+				</div>
+				<div class="codeStyleOne">¥ {{transactionData.totalFee}}</div>
+				<div class="codeStyleTwo">请您及时付款，以便订单尽快处理！<br /><span>请您在提交订单后及时完成支</span><br />付，否则订单会自动取消！</div>
+				<div class="codeStyleThree">交易单号：{{transactionData.orderNo}}<br />创建时间：{{currentTime}}</div>
 			</div>
-			<div class="codeStyleOne">¥ {{transactionData.totalFee}}</div>
-			<div class="codeStyleTwo">请您及时付款，以便订单尽快处理！<br /><span>请您在提交订单后及时完成支</span><br />付，否则订单会自动取消！</div>
-			<div class="codeStyleThree">交易单号：{{transactionData.orderNo}}<br />创建时间：{{currentTime}}</div>
+	        <div v-show="!err" class="err">{{transactionData.messages}}</div>
 		</div>
-        <div v-show="!err" class="err">{{transactionData.messages}}</div>
 	</div>
 </template>
 

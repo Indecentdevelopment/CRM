@@ -1,156 +1,154 @@
 <template>
 	<div class="uservip">
 		
-	<!-- 头部 顶部 -->
+		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		
-	<!--内容-->
-        <div class="content">
-
-            <div class="userName">
-                <input type="text" v-model="userExtendInfo.name">
-            </div>
-
-            <!-- 性别 -->
-            <div class="sex">
-                <input type="radio" value="True" name="sex" v-model="userExtendInfo.gender">
-                <label for="">男</label>
-                <input type="radio" value="False" name="sex" v-model="userExtendInfo.gender">
-                <label for="">女</label>
-            </div>
-
-            <!-- 会员等级 -->
-            <div class="level">
-                <div>当前会员级别：</div>
-                <div class="level-info">
-                    {{userExtendInfo.discount}}
-                </div>
-            </div>
-
-            <!-- 升级 -->
-            <div class="upgrade" v-if="userExtendInfo.level==='无卡'">
-                <input type="button" value="升为金卡" @click="ChooseLeve('金卡')">
-                <input type="button" value="升为钻卡" @click="ChooseLeve('钻卡')">
-                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
-            </div>
-            <div class="upgrade" v-if="userExtendInfo.level==='金卡'">
-                <input type="button" value="升为金卡" disabled>
-                <input type="button" value="升为钻卡" @click="ChooseLeve('钻卡')">
-                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
-            </div>
-            <div class="upgrade" v-if="userExtendInfo.level==='钻卡'">
-                <input type="button" value="升为金卡" disabled>
-                <input type="button" value="升为钻卡" disabled>
-                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
-            </div>
-            <div class="upgrade" v-if="userExtendInfo.level==='白金卡'">
-                <input type="button" value="升为金卡" disabled>
-                <input type="button" value="升为钻卡" disabled>
-                <input type="button" value="升为白金卡" disabled>
-            </div>
-
-            <!-- 电话 -->
-            <div class="mobile">
-                <input placeholder="手机号" v-model="userExtendInfo.mobile">
-            </div>
-
-            <!-- 地址 -->
-            <div class="address">
-                <input placeholder="地址" v-model="userExtendInfo.address">
-            </div>
-
-            <!-- 标签 -->
-            <div class="sign" >
-                <div class="item" v-for="item in userExtendInfo.userSign" :key="item.id">
-                    {{item.sign}}
-                    <div class="DelUserSign" @click="DelUserSign(item)"></div>
-                </div>
-                <div class="add-sign item" @click="ShowOrHiddenSign()">
-                    标签
-                    <span v-show="!isShowSign"> &nbsp;+</span>
-                    <span v-show="isShowSign"> &nbsp;-</span>
-                </div>
-            </div>
-
-            <!-- 确认按钮 -->
-            <button class="submit" @click="btnSubmit">确定</button>
-
-            <!-- 二维码 -->
-            <div class="qecode">
-                <img id="qecode-img" src="" alt="">
-                <div class="info">
-                    用户扫描此二维码即可绑定微信
-                </div>
-            </div>
-        </div>
-
-        <swiper class="sign-swiper" :options="swiperOption" ref="mySwiper" v-show="isShowSign">
-            <!-- slides -->
-            <swiper-slide>
-                <div class="title clearfix">
-                    {{userExtendInfo.signAName}}
-                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
-                </div>
-                <div class="sign-box">
-                    <div class="sign-item" v-for="item in userExtendInfo.signA" :key="item.id" @click="ShouSign(item)">
-                        {{item.sign}}
-                    </div>
-                </div>
-            </swiper-slide>
-
-            <swiper-slide>
-                <div class="title clearfix">
-                    {{userExtendInfo.signBName}}
-                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
-                </div>
-                <div class="sign-box">
-                    <div class="sign-item" v-for="item in userExtendInfo.signB" :key="item.id" @click="ShouSign(item)">
-                        {{item.sign}}
-                    </div>
-                </div>
-            </swiper-slide>
-
-            <swiper-slide>
-                <div class="title clearfix">
-                    {{userExtendInfo.signCName}}
-                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
-                </div>
-                <div class="sign-box">
-                    <div class="sign-item" v-for="item in userExtendInfo.signC" :key="item.id" @click="ShouSign(item)">
-                        {{item.sign}}
-                    </div>
-                </div>
-            </swiper-slide>
-
-            <swiper-slide>
-                <div class="title clearfix">
-                    {{userExtendInfo.signDName}}
-                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
-                </div>
-                <div class="sign-box">
-                    <div class="sign-item" v-for="item in userExtendInfo.signD" :key="item.id" @click="ShouSign(item)">
-                        {{item.sign}}
-                    </div>
-                </div>
-            </swiper-slide>
-
-            <swiper-slide>
-                <div class="title clearfix">
-                    {{userExtendInfo.signEName}}
-                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
-                </div>
-                <div class="sign-box">
-                    <div class="sign-item" v-for="item in userExtendInfo.signE" :key="item.id" @click="ShouSign(item)">
-                        {{item.sign}}
-                    </div>
-                </div>
-            </swiper-slide>
-            <!-- Optional controls -->
-            <div class="swiper-pagination"  slot="pagination"></div>
-        </swiper>
-		
-
-		
+		<div class="loading" v-loading="isLoading">
+		<!--内容-->
+	        <div class="content">
+	
+	            <div class="userName">
+	                <input type="text" v-model="userExtendInfo.name">
+	            </div>
+	
+	            <!-- 性别 -->
+	            <div class="sex">
+	                <input type="radio" value="True" name="sex" v-model="userExtendInfo.gender">
+	                <label for="">男</label>
+	                <input type="radio" value="False" name="sex" v-model="userExtendInfo.gender">
+	                <label for="">女</label>
+	            </div>
+	
+	            <!-- 会员等级 -->
+	            <div class="level">
+	                <div>当前会员级别：</div>
+	                <div class="level-info">
+	                    {{userExtendInfo.discount}}
+	                </div>
+	            </div>
+	
+	            <!-- 升级 -->
+	            <div class="upgrade" v-if="userExtendInfo.level==='无卡'">
+	                <input type="button" value="升为金卡" @click="ChooseLeve('金卡')">
+	                <input type="button" value="升为钻卡" @click="ChooseLeve('钻卡')">
+	                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
+	            </div>
+	            <div class="upgrade" v-if="userExtendInfo.level==='金卡'">
+	                <input type="button" value="升为金卡" disabled>
+	                <input type="button" value="升为钻卡" @click="ChooseLeve('钻卡')">
+	                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
+	            </div>
+	            <div class="upgrade" v-if="userExtendInfo.level==='钻卡'">
+	                <input type="button" value="升为金卡" disabled>
+	                <input type="button" value="升为钻卡" disabled>
+	                <input type="button" value="升为白金卡" @click="ChooseLeve('白金卡')">
+	            </div>
+	            <div class="upgrade" v-if="userExtendInfo.level==='白金卡'">
+	                <input type="button" value="升为金卡" disabled>
+	                <input type="button" value="升为钻卡" disabled>
+	                <input type="button" value="升为白金卡" disabled>
+	            </div>
+	
+	            <!-- 电话 -->
+	            <div class="mobile">
+	                <input placeholder="手机号" v-model="userExtendInfo.mobile">
+	            </div>
+	
+	            <!-- 地址 -->
+	            <div class="address">
+	                <input placeholder="地址" v-model="userExtendInfo.address">
+	            </div>
+	
+	            <!-- 标签 -->
+	            <div class="sign" >
+	                <div class="item" v-for="item in userExtendInfo.userSign" :key="item.id">
+	                    {{item.sign}}
+	                    <div class="DelUserSign" @click="DelUserSign(item)"></div>
+	                </div>
+	                <div class="add-sign item" @click="ShowOrHiddenSign()">
+	                    标签
+	                    <span v-show="!isShowSign"> &nbsp;+</span>
+	                    <span v-show="isShowSign"> &nbsp;-</span>
+	                </div>
+	            </div>
+	
+	            <!-- 确认按钮 -->
+	            <button class="submit" @click="btnSubmit">确定</button>
+	
+	            <!-- 二维码 -->
+	            <div class="qecode">
+	                <img id="qecode-img" src="" alt="">
+	                <div class="info">
+	                    用户扫描此二维码即可绑定微信
+	                </div>
+	            </div>
+	        </div>
+	
+	        <swiper class="sign-swiper" :options="swiperOption" ref="mySwiper" v-show="isShowSign">
+	            <!-- slides -->
+	            <swiper-slide>
+	                <div class="title clearfix">
+	                    {{userExtendInfo.signAName}}
+	                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
+	                </div>
+	                <div class="sign-box">
+	                    <div class="sign-item" v-for="item in userExtendInfo.signA" :key="item.id" @click="ShouSign(item)">
+	                        {{item.sign}}
+	                    </div>
+	                </div>
+	            </swiper-slide>
+	
+	            <swiper-slide>
+	                <div class="title clearfix">
+	                    {{userExtendInfo.signBName}}
+	                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
+	                </div>
+	                <div class="sign-box">
+	                    <div class="sign-item" v-for="item in userExtendInfo.signB" :key="item.id" @click="ShouSign(item)">
+	                        {{item.sign}}
+	                    </div>
+	                </div>
+	            </swiper-slide>
+	
+	            <swiper-slide>
+	                <div class="title clearfix">
+	                    {{userExtendInfo.signCName}}
+	                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
+	                </div>
+	                <div class="sign-box">
+	                    <div class="sign-item" v-for="item in userExtendInfo.signC" :key="item.id" @click="ShouSign(item)">
+	                        {{item.sign}}
+	                    </div>
+	                </div>
+	            </swiper-slide>
+	
+	            <swiper-slide>
+	                <div class="title clearfix">
+	                    {{userExtendInfo.signDName}}
+	                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
+	                </div>
+	                <div class="sign-box">
+	                    <div class="sign-item" v-for="item in userExtendInfo.signD" :key="item.id" @click="ShouSign(item)">
+	                        {{item.sign}}
+	                    </div>
+	                </div>
+	            </swiper-slide>
+	
+	            <swiper-slide>
+	                <div class="title clearfix">
+	                    {{userExtendInfo.signEName}}
+	                    <span class="fr" @click="ShowOrHiddenSign()">×</span>
+	                </div>
+	                <div class="sign-box">
+	                    <div class="sign-item" v-for="item in userExtendInfo.signE" :key="item.id" @click="ShouSign(item)">
+	                        {{item.sign}}
+	                    </div>
+	                </div>
+	            </swiper-slide>
+	            <!-- Optional controls -->
+	            <div class="swiper-pagination"  slot="pagination"></div>
+	        </swiper>
+		</div>
 	</div>
 </template>
 
@@ -163,6 +161,7 @@
 	export default {
 	    data () {
 	        return {
+	        	isLoading: true,
 	        	query: {                // 路由参数
                     userId: '',
                     cid: ''

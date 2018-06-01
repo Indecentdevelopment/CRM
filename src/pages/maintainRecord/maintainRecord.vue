@@ -4,37 +4,36 @@
 			
 			<!-- 头部 顶部 -->
 			<my-header></my-header>
-			<img src="../../assets/images/maintainRecord/clock.png" class="mainImg"/>
-			<div class="resumeData clearfix"  v-for="(item, index) in yearArr" :key="index">
-				<h3 class="fl clearfix"  @click="timeAxis($event, index)">
-					<span class="fl modelsa" >
-                        {{item.year}}
-                        <img src="../../assets/images/maintainRecord/triangle.png" class="triangle" :class="{close: !item.active}"/>
-                    </span>
-					<span class="fl models">{{models}}</span>
-				</h3>
-                <!-- <transition-group name="fade">
-                    
-                </transition-group> -->
-                <div class="timeBox" :class="{close: !item.active}">
-                    <div class="timeList fl clearfix" id="timeList" v-for="(items, i) in item.recordInfo" :key="i">
-                        <p class="fl listStylea">
-                            {{items.time}}
-                            <img src="../../assets/images/maintainRecord/circle-h.png" />
-                        </p>
-                        <div class="lestRight fl">
-                            <p class="fr listStyleb">{{items.mileage}}</p>
-                            <p class="fr listStyleb">实付价格:{{items.totalPrice}}</p>
-                            <p class="fr listStylec" v-for="(itemss, i) in items.product" :key="i">{{itemss.name}}</p>
-                            <p class="fr listStylec">
-                            	<router-link class="jump" :to="'/orderDetails/?OrderId='+items.orderId">详情</router-link>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                
-				
+			<div class="loading" v-loading="isLoading">
+				<img src="../../assets/images/maintainRecord/clock.png" class="mainImg"/>
+				<div class="resumeData clearfix"  v-for="(item, index) in yearArr" :key="index">
+					<h3 class="fl clearfix"  @click="timeAxis($event, index)">
+						<span class="fl modelsa" >
+	                        {{item.year}}
+	                        <img src="../../assets/images/maintainRecord/triangle.png" class="triangle" :class="{close: !item.active}"/>
+	                    </span>
+						<span class="fl models">{{models}}</span>
+					</h3>
+	                <!-- <transition-group name="fade">
+	                    
+	                </transition-group> -->
+	                <div class="timeBox" :class="{close: !item.active}">
+	                    <div class="timeList fl clearfix" id="timeList" v-for="(items, i) in item.recordInfo" :key="i">
+	                        <p class="fl listStylea">
+	                            {{items.time}}
+	                            <img src="../../assets/images/maintainRecord/circle-h.png" />
+	                        </p>
+	                        <div class="lestRight fl">
+	                            <p class="fr listStyleb">{{items.mileage}}</p>
+	                            <p class="fr listStyleb">实付价格:{{items.totalPrice}}</p>
+	                            <p class="fr listStylec" v-for="(itemss, i) in items.product" :key="i">{{itemss.name}}</p>
+	                            <p class="fr listStylec">
+	                            	<router-link class="jump" :to="'/orderDetails/?OrderId='+items.orderId">详情</router-link>
+	                            </p>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
 			</div>
 		</div>
 	</div>
@@ -47,6 +46,7 @@
 	export default {
 	    data () {
 	        return {
+	        	isLoading: true,
                 carId: '',
                 yearArr: [], 
                 models: '',

@@ -3,58 +3,59 @@
 		
 		<!-- 头部 顶部 -->
         <my-header></my-header>
-        
-        <!--功能键-->
-        <div class="functionBtn clearfix">
-        	<div class="callSign fl" @click="GetCleanvoice">呼号</div>
-        	<div class="details" @click="GetCleandetail">详情</div>
-        	<div class="Next fr" @click="GetCleanNext">下一位</div>
-        </div>
-        
-        <!--预约列表-->
-        <div class="aboutList clearfix">
-        	<div class="about clearfix fl">
-        		<p class="fl">预约列表<span>（当前车牌）</span></p>
-        		<span @click="isCode = true" class="fr"><img src="../../assets/images/cleaningCall/zs.png"/></span>
-        	</div>
-        	
-            <div class="aboutTimeList">
-                
-                <div v-for="(item, i) in timeList" :key="i" class="aboutTime">
-                    <div class="preorder" v-if="item.isok">
-                        <div v-for="(clean, index) in item.cleansData" :key="index" class="item" :class="{greyline: loctime === clean.preDate}">
-                            <div class="preDate">{{clean.preDate}}</div>
-                            <div class="carNumber">{{clean.carNumber}}</div>
-                            <div class="name">{{clean.name}}</div>
-                            <div class="voice" @click="clickVoice(clean.preDate, clean.carNumber)"></div>
-                        </div>
-                    </div>
-                   
-                    <div v-else class="nopreorder">
-                        <div class="time">{{item.time}}</div>
-                        <div class="info">{{item.appointInfo}}</div>
-                        <div class="icon" >
-                            <img v-show="item.isAppoint" src="../../assets/images/cleaningCall/addClean.gif" @click="washorder(item.time)">
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-
-        <!-- 二维码 大图 -->
-        <div class="code-box" v-show="isCode">
-            <div class="code">
-                <img id="code-img" src="" alt="">
-                <div class="info">
-                    请顾客扫描此二维码
-                    <br>
-                    预约洗车
-                </div>
-                <div class="btn" @click="isCode = false">关闭</div>
-            </div>
-            
-        </div>
+        <div class="loading" v-loading="isLoading">
+	        <!--功能键-->
+	        <div class="functionBtn clearfix">
+	        	<div class="callSign fl" @click="GetCleanvoice">呼号</div>
+	        	<div class="details" @click="GetCleandetail">详情</div>
+	        	<div class="Next fr" @click="GetCleanNext">下一位</div>
+	        </div>
+	        
+	        <!--预约列表-->
+	        <div class="aboutList clearfix">
+	        	<div class="about clearfix fl">
+	        		<p class="fl">预约列表<span>（当前车牌）</span></p>
+	        		<span @click="isCode = true" class="fr"><img src="../../assets/images/cleaningCall/zs.png"/></span>
+	        	</div>
+	        	
+	            <div class="aboutTimeList">
+	                
+	                <div v-for="(item, i) in timeList" :key="i" class="aboutTime">
+	                    <div class="preorder" v-if="item.isok">
+	                        <div v-for="(clean, index) in item.cleansData" :key="index" class="item" :class="{greyline: loctime === clean.preDate}">
+	                            <div class="preDate">{{clean.preDate}}</div>
+	                            <div class="carNumber">{{clean.carNumber}}</div>
+	                            <div class="name">{{clean.name}}</div>
+	                            <div class="voice" @click="clickVoice(clean.preDate, clean.carNumber)"></div>
+	                        </div>
+	                    </div>
+	                   
+	                    <div v-else class="nopreorder">
+	                        <div class="time">{{item.time}}</div>
+	                        <div class="info">{{item.appointInfo}}</div>
+	                        <div class="icon" >
+	                            <img v-show="item.isAppoint" src="../../assets/images/cleaningCall/addClean.gif" @click="washorder(item.time)">
+	                        </div>
+	                    </div>
+	                    
+	                </div>
+	            </div>
+	        </div>
+	
+	        <!-- 二维码 大图 -->
+	        <div class="code-box" v-show="isCode">
+	            <div class="code">
+	                <img id="code-img" src="" alt="">
+	                <div class="info">
+	                    请顾客扫描此二维码
+	                    <br>
+	                    预约洗车
+	                </div>
+	                <div class="btn" @click="isCode = false">关闭</div>
+	            </div>
+	            
+	        </div>
+		</div>
 	</div>
 </template>
 
@@ -65,6 +66,7 @@
 	export default {
 	    data () {
 	        return {
+	        	isLoading: true,
 	        	CleanList: {},    // init 获取数据
                 timeList: [],     // 预约时间列表
                 loctime: '0',
@@ -72,8 +74,13 @@
 	        }
 	    },
 	    created() {
-            this.toString()
-	    	this.getCleanList()
+	    	Promise.all([this.toString(),this.getCleanList()]).then(res => {
+                setTimeout(() => {
+                    this.isLoading = false
+                }, 500)
+            })
+            
+	    	
         },
         mounted () {
             let codeImg = document.getElementById('code-img')
