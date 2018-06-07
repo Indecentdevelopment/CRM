@@ -178,7 +178,7 @@
 	        			<span class="fl">卡类型</span>
 	        			<span class="fl">详情</span>
 	        		</div>
-	        		<div class="headerList" v-for="(item,index) in cardList">
+	        		<div class="headerList" v-for="(item,index) in cardList" :key="index">
 	        			<span class="fl">{{index}}</span>
 	        			<span class="fl">{{item.name}}</span>
 	        			<span class="fl">{{item.code}}</span>
@@ -200,7 +200,7 @@
 	        			<span class="fl">说明</span>
 	        			<span class="fl">订单</span>
 	        		</div>
-	        		<div class="headerList" v-for="(item,index) in integralList">
+	        		<div class="headerList" v-for="(item,index) in integralList" :key="index">
 	        			<span class="fl">{{index}}</span>
 	        			<span class="fl">{{item.createDate}}</span>
 	        			<span class="fl">{{item.shop.name}}</span>
@@ -301,7 +301,8 @@
                     })
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
-                    this.updateInfo = res.data.cars[0]
+                    var str = JSON.stringify(res.data.cars[0])
+                    this.updateInfo = JSON.parse(str)
                     this.carId = res.data.cars[0].carId
                     //console.log(this.carId)
                     this.cardList = res.data.cardCoupons
