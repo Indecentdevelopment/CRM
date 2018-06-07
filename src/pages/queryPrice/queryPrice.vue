@@ -2,7 +2,6 @@
 	<div class="queryPrice">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<!--搜索栏-->
 			<div class="search">
 				<div class="topmain clearfix">
@@ -56,7 +55,6 @@
 			</div>
 			<!--键盘-->
 			<keyboard-model :open="isInputCarNo" @inputWord="inputWord" @close="isInputCarNo=false" @backWord="backWord" @empty="empty"></keyboard-model>
-		</div>
 	</div>
 </template>
 

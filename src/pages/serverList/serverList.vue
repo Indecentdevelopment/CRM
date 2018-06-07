@@ -3,7 +3,6 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
-        <div class="loading" v-loading="isLoading">
 	        <!---->
 	        <div class="transactionType loading" v-loading="isLoading">
 	            <div class="tab">
@@ -37,7 +36,6 @@
 		    		</div>
 		    	</div>
         	</div>
-        </div>
     </div>
 </template>
 <script>

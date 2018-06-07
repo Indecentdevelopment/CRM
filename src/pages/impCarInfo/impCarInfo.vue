@@ -2,7 +2,6 @@
     <div class="impcarinfo">
         <!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 	        <!-- 修改车型、快捷查询 -->
 	        <div class="type">
 	            <div class="edit active" data-value="edit" @click="changePage('edit')">
@@ -141,7 +140,6 @@
 	                </div>
 	            </div>
 	        </div>
-		</div>	
     </div>
 </template>
 <script>

@@ -4,7 +4,6 @@
 			
 			<!-- 头部 顶部 -->
 			<my-header></my-header>
-			<div class="loading" v-loading="isLoading">
 				<img src="../../assets/images/maintainRecord/clock.png" class="mainImg"/>
 				<div class="resumeData clearfix"  v-for="(item, index) in yearArr" :key="index">
 					<h3 class="fl clearfix"  @click="timeAxis($event, index)">
@@ -33,8 +32,7 @@
 	                        </div>
 	                    </div>
 	                </div>
-	            </div>
-			</div>
+	           </div>
 		</div>
 	</div>
 </template>

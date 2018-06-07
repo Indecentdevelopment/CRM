@@ -2,7 +2,6 @@
 	<div class="applyRequire">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<!--列表-->
 			<div class="orderList clearfix"  v-for="(item,i) in orderList" :key="i" v-show="status==='order'">
 				<p class="fl">产品名称：{{item.productName}}</p>
@@ -124,7 +123,6 @@
 	        </div>
 			<div class="seekHelp-footer" v-show="status==='order'">如需要查看更多调拨信息请在crm后台调拨列表查看</div>
 			<div v-show="orderList == ''">暂未找到相关订单！</div>
-		</div>
 	</div>
 </template>
 <script>

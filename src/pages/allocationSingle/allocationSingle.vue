@@ -2,7 +2,6 @@
 	<div class="allocationSingle">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<div class="apply">
 				调拨申请单
 			</div>
@@ -51,7 +50,6 @@
 					<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
 				</div>
 			</div>
-		</div>
 	</div>
 </template>
 

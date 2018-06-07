@@ -3,7 +3,6 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
-        <div class="loading" v-loading="isLoading">
 	        <div class="voucherDetails">
 	        	<p class="vouHeder">卡券详情</p>
 	        	<ul class="clearfix">
@@ -50,7 +49,6 @@
 	        		</li>
 	        	</ul>
 	        </div>
-        </div>
     </div>
 </template>
 <script>

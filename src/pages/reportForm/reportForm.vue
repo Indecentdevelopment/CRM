@@ -2,7 +2,6 @@
 	<div class="reportForm">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<!--顶部切换按钮-->
 			<div class="switch" v-show="imgControl">
 				<img src="../../assets/images/personal/liebiao.png" @click="controlImg" v-show="dataSheet" />
@@ -71,7 +70,6 @@
 		        	<p @click="gotxt">转到</p>
 				</div>
 			</div>
-		</div>
 	</div>
 </template>
 <script>

@@ -3,7 +3,6 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
-        <div class="loading" v-loading="isLoading">
 	        <div class="userSelection clearfix">
 	        	<p class="fl">总金额：<b>{{totalTotal}}</b></p>
 	        	<span class="fr" @click="ticketOpening">开票</span>
@@ -27,7 +26,6 @@
 	        		</p>
 	        	</div>
 	        </div>
-    	</div>
     </div>
 </template>
 <script>

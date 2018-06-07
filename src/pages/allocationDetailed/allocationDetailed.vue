@@ -2,7 +2,6 @@
 	<div class="allocationDetailed">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<!--列表-->
 			<div class="listHead">
 				调拨单明细
@@ -52,7 +51,6 @@
 					<p @click="btnReject">拒绝申请</p>
 				</div>
 			</div>
-		</div>
 	</div>
 </template>
 

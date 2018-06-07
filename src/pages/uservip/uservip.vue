@@ -3,7 +3,6 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 		<!--内容-->
 	        <div class="content">
 	
@@ -148,7 +147,6 @@
 	            <!-- Optional controls -->
 	            <div class="swiper-pagination"  slot="pagination"></div>
 	        </swiper>
-		</div>
 	</div>
 </template>
 
