@@ -1,0 +1,128 @@
+.uservip
+    height: 100%
+    background: #5f5d5d
+    overflow-y: auto
+    .content
+        display: flex
+        flex-direction: column
+        width: 90%
+        margin-left: 5%
+        .userName
+            width: 100%
+            margin-top: 2.2rem
+            input
+                width: 100%
+                height: 1.5rem
+                background: #fff
+                border-radius: 6px
+                text-indent: 0.3rem
+        .sex
+            display: flex
+            margin-top: 1rem
+            color: #ddd
+            &>label
+                margin: 0 5rem 0 1rem
+        .level
+            display: flex
+            margin: 0.8rem 0
+            color: #FFD900
+            font-size: 0.7rem
+            .level-info
+                margin-left: 2rem
+        .upgrade
+            display: flex
+            justify-content: space-between
+            &>input
+                width: 30%
+                height: 2rem
+                border-radius: 6px
+                background-color: #FFD900
+            &>input:disabled
+                background-color: #eee
+        .mobile, .address
+            display: flex
+            margin-top: 0.8rem
+            input
+                width: 100%
+                height: 1.4rem
+                border-radius: 6px
+                padding: 0 0.5rem
+        .sign
+            width: 100%
+            display: flex
+            flex-wrap: wrap
+            margin: 0.6rem 0
+            .item
+                width: 46%
+                margin-left: 2%
+                margin-top: 0.5rem
+                height: 1.8rem
+                display: flex
+                justify-content: center
+                align-items: center
+                background-color: #FFD900
+                border-radius: 6px
+                position: relative
+                .DelUserSign
+                    position: absolute
+                    top: 0
+                    right: 0.25rem
+                    &:after
+                        content: "\2715"
+                        position: absolute
+                        top: 0
+                        right: 0.25rem
+                        font-size: 0.6rem
+                        font-weight: 900
+            .add-sign
+                background: none
+                border: dashed 1px #fff
+                color: #fff
+        .submit
+            background-color: #FFD900
+            border: none
+            height: 1.4rem
+            border-radius: 6px
+            margin-top: 2rem
+        .qecode
+            display: flex
+            flex-direction: column
+            justify-content: center
+            align-items: center
+            margin-top: 2rem
+            margin-bottom: 2rem
+            img
+                width: 6rem
+                height: 6rem
+
+            .info
+                margin-top: 0.5rem
+                color: #fff
+    .sign-swiper
+        position: fixed
+        bottom: 0
+        height: 11rem
+        width: 100%
+        z-index: 1000000
+        background: #fff
+        .swiper-slide
+            display: flex
+            flex-direction: column
+            .title
+                font-size: 0.8rem
+                padding: 0.3rem
+                box-sizing: border-box
+            .sign-box
+                display: flex
+                flex-wrap: wrap
+                padding: 0 0.5rem
+                .sign-item
+                    width: 22%
+                    height: 1.3rem
+                    line-height: 1.3rem
+                    border: solid 1px #ccc
+                    text-align: center
+                    margin: 0.2rem 1.2%
+.loading
+        margin-top: 1.4rem
+        height: calc(100% - 1.4rem)            
