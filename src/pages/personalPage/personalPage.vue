@@ -389,7 +389,8 @@
             // 点击换车
             changeCar (data) {
                 this.carInfo = data
-                this.updateInfo = data
+                var str = JSON.stringify(data)
+                this.updateInfo = JSON.parse(str)
             },
             // 添加车型
             addNewCar () {
