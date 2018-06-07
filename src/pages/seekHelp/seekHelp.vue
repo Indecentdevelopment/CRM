@@ -2,126 +2,126 @@
 	<div class="seekHelp">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<!--列表-->
-		<div class="" v-show="status === 'order'">
-			<div class="orderList clearfix" v-for="item in orderLists.applyShopModels" :key="item.id" >
-				<p class="fl">需求单号：{{item.serial}}</p>
-				<p class="fl">订单状态：{{item.providerStatus}}</p>
-				<p class="fl">请求门店：{{item.currentShopName}}</p>
-				<p class="fl">订单状态：{{item.createDateTime}}</p>
-				<!-- <router-link :to="{
-					path: 'allocationDetailed',
-					query:{
-						id:item.id,
-						serial:item.serial,
-						currentShopName:item.currentShopName
-					}
-				}">
-					<span class="fr" @click="details">详情</span>
-				</router-link> -->
-                <div class="show-detail" @click="showDetails(item,item.serial,item.shopId,item.deliverDateTime)">详情</div>
+			<!--列表-->
+			<div class="" v-show="status === 'order'">
+				<div class="orderList clearfix" v-for="item in orderLists.applyShopModels" :key="item.id" >
+					<p class="fl">需求单号：{{item.serial}}</p>
+					<p class="fl">订单状态：{{item.providerStatus}}</p>
+					<p class="fl">请求门店：{{item.currentShopName}}</p>
+					<p class="fl">订单状态：{{item.createDateTime}}</p>
+					<!-- <router-link :to="{
+						path: 'allocationDetailed',
+						query:{
+							id:item.id,
+							serial:item.serial,
+							currentShopName:item.currentShopName
+						}
+					}">
+						<span class="fr" @click="details">详情</span>
+					</router-link> -->
+	                <div class="show-detail" @click="showDetails(item,item.serial,item.shopId,item.deliverDateTime)">详情</div>
+				</div>
+				<div class="seekHelp-footer">如需要查看更多调拨信息请在crm后台调拨列表查看</div>
 			</div>
-			<div class="seekHelp-footer">如需要查看更多调拨信息请在crm后台调拨列表查看</div>
-		</div>
-
-        <div class="form" v-show="status === 'form'">
-            <div class="title">调拨单明细</div>
-            <div class="form-box">
-                <div class="form-item">
-                    <div class="info">ID：</div>
-                    <div class="val">{{orderData.id}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">零采单号：</div>
-                    <div class="val">{{crmData.ebeln}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">CRM服务单号：</div>
-                    <div class="val">{{crmData.orderNum}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">Serial号：</div>
-                    <div class="val">{{orderData.serial}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">申请门店：</div>
-                    <div class="val">{{orderData.currentShopName}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">申请产品：</div>
-                    <div class="val"><span>{{crmData.productName}}</span></div>
-                </div>
-                <div class="form-item">
-                    <div class="info">申请数量：</div>
-                    <div class="val"><span>{{crmData.quantity}}</span></div>
-                </div>
-                <div class="form-item">
-                    <div class="info">申请时间：</div>
-                    <div class="val">{{orderData.createDateTime}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">被调拨方：</div>
-                    <div class="val">{{crmData.shopName}}</div>
-                </div>
-                <div class="form-item" v-if="replyPriceDiv">
-                    <div class="info">回复报价(单价)：</div>
-                    <div class="val">{{crmData.ReplyPrice}}</div>
-                </div>
-                <div class="form-item" v-if="addsalelv">
-                    <div class="info">毛利率：</div>
-                    <div class="val">{{crmData.addPriceLv}}%</div>
-                </div>
-                <div class="form-item" v-if="salePriceDiv">
-                    <div class="info">销售价格(单价)：</div>
-                    <div class="val">{{crmData.SalePrice}}</div>
-                </div>
-			    <div class="form-item" v-if="invoiceDiv">
-                    <div class="info">税别：</div>
-			        <select>
-			            <option value="J6">专票</option>
-			            <option value="J0">普票</option>
-			            <option value="J5">其它</option>
-			        </select>
-                </div>
-                <div class="form-item">
-                    <div class="info">预估到店：</div>
-                    <div class="block">
-						<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
-						</el-date-picker>
-					</div>
-                </div>
-                <div class="form-item" v-if="deliverSerialDiv">
-                    <div class="info">{{oddNumbers}}</div>
-                    <div class="val">{{crmData.deliverSerial}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">调拨状态：</div>
-                    <div class="val">{{orderData.providerStatus}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">收货状态：</div>
-                    <div class="val">{{crmData.deliveryStatus}}</div>
-                </div>
-                <div class="form-item">
-                    <div class="info">备注：</div>
-                    <textarea ></textarea>
-                </div>
-                <div class="form-item" v-if="rejectDiv">
-                    <div class="info">拒绝原因：</div>
-                    <textarea ></textarea>
-                </div>
-
-                <div class="btn-box">
-                    <button v-if="btnAccept" @click="acceptApply">接受申请</button>
-                    <button v-if="btnReject" @click="returnList">拒绝申请</button>
-                    <button v-if="btnAcceptPrice" @click="acceptOffer">接受报价</button>
-                    <button v-if="btnRejectPrice" @click="refuseOffer">拒绝报价</button>
-                    <button v-if="btnSendBack" @click="returnList">退回</button>
-                    <button v-if="btnCheXiao" @click="revokeList">撤销</button>
-                    <button v-if="btnOutStore" @click="commodity">商品出库</button>
-                </div>
-            </div>
-        </div>
+	
+	        <div class="form" v-show="status === 'form'">
+	            <div class="title">调拨单明细</div>
+	            <div class="form-box">
+	                <div class="form-item">
+	                    <div class="info">ID：</div>
+	                    <div class="val">{{orderData.id}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">零采单号：</div>
+	                    <div class="val">{{crmData.ebeln}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">CRM服务单号：</div>
+	                    <div class="val">{{crmData.orderNum}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">Serial号：</div>
+	                    <div class="val">{{orderData.serial}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">申请门店：</div>
+	                    <div class="val">{{orderData.currentShopName}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">申请产品：</div>
+	                    <div class="val"><span>{{crmData.productName}}</span></div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">申请数量：</div>
+	                    <div class="val"><span>{{crmData.quantity}}</span></div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">申请时间：</div>
+	                    <div class="val">{{orderData.createDateTime}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">被调拨方：</div>
+	                    <div class="val">{{crmData.shopName}}</div>
+	                </div>
+	                <div class="form-item" v-if="replyPriceDiv">
+	                    <div class="info">回复报价(单价)：</div>
+	                    <div class="val">{{crmData.ReplyPrice}}</div>
+	                </div>
+	                <div class="form-item" v-if="addsalelv">
+	                    <div class="info">毛利率：</div>
+	                    <div class="val">{{crmData.addPriceLv}}%</div>
+	                </div>
+	                <div class="form-item" v-if="salePriceDiv">
+	                    <div class="info">销售价格(单价)：</div>
+	                    <div class="val">{{crmData.SalePrice}}</div>
+	                </div>
+				    <div class="form-item" v-if="invoiceDiv">
+	                    <div class="info">税别：</div>
+				        <select>
+				            <option value="J6">专票</option>
+				            <option value="J0">普票</option>
+				            <option value="J5">其它</option>
+				        </select>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">预估到店：</div>
+	                    <div class="block">
+							<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+							</el-date-picker>
+						</div>
+	                </div>
+	                <div class="form-item" v-if="deliverSerialDiv">
+	                    <div class="info">{{oddNumbers}}</div>
+	                    <div class="val">{{crmData.deliverSerial}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">调拨状态：</div>
+	                    <div class="val">{{orderData.providerStatus}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">收货状态：</div>
+	                    <div class="val">{{crmData.deliveryStatus}}</div>
+	                </div>
+	                <div class="form-item">
+	                    <div class="info">备注：</div>
+	                    <textarea ></textarea>
+	                </div>
+	                <div class="form-item" v-if="rejectDiv">
+	                    <div class="info">拒绝原因：</div>
+	                    <textarea ></textarea>
+	                </div>
+	
+	                <div class="btn-box">
+	                    <button v-if="btnAccept" @click="acceptApply">接受申请</button>
+	                    <button v-if="btnReject" @click="returnList">拒绝申请</button>
+	                    <button v-if="btnAcceptPrice" @click="acceptOffer">接受报价</button>
+	                    <button v-if="btnRejectPrice" @click="refuseOffer">拒绝报价</button>
+	                    <button v-if="btnSendBack" @click="returnList">退回</button>
+	                    <button v-if="btnCheXiao" @click="revokeList">撤销</button>
+	                    <button v-if="btnOutStore" @click="commodity">商品出库</button>
+	                </div>
+	            </div>
+	        </div>
 	</div>
 </template>
 

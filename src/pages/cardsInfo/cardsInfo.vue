@@ -3,7 +3,6 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">
 			<!--收搜框-->
 			<div class="findbox">
 				<input class="sthelse" placeholder="请输入四位以上卡号查询" v-model="cardsNo"/>
@@ -49,9 +48,7 @@
 						</router-link>	
 			        </div>
 		        </div>
-		    </div>
-		   
-		</div>
+		   </div>
 	</div>
 </template>
 <script>

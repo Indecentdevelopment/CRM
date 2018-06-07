@@ -2,74 +2,74 @@
 	<div class="reportForm">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<!--顶部切换按钮-->
-		<div class="switch" v-show="imgControl">
-			<img src="../../assets/images/personal/liebiao.png" @click="controlImg" v-show="dataSheet" />
-			<img src="../../assets/images/personal/qiehuan.png" @click="getUserList" v-show="userList" />
-		</div>
-		<!--功能输入区域-->
-		<div class="start">
-			<span>开始时间：</span>
-			<div class="block">
-				<el-date-picker v-model="startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
-				</el-date-picker>
+			<!--顶部切换按钮-->
+			<div class="switch" v-show="imgControl">
+				<img src="../../assets/images/personal/liebiao.png" @click="controlImg" v-show="dataSheet" />
+				<img src="../../assets/images/personal/qiehuan.png" @click="getUserList" v-show="userList" />
 			</div>
-		</div>
-		<div class="start">
-			<span>结束时间：</span>
-			<div class="block">
-				<el-date-picker v-model="endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
-				</el-date-picker>
+			<!--功能输入区域-->
+			<div class="start">
+				<span>开始时间：</span>
+				<div class="block">
+					<el-date-picker v-model="startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+					</el-date-picker>
+				</div>
 			</div>
-		</div>
-		<div class="control clearfix">
-		    <p class="fl">状态:</p>
-		    <select class="otype fl" v-model="status">
-		        <option value="全部">全部</option>
-		        <option value="已预约">已预约</option>
-		        <option value="服务中">服务中</option>
-		        <option value="已取消">已取消</option>
-		        <option value="已完成">已完成</option>
-		    </select>
-		    <p class="fl">来源:</p>
-		    <select class="osource fl" v-model="source">
-		        <option value="ALL">全部</option>
-		        <option value="PRE">洗车预约</option>
-		        <option value="SCode">小程序</option>
-		        <option value="CRM">CRM</option>
-		    </select>
-		</div>
-		<div class="query" @click="GetReportData">查询</div>
-		<!--数据表-->
-		<div class="echarts" v-show="dataSheet">
-			<div id="myChart" :style="{width: '450px', height: '400px'}"></div>
-		</div>
-		<!--用户列表-->
-		<div class="userList" v-show="userList">
-			<div class="userData clearfix" v-for="item in reports">
-	        	<div class="useRighr fr">
-	        		<p class="fl">姓名：{{item.name}}</p>
-	        		<p class="fl">手机号：{{item.mobile}}</p>
-	        		<p class="fl">车牌号：{{item.carNo}}</p>
-	        		<p class="fl">工作状态：{{item.orderStatus}}</p>
-	        		<p class="fl">时间：{{item.date}}</p>
-	        		<p class="fl clearfix">
-	        			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
-	        				<span class="fr">详情</span>
-	        			</router-link>
-	        		</p>
-	        	</div>
-	        </div>
-	        
-	        <!--分页-->
-	        <div class="paging">
-	        	<p @click="before">上一页</p>
-	        	<p><span v-model="initial">{{initial}}</span>/<span v-model="endPage">{{endPage}}</span></p>
-	        	<p @click="next">下一页</p>
-	        	<input type="text" v-model="conPage" />
-	        	<p @click="gotxt">转到</p>
+			<div class="start">
+				<span>结束时间：</span>
+				<div class="block">
+					<el-date-picker v-model="endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+					</el-date-picker>
+				</div>
 			</div>
-		</div>
+			<div class="control clearfix">
+			    <p class="fl">状态:</p>
+			    <select class="otype fl" v-model="status">
+			        <option value="全部">全部</option>
+			        <option value="已预约">已预约</option>
+			        <option value="服务中">服务中</option>
+			        <option value="已取消">已取消</option>
+			        <option value="已完成">已完成</option>
+			    </select>
+			    <p class="fl">来源:</p>
+			    <select class="osource fl" v-model="source">
+			        <option value="ALL">全部</option>
+			        <option value="PRE">洗车预约</option>
+			        <option value="SCode">小程序</option>
+			        <option value="CRM">CRM</option>
+			    </select>
+			</div>
+			<div class="query" @click="GetReportData">查询</div>
+			<!--数据表-->
+			<div class="echarts" v-show="dataSheet">
+				<div id="myChart" :style="{width: '450px', height: '400px'}"></div>
+			</div>
+			<!--用户列表-->
+			<div class="userList" v-show="userList">
+				<div class="userData clearfix" v-for="item in reports">
+		        	<div class="useRighr fr">
+		        		<p class="fl">姓名：{{item.name}}</p>
+		        		<p class="fl">手机号：{{item.mobile}}</p>
+		        		<p class="fl">车牌号：{{item.carNo}}</p>
+		        		<p class="fl">工作状态：{{item.orderStatus}}</p>
+		        		<p class="fl">时间：{{item.date}}</p>
+		        		<p class="fl clearfix">
+		        			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
+		        				<span class="fr">详情</span>
+		        			</router-link>
+		        		</p>
+		        	</div>
+		        </div>
+		        
+		        <!--分页-->
+		        <div class="paging">
+		        	<p @click="before">上一页</p>
+		        	<p><span v-model="initial">{{initial}}</span>/<span v-model="endPage">{{endPage}}</span></p>
+		        	<p @click="next">下一页</p>
+		        	<input type="text" v-model="conPage" />
+		        	<p @click="gotxt">转到</p>
+				</div>
+			</div>
 	</div>
 </template>
 <script>

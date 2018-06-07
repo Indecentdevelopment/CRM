@@ -3,29 +3,29 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
-        <div class="userSelection clearfix">
-        	<p class="fl">总金额：<b>{{totalTotal}}</b></p>
-        	<span class="fr" @click="ticketOpening">开票</span>
-        	<input type="text" class="fr" v-model="invoiceNber" />
-        </div>
-        
-        <div class="userData clearfix" v-for="item in userDetails">
-        	<div class="useLeft fl">
-        		<input type="checkbox" :id="item.orderId" :value="item.orderId" name="total" v-model="total" @change="totalTotalFn()"/>
-        	</div>
-        	<div class="useRighr fr">
-        		<p class="fl">姓名：{{item.name}}</p>
-        		<p class="fl">手机号：{{item.mobile}}</p>
-        		<p class="fl">车牌号：{{item.carNo}}</p>
-        		<p class="fl">实付款：{{item.price}}</p>
-        		<p class="fl">{{item.status == '已预约'?'预约时间：':'下单时间：'}}{{item.preDate}}</p>
-        		<p class="fl clearfix">
-        			<router-link :to="{path: 'orderDetails', query:{OrderId:item.orderId}}">
-        			<span class="fr">详情</span>
-        			</router-link>
-        		</p>
-        	</div>
-        </div>
+	        <div class="userSelection clearfix">
+	        	<p class="fl">总金额：<b>{{totalTotal}}</b></p>
+	        	<span class="fr" @click="ticketOpening">开票</span>
+	        	<input type="text" class="fr" v-model="invoiceNber" />
+	        </div>
+	        
+	        <div class="userData clearfix" v-for="item in userDetails">
+	        	<div class="useLeft fl">
+	        		<input type="checkbox" :id="item.orderId" :value="item.orderId" name="total" v-model="total" @change="totalTotalFn()"/>
+	        	</div>
+	        	<div class="useRighr fr">
+	        		<p class="fl">姓名：{{item.name}}</p>
+	        		<p class="fl">手机号：{{item.mobile}}</p>
+	        		<p class="fl">车牌号：{{item.carNo}}</p>
+	        		<p class="fl">实付款：{{item.price}}</p>
+	        		<p class="fl">{{item.status == '已预约'?'预约时间：':'下单时间：'}}{{item.preDate}}</p>
+	        		<p class="fl clearfix">
+	        			<router-link :to="{path: 'orderDetails', query:{OrderId:item.orderId}}">
+	        			<span class="fr">详情</span>
+	        			</router-link>
+	        		</p>
+	        	</div>
+	        </div>
     </div>
 </template>
 <script>

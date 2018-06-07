@@ -2,13 +2,12 @@
     <div class="scan">
         <!-- 头部 顶部 -->
 		<my-header></my-header>
-        
-        <div class="code">
-            <img id="code-img" src="">
-            <div class="update" @click="updateCode">刷新</div>
-            <div class="msg">请扫描二维码以绑定微信信息</div>
-            <button class="jump" @click="jump()">跳过</button>
-        </div>
+	        <div class="code">
+	            <img id="code-img" src="">
+	            <div class="update" @click="updateCode">刷新</div>
+	            <div class="msg">请扫描二维码以绑定微信信息</div>
+	            <button class="jump" @click="jump()">跳过</button>
+	        </div>
     </div>
 </template>
 <script>
@@ -18,6 +17,7 @@ import './scan.sass'
 export default {
     data () {
         return {
+        	isLoading: true,
             query: {
                 bindId: ''       // userCarBindId
             },

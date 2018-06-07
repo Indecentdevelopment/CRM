@@ -2,54 +2,54 @@
 	<div class="allocationSingle">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="apply">
-			调拨申请单
-		</div>
-		<!--调拨数量-->
-		<div class="allocationNber">
-			<span class="allNber-amount">调拨数量：</span>
-			<span class="allNber-reduce" @click="allReduce">-</span>
-			<input class="allNber-conter" onfocus=this.blur() type="text" v-model="allocationNumber" />
-			<span class="allNber-plus" @click="allPlus">+</span>
-		</div>
-		<!--调拨时间-->
-		<div class="allocationNber">
-			<span class="allNber-amount">调拨时间：</span>
-			<div class="block">
-				<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
-				</el-date-picker>
+			<div class="apply">
+				调拨申请单
 			</div>
-		</div>
-		<!--查找门店（供应商）-->
-		<div class="supplier">
-			<span @click="supplier">查找门店（供应商）</span>
-		</div>
-		<div class="store" v-show="storejudge">
-			<!--同城门店-->
-			<div class="cityStore">
-				<div class="cityHeader">
-					<span :class="{active: shopType==='同城门店'}">同城门店</span>
-                    <span :class="{active: shopType==='供应商'}">供应商</span>
-				</div>
-				<div class="allocation clearfix">
-					<span class="fr" @click="applicationApply">调拨申请</span>
+			<!--调拨数量-->
+			<div class="allocationNber">
+				<span class="allNber-amount">调拨数量：</span>
+				<span class="allNber-reduce" @click="allReduce">-</span>
+				<input class="allNber-conter" onfocus=this.blur() type="text" v-model="allocationNumber" />
+				<span class="allNber-plus" @click="allPlus">+</span>
+			</div>
+			<!--调拨时间-->
+			<div class="allocationNber">
+				<span class="allNber-amount">调拨时间：</span>
+				<div class="block">
+					<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1" >
+					</el-date-picker>
 				</div>
 			</div>
-			<!--门店列表-->
-			<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i, item.id)">
-				<div class="storeImg fl">
-					<img src="../../assets/images/allocationSingle/shop.png"/>
-				</div>
-				<div class="storeData clearfix fl">
-					<h3 class="fl">{{item.name}}</h3>
-					<p class="fl">距离：{{(item.distance/1000).toFixed(2)}}公里</p>
-					<p class="fl">预计时间：{{(item.duration/60).toFixed(0)}}分钟</p>
-					<p class="fl">电话：{{item.phone}}</p>
-					<p class="fl">库存：{{item.quantity}}</p>
-				</div>
-				<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
+			<!--查找门店（供应商）-->
+			<div class="supplier">
+				<span @click="supplier">查找门店（供应商）</span>
 			</div>
-		</div>
+			<div class="store" v-show="storejudge">
+				<!--同城门店-->
+				<div class="cityStore">
+					<div class="cityHeader">
+						<span :class="{active: shopType==='同城门店'}">同城门店</span>
+	                    <span :class="{active: shopType==='供应商'}">供应商</span>
+					</div>
+					<div class="allocation clearfix">
+						<span class="fr" @click="applicationApply">调拨申请</span>
+					</div>
+				</div>
+				<!--门店列表-->
+				<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i, item.id)">
+					<div class="storeImg fl">
+						<img src="../../assets/images/allocationSingle/shop.png"/>
+					</div>
+					<div class="storeData clearfix fl">
+						<h3 class="fl">{{item.name}}</h3>
+						<p class="fl">距离：{{(item.distance/1000).toFixed(2)}}公里</p>
+						<p class="fl">预计时间：{{(item.duration/60).toFixed(0)}}分钟</p>
+						<p class="fl">电话：{{item.phone}}</p>
+						<p class="fl">库存：{{item.quantity}}</p>
+					</div>
+					<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
+				</div>
+			</div>
 	</div>
 </template>
 
@@ -109,6 +109,7 @@
             } else {
                 this.shopType = '同城门店'
             }
+            console.log(this.value1)
 			
 		},
 		methods: {
@@ -198,17 +199,39 @@
 							console.log(this.allocationNumber)
 							console.log(this.value1)
 							console.log(this.shopType)
+							let date = this.value1
+							let getMonth = (date.getMonth() + 1)
+							let getDate = date.getDate()
+							let getHours = date.getHours()
+							let getMinutes = date.getMinutes()
+							if(getMonth < 10){
+								getMonth = "0" + getMonth
+							}
+							if(getDate < 10){
+								getDate = "0" + getDate
+							}
+							if(getHours < 10){
+								getHours = "0" + getHours
+							}
+							if(getMinutes < 10){
+								getMinutes = "0" + getMinutes
+							}
+							let date_value = date.getFullYear() + '-' + getMonth + '-' + getDate + ' ' + getHours + ':' + getMinutes;
 							api.GetCreateApply({
 								ProductId: this.query.productId,
 								ShopIds: this.shopIds.join(),
 								Quantity: this.allocationNumber,
-								ProviderDateTime: this.value1,
+								ProviderDateTime: date_value,//格式
 								ApplyType: this.shopType,
 								OrderNum: '',
 								RowNum: ''
-			                }).then(res => {
-			                	console.log(res.data)
-			                	this.$router.push({path:'allocationYes',query:{serial: res.data.errMsg}})
+			               }).then(res => {
+				               	if(res.data.result){
+				               		alert("您的调拨申请已发送！");
+			                		this.$router.push({path:'applyRequireList',query:{serial: res.data.errMsg}})
+				               	} else {
+			                        alert(json.errMsg);
+			                    }
 			                })
 						}
 					}

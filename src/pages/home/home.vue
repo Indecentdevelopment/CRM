@@ -17,8 +17,15 @@
                     <input type="text" placeholder=" 请输入手机号码" class="inp-phone" v-model="phone" @input="getCarInfo()"/>
                     <!--卡券选择框-->
                     <select class="inp-choiceCard">
-                        <option value ="储值卡">储值卡</option>
-                        <option value ="买三送一机油卡">买三送一机油卡</option>
+                        <option value="储值卡">储值卡</option>
+	                    <option value="优惠券">优惠券</option>
+	                    <option value="买三送一机油卡">买三送一机油卡</option>
+	                    <option value="洗车代金卡">洗车代金卡</option>
+	                    <option value="金卡">金卡(9.5折)</option>
+	                    <option value="钻卡">钻卡(9.2折)</option>
+	                    <option value="白金卡">白金卡(9.0折)</option>
+	                    <option value="小KA">小KA(10折)</option>
+	                    <option value="大客户">大客户(9.2折)</option>
                     </select>
                     <!--卡券输入框-->
                     <input type="text" placeholder=" 请输入卡券号" class="inp-inputCard" v-model="cardName" @input="getCarInfo()" />

@@ -3,7 +3,6 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-		<div class="loading" v-loading="isLoading">	
 			<!--个人信息-->
 			<div class="personalData">
 				<div class="personal-information">
@@ -57,8 +56,49 @@
 			</div>
 			
 			<!--选填信息-->
-			<div class="personalOptional">
-				<div class="optional-input">
+			<div class="personalOptional clearfix">
+				<!--新版-->
+				
+				<h3 class="fl">当前车辆信息</h3>
+				<div class="personalInput fl">
+					<span>上次保养：</span><div class="block">
+						<el-date-picker v-model="updateInfo.lastTime" type="date" placeholder="上次保养日期" :picker-options="pickerOptions1" >
+						</el-date-picker>
+					</div>
+				</div>
+				<div class="personalInput fl">
+					<span>上次换胎：</span><div class="block">
+						<el-date-picker v-model="updateInfo.lastChangeTire" type="date" placeholder="上次换胎日期" :picker-options="pickerOptions1" >
+						</el-date-picker>
+					</div>
+				</div>
+				<div class="personalInput fl">
+					<span>当前里程：</span><input class="pereinp" type="text" placeholder="请输入..." v-model="updateInfo.mileage" @click="showKeyboard($event, 'mileage')"><b>*</b>
+				</div>
+				<div class="personalInput fl">
+					<span>月均里程：</span><input class="pereinp" type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth"  @click="showKeyboard($event, 'mileageMonth')"><b>*</b>
+				</div>
+				<h3 class="fl">下次保养 / 换胎信息</h3>
+				<div class="personalInput fl">
+					<span>保养日期：</span><div class="block">
+						<el-date-picker v-model="updateInfo.nextTime" type="date" placeholder="下次保养日期" :picker-options="pickerOptions1" >
+						</el-date-picker>
+					</div>
+				</div>
+				<div class="personalInput fl">
+					<span>保养里程：</span><input class="pereinp" type="text" placeholder="下次保养里程" v-model="updateInfo.nextMileage" @click="showKeyboard($event, 'nextMileage')">
+				</div>
+				<div class="personalInput fl">
+					<span>换胎日期：</span><div class="block">
+						<el-date-picker v-model="updateInfo.nextChangeTire" type="date" placeholder="下次换胎日期" :picker-options="pickerOptions1" >
+						</el-date-picker>
+					</div>
+				</div>
+				<div class="personalInput fl">
+					<span>换胎里程：</span><input class="pereinp" type="text" placeholder="下次换胎里程" v-model="updateInfo.nextTireMileage" @click="showKeyboard($event, 'nextTireMileage')">
+				</div>
+				<!--旧版  留着备用-->
+				<!--<div class="optional-input">
 					<span>&nbsp;&nbsp;&nbsp;DOT号：</span><input type="text" placeholder="DOT号" v-model="updateInfo.dotNo" @click="showDot($event)">
 				</div>
 				<div class="optional-input">
@@ -69,8 +109,8 @@
 				</div>
 				<div class="optional-input">
 					<span>月均里程：</span><input type="text" placeholder="请输入..." v-model="updateInfo.mileageMonth" @click="showKeyboard($event, 'mileageMonth')">
-				</div>
-				<div class="optional-inpRadio">
+				</div>-->
+				<!--<div class="optional-inpRadio">
 					<span class="inpRadio-style">过度磨损：</span>
 					<div class="radioBtn">
 				        <span>否</span>
@@ -108,7 +148,7 @@
 				        <input id="item6" type="radio" name="itemss" value="6" v-model="updateInfo.cracks">
 				        <label for="item6"></label>
 				    </div>
-				</div>
+				</div>-->
 				<div class="optional-button">
 					<button @click="UpadateUserInfo">继续</button>
 				</div>
@@ -138,7 +178,7 @@
 	        			<span class="fl">卡类型</span>
 	        			<span class="fl">详情</span>
 	        		</div>
-	        		<div class="headerList" v-for="(item,index) in cardList">
+	        		<div class="headerList" v-for="(item,index) in cardList" :key="index">
 	        			<span class="fl">{{index}}</span>
 	        			<span class="fl">{{item.name}}</span>
 	        			<span class="fl">{{item.code}}</span>
@@ -160,7 +200,7 @@
 	        			<span class="fl">说明</span>
 	        			<span class="fl">订单</span>
 	        		</div>
-	        		<div class="headerList" v-for="(item,index) in integralList">
+	        		<div class="headerList" v-for="(item,index) in integralList" :key="index">
 	        			<span class="fl">{{index}}</span>
 	        			<span class="fl">{{item.createDate}}</span>
 	        			<span class="fl">{{item.shop.name}}</span>
@@ -176,7 +216,6 @@
 	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 	        <!--DOT键盘-->
 			<keyboardDot :dot="isInputDot" @dotWords="dotWords" @dotSpaces="dotSpaces"  @dotbackWord="dotbackWord"></keyboardDot>
-		</div>
 	</div>
 </template>
 
@@ -190,6 +229,25 @@
 	    data () {
 	        return {
 	        	isLoading: true,
+	        	pickerOptions1: {
+					disabledDate(time) {
+						return time.getTime < Date.now();
+					},
+					shortcuts: [{
+						text: '今天',
+						onClick(picker) {
+							picker.$emit('pick', new Date());
+						}
+					}, {
+						text: '昨天',
+						onClick(picker) {
+							const date = new Date();
+							date.setTime(date.getTime() - 3600 * 1000 * 24);
+							picker.$emit('pick', date);
+						}
+
+					}]
+				},
                 userCarBindId: '', 		// 获取userInfo时  传参
                 uid: '',           		// 获取userInfo时  传参
                 userInfo: {        		// 获取的userInfo数据
@@ -207,7 +265,16 @@
                 cardList: '',			// 卡劵列表
                 integralList: '',		// 积分列表
                 cardControl: false,		// 卡劵控制                
-                integraControl: false,		// 积分控制
+                integraControl: false,	// 积分控制
+            	lastTime: '',			// 上次保养时间
+				lastChangeTire: '',		// 上次换胎时间
+				mileage: '',			// 当前里程
+				mileageMonth: '',		// 月均里程
+				nextTime: '',			// 下次保养日期
+				nextMileage: '',		// 下次保养里程
+				nextChangeTire: '',		// 下次换胎日期
+				nextTireMileage: '',	// 下次换胎里程
+				
 	        }
         },
         created () {
@@ -234,16 +301,61 @@
                     })
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
-                    this.updateInfo = this.carInfo
+                    var str = JSON.stringify(res.data.cars[0])
+                    this.updateInfo = JSON.parse(str)
                     this.carId = res.data.cars[0].carId
-                    console.log(this.carId)
+                    //console.log(this.carId)
                     this.cardList = res.data.cardCoupons
                     this.integralList = res.data.integrals
-                    // this.updateInfo.CarId = res.data.cars[0].carId
-                    // this.updateInfo.Mileage = res.data.cars[0].mileage
-                    // this.updateInfo.MileageMonth = res.data.cars[0].mileageMonth
-                    // this.updateInfo.DotNo = res.data.cars[0].dotNo
-                    // this.updateInfo.LastTime = res.data.cars[0].lastTime
+                    
+                	
+                    if(this.updateInfo.lastTime != 0 && this.updateInfo.lastTime != null){
+                    	this.updateInfo.lastTime = this.updateInfo.lastTime
+                    }else{
+                    	this.lastTime = ""
+                    }
+                    
+                    if(this.updateInfo.lastChangeTire != 0 && this.updateInfo.lastChangeTire != null){
+                    	this.updateInfo.lastChangeTire = this.updateInfo.lastChangeTire
+                    }else{
+                    	this.lastChangeTire = ""
+                    }
+                    
+                    if(this.updateInfo.mileage != 0 && this.updateInfo.mileage != null){
+                    	this.updateInfo.mileage = this.updateInfo.mileage
+                    }else{
+                    	this.updateInfo.mileage = ""
+                    }
+                    
+                    if(this.updateInfo.mileageMonth != 0 && this.updateInfo.mileageMonth != null){
+                    	this.updateInfo.mileageMonth = this.updateInfo.mileageMonth
+                    }else{
+                    	this.updateInfo.mileageMonth = ""
+                    }
+                    
+                    if(this.updateInfo.nextTime != 0 && this.updateInfo.nextTime != null){
+                    	this.updateInfo.nextTime = this.updateInfo.nextTime
+                    }else{
+                    	this.updateInfo.nextTime = ""
+                    }
+                    
+                    if(this.updateInfo.nextMileage != 0 && this.updateInfo.nextMileage != null){
+                    	this.updateInfo.nextMileage = this.updateInfo.nextMileage
+                    }else{
+                    	this.updateInfo.nextMileage = ""
+                    }
+                    
+                    if(this.updateInfo.nextChangeTire != 0 && this.updateInfo.nextChangeTire != null){
+                    	this.updateInfo.nextChangeTire = this.updateInfo.nextChangeTire
+                    }else{
+                    	this.updateInfo.nextChangeTire = ""
+                    }
+                    
+                    if(this.updateInfo.nextTireMileage != 0 && this.updateInfo.nextTireMileage != null){
+                    	this.updateInfo.nextTireMileage = this.updateInfo.nextTireMileage
+                    }else{
+                    	this.updateInfo.nextTireMileage = ""
+                    }
                 })
             },
             // 查看卡劵
@@ -277,7 +389,8 @@
             // 点击换车
             changeCar (data) {
                 this.carInfo = data
-                this.updateInfo = data
+                var str = JSON.stringify(data)
+                this.updateInfo = JSON.parse(str)
             },
             // 添加车型
             addNewCar () {
@@ -330,7 +443,39 @@
             },
             // 点击继续 
             UpadateUserInfo () {
-                api.UpadateUserInfo(this.updateInfo).then(res => {
+            	console.log(this.updateInfo.lastTime)
+            	let mileage =	this.updateInfo.mileage		// 上次当前里程
+            	let mileageM =	this.updateInfo.mileageMonth// 上次月均里程
+            	
+	            // 必填项
+	            if (mileage == '') {
+	                alert("当前里程不能为空");
+	                return
+	            } else if (mileageM == '') {
+	                alert("月平均里程不能为空");
+	                return
+	            } else if (mileage == 0) {
+	                alert("当前里程不能为0");
+	                return
+	            } else if (mileageM == 0) {
+	                alert("月平均里程不能为0");
+	                return
+	            }
+                api.UpadateUserInfo({
+                	CarId:this.updateInfo.carId,
+                	Mileage:this.updateInfo.mileage,
+                	MileageMonth: this.updateInfo.mileageMonth,
+                	DotNo:this.updateInfo.dotNo,
+                	WearAndTear:this.updateInfo.wearAndTear,
+                	Aging:this.updateInfo.aging,
+                	cracks:this.updateInfo.cracks,
+                	LastTime:this.updateInfo.lastTime,
+                	LastChangeTire:this.updateInfo.lastChangeTire,
+                	NextTime:this.updateInfo.nextTime,
+                	NextMileage:this.updateInfo.nextMileage,
+                	NextChangeTire:this.updateInfo.nextChangeTire,
+                	NextTireMileage:this.updateInfo.nextTireMileage
+                }).then(res => {
                     let data = res.data
                     if (data.success) {
                         if (data.isBind) {
@@ -373,20 +518,26 @@
                     }
                 })
             },
-        // 显示键盘
+        	// 显示键盘  
             showKeyboard (event, focus) {
+            	//console.log(focus)
                 event.target.blur()
                 this.focusInp = focus
                 this.isShowKeyboard = true
             },
             // 点击键盘 开始输入
             inputWord (data) {
+            	//console.log(this.carInfo.mileage)
+            	//console.log(this.carInfo.mileageMonth)
                 this.updateInfo[this.focusInp] += data
+                console.log(this.updateInfo[this.focusInp])
             },
             // 键盘 撤销
             backWord () {
-                let length = this.updateInfo[this.focusInp].length
-                this.updateInfo[this.focusInp] = this.updateInfo[this.focusInp].substring(0, length - 1)
+            	let focusInp = this.updateInfo[this.focusInp].toString()
+                let length = focusInp.length
+                //console.log(focusInp)
+                this.updateInfo[this.focusInp] = focusInp.substring(0, length - 1)
             },
         // DOT显示键盘
             showDot (event, focus) {

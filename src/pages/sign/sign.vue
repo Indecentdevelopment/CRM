@@ -2,7 +2,6 @@
     <div class="signature">
         <!-- 头部 顶部 -->
 		<my-header></my-header>
-        <div class="loading" v-loading="isLoading">
             <div class="title">选择技师</div>
             <div class="teach-box">
                 <div class="item" :class="{active: JSON.stringify(choList).includes(item.uid)}" v-for="(item, index) in techData.techs" 
@@ -30,7 +29,6 @@
                 <button @click="submit()">开始服务</button>
                 <button @click="cancelOrder()">取消订单</button>
             </div>
-        </div>
     </div>
 </template>
 <script>
