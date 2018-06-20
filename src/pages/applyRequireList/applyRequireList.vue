@@ -100,6 +100,12 @@
 	                    <div class="info">收货状态：</div>
 	                    <div class="val">{{crmData.deliveryStatus}}</div>
 	                </div>
+                    <div class="form-item" v-if="detailList.applyShopModels" v-show="detailList.applyShopModels[0].isProvider!=='2'&&detailList.applyShopModels[0].isProvider!=='4'
+                    &&detailList.applyShopModels[0].isProvider!=='6'&&detailList.applyShopModels[0].isProvider!=='7'
+                    &&detailList.applyShopModels[0].isProvider!=='8'&&detailList.applyType!=='同城门店'">
+	                    <div class="info">运费（范围0~50）：</div>
+	                    <input v-model="yunfei">
+	                </div>
 	                <div class="form-item">
 	                    <div class="info">备注：</div>
 	                    <textarea v-model="remarks"></textarea>
@@ -162,7 +168,8 @@
                 detailList: [],         // 详情列表
 				value1: '',				//调拨时间
 				serial: '',
-				crmData:{},				//CRM剩余参数
+                crmData:{},				//CRM剩余参数
+                yunfei: 12,             // 运费
 				btnAccept: false,
 				btnReject: false,
 				btnAcceptPrice: false,
