@@ -44,10 +44,10 @@
 					<p>车牌号：{{carInfo.carNo}}</p>
 					<p>车架号：{{carInfo.vin}}</p>
 					<p>技师备注：<input type="text" class="" /></p>
-	                <p>上次行驶里程：{{carInfo.mileage}}</p>
-	                <p>平均月行驶里程：{{carInfo.mileageMonth}}</p>
-					<p>
-	                    <button @click="SeeMaintain">查看保养履历</button>
+	                <p v-if="!carInfo.isNewCar">上次行驶里程：{{carInfo.mileage}}</p>
+	                <p v-if="!carInfo.isNewCar">平均月行驶里程：{{carInfo.mileageMonth}}</p>
+					<p class="personal-mStyle">
+	                    <button @click="SeeMaintain" v-if="!carInfo.isNewCar">查看保养履历</button>
 	                    <button @click="CheckUserInfo">修改车辆信息</button>
 	                    <button @click="isDelCar = true">删除车辆信息</button>
 	                </p>
@@ -443,7 +443,6 @@
             },
             // 点击继续 
             UpadateUserInfo () {
-            	console.log(this.updateInfo.lastTime)
             	let mileage =	this.updateInfo.mileage		// 上次当前里程
             	let mileageM =	this.updateInfo.mileageMonth// 上次月均里程
             	
@@ -461,62 +460,66 @@
 	                alert("月平均里程不能为0");
 	                return
 	            }
-                api.UpadateUserInfo({
-                	CarId:this.updateInfo.carId,
-                	Mileage:this.updateInfo.mileage,
-                	MileageMonth: this.updateInfo.mileageMonth,
-                	DotNo:this.updateInfo.dotNo,
-                	WearAndTear:this.updateInfo.wearAndTear,
-                	Aging:this.updateInfo.aging,
-                	cracks:this.updateInfo.cracks,
-                	LastTime:this.updateInfo.lastTime,
-                	LastChangeTire:this.updateInfo.lastChangeTire,
-                	NextTime:this.updateInfo.nextTime,
-                	NextMileage:this.updateInfo.nextMileage,
-                	NextChangeTire:this.updateInfo.nextChangeTire,
-                	NextTireMileage:this.updateInfo.nextTireMileage
-                }).then(res => {
-                    let data = res.data
-                    if (data.success) {
-                        if (data.isBind) {
-                            this.$router.push({
-                                path: 'Confirm',
-                                query: {
-                                    userCarBindId: data.id
-                                }
-                            })
-                        } else {
-                            this.$router.push({
-                                path: 'scan',
-                                query: {
-                                    userCarBindId: data.id
-                                }
-                            })
-                        }
-                    } else {
-                        if (!data.phoneNumber) {
-                            alert('您的手机号格式不正确，请先修改手机号')
-                            this.$router.push({
-                                path: 'uservip',
-                                query: {
-                                    uid: userInfo.id,
-                                    cid: userCarBindId
-                                }
-                            })
-                        } else {
-                            alert(data.errMsg)
-                            if (data.errMsg === '请先维护完整车型信息') {
-                                this.$router.push({
-                                    path: 'impCarInfo',
-                                    query: {
-                                        opera: 'update',
-                                        id: data.id
-                                    }
-                                })
-                            }
-                        }
-                    }
-                })
+	            console.log(this.updateInfo.lastChangeTire)
+	            console.log(this.updateInfo.lastTime)
+	            console.log(this.updateInfo.nextChangeTire)
+	            console.log(this.updateInfo.nextTime)
+//              api.UpadateUserInfo({
+//              	CarId:this.updateInfo.carId,
+//              	Mileage:this.updateInfo.mileage,
+//              	MileageMonth: this.updateInfo.mileageMonth,
+//              	DotNo:this.updateInfo.dotNo,
+//              	WearAndTear:this.updateInfo.wearAndTear,
+//              	Aging:this.updateInfo.aging,
+//              	cracks:this.updateInfo.cracks,
+//              	LastTime:this.updateInfo.lastTime,
+//              	LastChangeTire:this.updateInfo.lastChangeTire,
+//              	NextTime:this.updateInfo.nextTime,
+//              	NextMileage:this.updateInfo.nextMileage,
+//              	NextChangeTire:this.updateInfo.nextChangeTire,
+//              	NextTireMileage:this.updateInfo.nextTireMileage
+//              }).then(res => {
+//                  let data = res.data
+//                  if (data.success) {
+//                      if (data.isBind) {
+//                          this.$router.push({
+//                              path: 'Confirm',
+//                              query: {
+//                                  userCarBindId: data.id
+//                              }
+//                          })
+//                      } else {
+//                          this.$router.push({
+//                              path: 'scan',
+//                              query: {
+//                                  userCarBindId: data.id
+//                              }
+//                          })
+//                      }
+//                  } else {
+//                      if (!data.phoneNumber) {
+//                          alert('您的手机号格式不正确，请先修改手机号')
+//                          this.$router.push({
+//                              path: 'uservip',
+//                              query: {
+//                                  uid: userInfo.id,
+//                                  cid: userCarBindId
+//                              }
+//                          })
+//                      } else {
+//                          alert(data.errMsg)
+//                          if (data.errMsg === '请先维护完整车型信息') {
+//                              this.$router.push({
+//                                  path: 'impCarInfo',
+//                                  query: {
+//                                      opera: 'update',
+//                                      id: data.id
+//                                  }
+//                              })
+//                          }
+//                      }
+//                  }
+//              })
             },
         	// 显示键盘  
             showKeyboard (event, focus) {
@@ -530,7 +533,7 @@
             	//console.log(this.carInfo.mileage)
             	//console.log(this.carInfo.mileageMonth)
                 this.updateInfo[this.focusInp] += data
-                console.log(this.updateInfo[this.focusInp])
+                //console.log(this.updateInfo[this.focusInp])
             },
             // 键盘 撤销
             backWord () {

@@ -236,6 +236,8 @@
             //
             ifState(isShowBtn){
 				//门店撤销
+		        console.log(isShowBtn)
+		        console.log(this.crmData.isShowCheXiao)
 		        if (this.crmData.applyType == "同城门店" && isShowBtn == 1) {
 		            if (this.crmData.isShowCheXiao == 1) {
 		                this.btnCheXiao = true
