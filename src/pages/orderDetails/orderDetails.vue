@@ -45,6 +45,7 @@
                 <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
+            	<p class="fr" v-show="orderInfo.status == '服务中'" @click="returnConfirm"><img src="../../assets/images/orderDetails/edit.png"/>返回待确认</p>
             </div>
             
             <!--订单内容-->
@@ -625,6 +626,10 @@
                     this.isLoading = false
                     this.drawingData(res.data)
                 })
+            },
+            // 点击  返回待确认
+            returnConfirm (){
+            	console.log(this.query.orderId)
             },
 			//增减工时
 				//增加工时
