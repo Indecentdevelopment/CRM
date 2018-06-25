@@ -58,11 +58,16 @@
                         
                         <div class="item-change">
                             <p id="productName">{{item.productName}}</p>
-                            <div class="isHave" v-if="orderInfo.status !== '已完成'">
+                            <div class="isHave item-style" v-if="orderInfo.status !== '已完成'">
                                 <div v-show="!item.isService">
                                     <font v-show="item.isHave" class="have">已领料</font>
                                     <font v-show="!item.isHave" class="havenot">未领料</font>
                                 </div>
+                            </div>
+                            <div class="item-style" v-show="!item.isService">
+                            	<router-link :to="{path: 'uservip', query: {uid: userInfo.id,cid: userCarBindId}}">
+                            		<spam v-if="orderInfo.status == '待确认'">他仓求助</spam>
+                            	</router-link>
                             </div>
                             <div id="itemPrice">
                                 <span v-show="item.isService">服务</span>
