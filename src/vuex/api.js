@@ -22,7 +22,8 @@ axios.interceptors.request.use(
 // http 响应response 拦截器
 axios.interceptors.response.use(
     res => {
-        if (res.data.code === 401) { // 验证失败
+        if (res.data.code === 401 || res.data.code === 302) { // 验证失败
+            console.log(res)
             localStorage.removeItem('currentUser_token')
             store.dispatch('loginOut')
             router.push('/')
@@ -33,8 +34,8 @@ axios.interceptors.response.use(
         }
     },
     err => {
-    	console.log(err.response.status)
-    	if(err.response.status == 400){
+        // console.log(err.response.status)
+    	if(err.response && err.response.status == 400){
     		alert(err.response.data.error_description)
     		//console.log(err.response.data.error_description)
     	}else{
