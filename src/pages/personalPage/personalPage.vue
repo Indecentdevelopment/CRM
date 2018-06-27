@@ -464,62 +464,62 @@
 	            console.log(this.updateInfo.lastTime)
 	            console.log(this.updateInfo.nextChangeTire)
 	            console.log(this.updateInfo.nextTime)
-//              api.UpadateUserInfo({
-//              	CarId:this.updateInfo.carId,
-//              	Mileage:this.updateInfo.mileage,
-//              	MileageMonth: this.updateInfo.mileageMonth,
-//              	DotNo:this.updateInfo.dotNo,
-//              	WearAndTear:this.updateInfo.wearAndTear,
-//              	Aging:this.updateInfo.aging,
-//              	cracks:this.updateInfo.cracks,
-//              	LastTime:this.updateInfo.lastTime,
-//              	LastChangeTire:this.updateInfo.lastChangeTire,
-//              	NextTime:this.updateInfo.nextTime,
-//              	NextMileage:this.updateInfo.nextMileage,
-//              	NextChangeTire:this.updateInfo.nextChangeTire,
-//              	NextTireMileage:this.updateInfo.nextTireMileage
-//              }).then(res => {
-//                  let data = res.data
-//                  if (data.success) {
-//                      if (data.isBind) {
-//                          this.$router.push({
-//                              path: 'Confirm',
-//                              query: {
-//                                  userCarBindId: data.id
-//                              }
-//                          })
-//                      } else {
-//                          this.$router.push({
-//                              path: 'scan',
-//                              query: {
-//                                  userCarBindId: data.id
-//                              }
-//                          })
-//                      }
-//                  } else {
-//                      if (!data.phoneNumber) {
-//                          alert('您的手机号格式不正确，请先修改手机号')
-//                          this.$router.push({
-//                              path: 'uservip',
-//                              query: {
-//                                  uid: userInfo.id,
-//                                  cid: userCarBindId
-//                              }
-//                          })
-//                      } else {
-//                          alert(data.errMsg)
-//                          if (data.errMsg === '请先维护完整车型信息') {
-//                              this.$router.push({
-//                                  path: 'impCarInfo',
-//                                  query: {
-//                                      opera: 'update',
-//                                      id: data.id
-//                                  }
-//                              })
-//                          }
-//                      }
-//                  }
-//              })
+                api.UpadateUserInfo({
+                	CarId:this.updateInfo.carId,
+                	Mileage:this.updateInfo.mileage,
+                	MileageMonth: this.updateInfo.mileageMonth,
+                	DotNo:this.updateInfo.dotNo,
+                	WearAndTear:this.updateInfo.wearAndTear,
+                	Aging:this.updateInfo.aging,
+                	cracks:this.updateInfo.cracks,
+                	LastTime:this.updateInfo.lastTime,
+                	LastChangeTire:this.updateInfo.lastChangeTire,
+                	NextTime:this.updateInfo.nextTime,
+                	NextMileage:this.updateInfo.nextMileage,
+                	NextChangeTire:this.updateInfo.nextChangeTire,
+                	NextTireMileage:this.updateInfo.nextTireMileage
+                }).then(res => {
+                    let data = res.data
+                    if (data.success) {
+                        if (data.isBind) {
+                            this.$router.push({
+                                path: 'Confirm',
+                                query: {
+                                    userCarBindId: data.id
+                                }
+                            })
+                        } else {
+                            this.$router.push({
+                                path: 'scan',
+                                query: {
+                                    userCarBindId: data.id
+                                }
+                            })
+                        }
+                    } else {
+                        if (!data.phoneNumber) {
+                            alert('您的手机号格式不正确，请先修改手机号')
+                            this.$router.push({
+                                path: 'uservip',
+                                query: {
+                                    uid: userInfo.id,
+                                    cid: userCarBindId
+                                }
+                            })
+                        } else {
+                            alert(data.errMsg)
+                            if (data.errMsg === '请先维护完整车型信息') {
+                                this.$router.push({
+                                    path: 'impCarInfo',
+                                    query: {
+                                        opera: 'update',
+                                        id: data.id
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
             },
         	// 显示键盘  
             showKeyboard (event, focus) {

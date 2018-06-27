@@ -12,7 +12,7 @@
                 <p class="orderStyleOne orderColor-white fl">订单编号：{{new Date(orderInfo.datePlaced).toString('yyMMdd10' + orderInfo.id)}}</p>
                 <p class="orderStyleTwo orderColor-white fl">客户：{{orderInfo.user.firstName}}</p>
                 
-                <p class="orderStyleTwo orderColor-white fl mobile">电话：173665156</p>
+                <p class="orderStyleTwo orderColor-white fl mobile">电话：{{orderInfo.user.phoneNumber}}</p>
                 <p class="orderStyleOne orderColor-gray fl">订单状态：{{orderInfo.status}}</p>
                 <p class="orderStyleTwo orderColor-gray fl">技师：{{orderInfo.technician}}</p>
                 <p class="orderStyleOne orderColor-gray fl">服务店铺：{{orderInfo.shop.name}}</p>
@@ -45,7 +45,9 @@
                 <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
-            	<p class="fr" v-show="orderInfo.status == '服务中'" @click="returnConfirm"><img src="../../assets/images/orderDetails/edit.png"/>返回待确认</p>
+                
+            		<p class="fr" v-show="orderInfo.status == '服务中'" @click="returnConfirm"><img src="../../assets/images/orderDetails/edit.png"/>返回待确认</p>
+            	
             </div>
             
             <!--订单内容-->
@@ -66,8 +68,8 @@
                                 </div>
                             </div>
                             <div class="item-style" v-show="!item.isService">
-                            	<router-link :to="{path: 'uservip', query: {uid: userInfo.id,cid: userCarBindId}}">
-                            		<spam v-if="orderInfo.status == '待确认'">他仓求助</spam>
+                            	<router-link :to="{path: 'allocationSingle',query:{ productId:item.productId,shopId:orderInfo.shopId, ShowShopType: 3}}">
+                            		<span v-if="orderInfo.status == '待确认'">他仓求助</span>
                             	</router-link>
                             </div>
                             <div id="itemPrice">
@@ -424,7 +426,7 @@
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
                 },
-
+				productId: '',
                 cardCoupon: {},             // 使用卡券 弹窗信息
                 cardCouponUseAmount: '',    // 使用卡券 本次使用金额
                 deductionAmount: '',        // 使用卡券 冲抵金额
@@ -572,6 +574,18 @@
 				}else{
 					this.isServiceEnd = false
 				}
+				
+				// 2、判断代付款   卡券支付
+				console.log(this.orderInfo.cardCouponLogs)
+				console.log(this.orderInfo.cardCouponLogs.length)
+				let iscardconlistshow = this.orderInfo.iscardconlistshow
+				if(this.orderInfo.status == '待付款'){
+					if (iscardconlistshow == 1) {
+						
+		            } else {
+		            	this.orderInfo.status = '待付款'
+		            }
+				}
 //              this.isService = this.orderInfo.items[0].isService
 //              console.log(this.orderInfo.status + ' 服务状态')
 //              console.log(this.orderInfo.isHidden + ' isHidden')
@@ -592,6 +606,7 @@
                         "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
                         "S": this.getMilliseconds() //毫秒 
                     }
+                    //console.log(o)
                     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length))
                     for (var k in o)
                         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
@@ -629,7 +644,16 @@
             },
             // 点击  返回待确认
             returnConfirm (){
-            	console.log(this.query.orderId)
+				let orderId = this.query.orderId + "";
+            	api.UpdateStatus({
+            		orderId: orderId
+            	}).then(res => {
+            		if (res) {
+		                this.GetOrderInfo()
+		            } else { 
+		            	alert("返回失败")
+		            }
+            	})
             },
 			//增减工时
 				//增加工时
@@ -668,8 +692,13 @@
 //		            console.log('false')
 		        }
             },
-            
-            
+            // 他仓求助
+//          allocationSingle(productId,shopId){
+//          	let showshoptype = 3
+//          	console.log(productId)
+//          	console.log(shopId)
+//          },
+//          
             // 店家 添加产品
             addProduct () {
                 this.$router.push({

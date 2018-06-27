@@ -2,54 +2,54 @@
 	<div class="allocationSingle">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
-			<div class="apply">
-				调拨申请单
+		<div class="apply">
+			调拨申请单
+		</div>
+		<!--调拨数量-->
+		<div class="allocationNber">
+			<span class="allNber-amount">调拨数量：</span>
+			<span class="allNber-reduce" @click="allReduce">-</span>
+			<input class="allNber-conter" onfocus=this.blur() type="text" v-model="allocationNumber" />
+			<span class="allNber-plus" @click="allPlus">+</span>
+		</div>
+		<!--调拨时间-->
+		<div class="allocationNber">
+			<span class="allNber-amount">调拨时间：</span>
+			<div class="block">
+				<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1" >
+				</el-date-picker>
 			</div>
-			<!--调拨数量-->
-			<div class="allocationNber">
-				<span class="allNber-amount">调拨数量：</span>
-				<span class="allNber-reduce" @click="allReduce">-</span>
-				<input class="allNber-conter" onfocus=this.blur() type="text" v-model="allocationNumber" />
-				<span class="allNber-plus" @click="allPlus">+</span>
-			</div>
-			<!--调拨时间-->
-			<div class="allocationNber">
-				<span class="allNber-amount">调拨时间：</span>
-				<div class="block">
-					<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1" >
-					</el-date-picker>
+		</div>
+		<!--查找门店（供应商）-->
+		<div class="supplier">
+			<span @click="supplier">查找门店（供应商）</span>
+		</div>
+		<div class="store" v-show="storejudge">
+			<!--同城门店-->
+			<div class="cityStore">
+				<div class="cityHeader">
+					<span :class="{active: shopType==='同城门店'}">同城门店</span>
+                    <span v-show="shopType==='供应商'">供应商</span>
+				</div>
+				<div class="allocation clearfix">
+					<span class="fr" @click="applicationApply">调拨申请</span>
 				</div>
 			</div>
-			<!--查找门店（供应商）-->
-			<div class="supplier">
-				<span @click="supplier">查找门店（供应商）</span>
-			</div>
-			<div class="store" v-show="storejudge">
-				<!--同城门店-->
-				<div class="cityStore">
-					<div class="cityHeader">
-						<span :class="{active: shopType==='同城门店'}">同城门店</span>
-	                    <span :class="{active: shopType==='供应商'}">供应商</span>
-					</div>
-					<div class="allocation clearfix">
-						<span class="fr" @click="applicationApply">调拨申请</span>
-					</div>
+			<!--门店列表-->
+			<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i, item.id)">
+				<div class="storeImg fl">
+					<img src="../../assets/images/allocationSingle/shop.png"/>
 				</div>
-				<!--门店列表-->
-				<div class="storeList clearfix" v-for="(item, i) in supplierList" :key="i" @click="selectStore(i, item.id)">
-					<div class="storeImg fl">
-						<img src="../../assets/images/allocationSingle/shop.png"/>
-					</div>
-					<div class="storeData clearfix fl">
-						<h3 class="fl">{{item.name}}</h3>
-						<p class="fl">距离：{{(item.distance/1000).toFixed(2)}}公里</p>
-						<p class="fl">预计时间：{{(item.duration/60).toFixed(0)}}分钟</p>
-						<p class="fl">电话：{{item.phone}}</p>
-						<p class="fl">库存：{{item.quantity}}</p>
-					</div>
-					<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
+				<div class="storeData clearfix fl">
+					<h3 class="fl">{{item.name}}</h3>
+					<p class="fl">距离：{{(item.distance/1000).toFixed(2)}}公里</p>
+					<p class="fl">预计时间：{{(item.duration/60).toFixed(0)}}分钟</p>
+					<p class="fl">电话：{{item.phone}}</p>
+					<p class="fl">库存：{{item.quantity}}</p>
 				</div>
+				<div v-bind:class="[item.active?'choice-b':'choice-a']"></div>
 			</div>
+		</div>
 	</div>
 </template>
 
@@ -101,7 +101,7 @@
 					this.isLoading = false
 				}, 500)
             })
-            
+            console.log(this.query.ShowShopType)
             if (this.query.ShowShopType === 1) {
                 this.shopType = '同城门店'
             } else if (this.query.ShowShopType === 2) {
@@ -109,7 +109,7 @@
             } else {
                 this.shopType = '同城门店'
             }
-            console.log(this.value1)
+            console.log(this.shopType)
 			
 		},
 		methods: {

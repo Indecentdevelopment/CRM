@@ -104,7 +104,7 @@
                     &&detailList.applyShopModels[0].isProvider!=='6'&&detailList.applyShopModels[0].isProvider!=='7'
                     &&detailList.applyShopModels[0].isProvider!=='8'&&detailList.applyType!=='同城门店'">
 	                    <div class="info">运费（范围0~50）：</div>
-	                    <input v-model="yunfei">
+	                    <input v-model="crmData.fee">
 	                </div>
 	                <div class="form-item">
 	                    <div class="info">备注：</div>
@@ -169,7 +169,7 @@
 				value1: '',				//调拨时间
 				serial: '',
                 crmData:{},				//CRM剩余参数
-                yunfei: 12,             // 运费
+                fee: '',             // 运费
 				btnAccept: false,
 				btnReject: false,
 				btnAcceptPrice: false,

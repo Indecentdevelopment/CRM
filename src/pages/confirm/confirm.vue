@@ -518,7 +518,7 @@
 				}
 			},
 
-			// 他店求组
+			// 他店求助
 			help(event, goodsIndex, proIndex, catIndex) {
 				event.stopPropagation()
 

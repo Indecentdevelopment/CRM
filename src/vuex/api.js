@@ -254,7 +254,11 @@ export default {
     UpadateUserInfo(data) {
         return axios.post(url + 'api/car/UpadateUserInfo', querystring.stringify(data))
     },
-
+	// 返回待确认
+	UpdateStatus(data) {
+		return axios.post(url + `api/order/UpdateStatus?orderId=${data.orderId}`)
+    },
+	
     /***************************vip 用户升级**********************************/
     GetUserExtendInfo(data) {
         return axios.get(url + 'api/car/GetUserExtendInfo', {
