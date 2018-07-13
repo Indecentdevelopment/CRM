@@ -3,7 +3,7 @@
 		
 		<!-- 头部 顶部 -->
         <my-header></my-header>
-
+		<div class="loading" v-loading="isLoading">
             <!--顾客信息-->
             <div class="customerInfo clearfix">
                 <div class="pre-count" v-if="orderInfo.status==='已预约'">
@@ -41,18 +41,16 @@
             </div>
             
             <!--编辑 + 添加 按钮-->
-            <div class="editAdd clearfix" v-if="orderInfo.status !== '已预约'&&orderInfo.status !== '已完成'&&orderInfo.status !== '已取消'&&orderInfo.status !== '待付款'">
+            <div class="editAdd clearfix" v-if="orderInfo.status == '已预约' || orderInfo.status == '待确认' || orderInfo.status == '服务中'">
                 <p class="fr" @click="addProduct"><img src="../../assets/images/orderDetails/add.png"/>添加</p>
                 <p v-show="!isEditProduct" class="fr" @click="isEditProduct=!isEditProduct"><img src="../../assets/images/orderDetails/edit.png"/>编辑</p>
                 <p v-show="isEditProduct" class="fr" @click="saveOrderItem"><img src="../../assets/images/orderDetails/edit.png"/>保存</p>
-                
-            		<p class="fr" v-show="orderInfo.status == '服务中'" @click="returnConfirm"><img src="../../assets/images/orderDetails/edit.png"/>返回待确认</p>
-            	
+                <p class="fr" v-show="orderInfo.status == '服务中'" @click="returnConfirm"><img src="../../assets/images/orderDetails/edit.png"/>返回待确认</p>
             </div>
             
             <!--订单内容-->
             <div class="orderContent" >
-                <p class="orderContentp fl">订单内容 <span v-show="orderInfo.evaluation">邀请用户评价</span></p>
+                <p class="orderContentp fl">订单内容 <span v-show="orderInfo.evaluation" @click="evaluation" class="fr">邀请用户评价</span></p>
                 <div class="orderConDetails" v-if="orderInfo.items" v-for="(item, index) in orderInfo.items" :key="item.id">
                     <div class="detailsImg fl">
                         <img :src="item.imgUrl"/>
@@ -68,8 +66,8 @@
                                 </div>
                             </div>
                             <div class="item-style" v-show="!item.isService">
-                            	<router-link :to="{path: 'allocationSingle',query:{ productId:item.productId,shopId:orderInfo.shopId, ShowShopType: 3}}">
-                            		<span v-if="orderInfo.status == '待确认'">他仓求助</span>
+                            	<router-link :to="{path: 'allocationSingle',query:{ productId:item.productId,shopId:orderInfo.shopId, ShowShopType: 3,ordernum: query.orderId,rownum: item.id}}">
+                            		<span v-if="orderInfo.status == '待确认'">他店求助</span>
                             	</router-link>
                             </div>
                             <div id="itemPrice">
@@ -148,8 +146,9 @@
                         </div>
                     </div>
 
-                    <!-- 卡券 -->
-                    <div class="item" id="kaquan" v-if="orderInfo.cardCouponLogs" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status === '待付款'">
+                    <!--卡券支付 -->
+                    <!--<div class="item" id="kaquan" v-if="orderInfo.cardCouponLogs" v-show="!(orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0)&&orderInfo.status === '待付款'">-->
+                    <div class="item" id="kaquan" v-if="orderInfo.cardCouponLogs" v-show="orderInfo.status === '待付款'">
                         <div class="title">卡券：</div>
                         <div class="info">
                             <input type="text" :placeholder="orderInfo.couponMsg" v-model="currentKaquan.code">
@@ -208,7 +207,7 @@
                                     <div class="item">
                                         <div class="title">使用金额：</div>
                                         <div class="info">
-                                            <input placeholder="请输入本次使用金额" v-model="cardCouponUseAmount">
+                                            <input placeholder="请输入本次使用金额" v-model="cardCouponUseAmount" @input="keyupFn()">
                                         </div>
                                     </div>
                                     <div class="item" v-if="cardCoupon.orderInfo != ''">
@@ -246,24 +245,15 @@
                         </div>
                     </div>
                     
-                    <!-- 卡券抵扣 -->
-                    <div class="item kaquan-discont" v-show="orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0">
-                        <div class="title">卡券抵扣</div>
-                        <div class="info">
-                            <div class="kaquan-dis-item" v-for="item in orderInfo.cardCouponLogs" :key="item.id">
-                                <div class="text">{{item.cardCouponName}}￥{{item.useAmount}}元</div>
-                                <button @click="cancelUseCard(item.id)">取消</button>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <!-- 发票号 -->
                     <div class="item useother-box1" id="dvinvoice" 
                      v-if="orderInfo.status==='已完成'||orderInfo.status==='已作废'||orderInfo.status==='已冲销'">
                         <div class="title">发票号：</div>
                         <div class="info">
-                            <input type="text" placeholder="发票号">
-                            <div class="apply">确定</div>
+                            <input type="text" v-model="invoiceNumber">
+                            <div class="apply" @click="ticketOpening">确定</div>
                         </div>
                     </div>
 
@@ -284,6 +274,18 @@
                             {{orderInfo.status==='待付款'?orderInfo.cardType.typeName+orderInfo.cardType.discount+'折':''}}
                         </div>
                     </div>
+                    
+                    <!-- 卡券抵扣 -->
+                    <div class="item kaquan-discont" v-show="orderInfo.cardCouponLogs&&orderInfo.cardCouponLogs.length>0">
+                        <div class="title">卡券抵扣</div>
+                        <div class="info">
+                            <div class="kaquan-dis-item" v-for="item in orderInfo.cardCouponLogs" :key="item.id">
+                                <div class="text">{{item.cardCouponName}}￥{{item.useAmount}}元</div>
+                                <button @click="cancelUseCard(item.id)">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="item" v-show="orderInfo.discount>0">
                         <div class="title useother-box">优惠合计：</div>
                         <div class="info">¥{{orderInfo.discount}}</div>
@@ -375,20 +377,20 @@
             </div>
             
             <!--顾客签字-->
-            <div class="sign"  v-if="orderInfo.status==='已预约'||orderInfo.status==='待确认'">
+            <div class="sign" v-show="orderInfo.status === '待确认' || orderInfo.status === '已预约'">
                 <p class="head">顾客签字确认</p>
                 <div class="signbtn-box">
                     <div class="signbtn" @click="clearSign">
                         <img src="/Content/img/images/refresh.png" alt="">
                     </div>
                 </div>
-                <div class="mySignature">
+                <div class="mySignature" id="mySignature">
                     <vueSignature ref="signature" :sigOption="option" :w="'100%'" :h="'16rem'"></vueSignature> 
                 </div>
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-if="orderInfo.status!=='已预约'&&orderInfo.status!=='待确认'&&orderInfo.status!=='待付款'">
+            <div class="customer-sign"  v-show="orderInfo.status === '待付款' || orderInfo.status === '服务中'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -400,6 +402,7 @@
                 <div v-show="orderInfo.status === '待确认'||orderInfo.status === '已预约'" @click="SaveRemark">保存/选择技师</div>
                 <div v-show="orderInfo.status!=='待付款'&&orderInfo.status!=='已完成'&&orderInfo.status!=='已取消'&&orderInfo.status!=='已冲销'" @click="cancelOrder()">取消订单</div>
             </div>
+		</div>
 	</div>
 </template>
 
@@ -411,7 +414,7 @@
 	export default {
 	    data () {
 	        return {
-                isLoading: false,       // laoding
+                isLoading: true,       // laoding
                 isEditProduct: false,   // 是否编辑订单内容
                 query: {
                     orderId: ''
@@ -421,7 +424,6 @@
                     shop: {},
                     user: {}
                 },
-
                 option: {
                     penColor:"rgb(0, 0, 0)",
                     backgroundColor:"#E4E4E4"
@@ -431,7 +433,6 @@
                 cardCouponUseAmount: '',    // 使用卡券 本次使用金额
                 deductionAmount: '',        // 使用卡券 冲抵金额
                 carduseremark: '',          // 使用卡券 备注
-
                 isUseIntegral: false,       // 是否使用积分
                 isChooseKaquan: false,      // 是否打开选择卡券弹窗
                 currentKaquan: {},          // 当前选中的卡券
@@ -443,22 +444,22 @@
                 isOpenPaySplit: false,      // 是否打开拆分支付 弹窗
                 paySplitNum: '',            // 拆分支付 本次支付的金额
                 amount: '',                 // 本次支付应该支付的金额
-				isMoLing: true,			// 是否抹零
+				isMoLing: true,				// 是否抹零
                 isSuppliers: false,         // 是否显示第三方挂账选择器
                 suppliersId: '',            // 当前选中的第三方支付方式的id
                 suppliers: {},              // 第三方挂账 信息
                 picking: '',                // 第三方挂账 信息
                 isServiceEnd: '',           // if是否服务结束
+                invoiceNumber: '',			// 发票号
 	        	
 	        }
 	    },
 	    created() {
             this.query.orderId = this.$route.query.OrderId
             this.toString()
-            // this.GetOrderInfo()
+            this.GetOrderInfo()
 	    },
         mounted () {
-            this.GetOrderInfo()
         },
 	    methods: {
             // init 获取初始数据
@@ -466,6 +467,7 @@
                 this.isLoading = true
                 api.GetOrderInfo({orderId: this.query.orderId}).then(res => {
                     this.isLoading = false
+                    //console.log(res.data)
                     this.drawingData(res.data)
                     this.isMoLing = res.data.isMoLing
                 })
@@ -576,8 +578,8 @@
 				}
 				
 				// 2、判断代付款   卡券支付
-				console.log(this.orderInfo.cardCouponLogs)
-				console.log(this.orderInfo.cardCouponLogs.length)
+//				console.log(this.orderInfo.cardCouponLogs)
+//				console.log(this.orderInfo.cardCouponLogs.length)
 				let iscardconlistshow = this.orderInfo.iscardconlistshow
 				if(this.orderInfo.status == '待付款'){
 					if (iscardconlistshow == 1) {
@@ -609,11 +611,24 @@
                     //console.log(o)
                     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length))
                     for (var k in o)
-                        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+						//if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+                        if (fmt && new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+                        
                     return fmt
                 }
             },
-
+            
+			// 邀请用户评价
+			evaluation(){
+				let orderId = this.query.orderId
+				api.SendOrderEvaluation({
+					oid: orderId
+				}).then(res=>{
+					console.log(res)
+					alert(res.data.msg)
+				})
+			},
+			
             // 点击免
             freeComplimentary () {
                 this.isLoading = true
@@ -672,6 +687,7 @@
 			},
 		    // 使用工时
 			useit(){
+				this.isLoading = true
 				let hours = Number(this.workingHours)
 		        let reg = /^[\d\-]+$/
 		        if (reg.test(hours)) {
@@ -680,7 +696,11 @@
 		        		orderId: this.query.orderId
 	                }).then(res => {
 	                    if (res.data.isok) {
+							setTimeout(() => {
+							    this.isLoading = false
+							}, 1000)
 		                    window.location.reload()
+		                    
 		                } else {
 		                	this.$alert(res.data.msg, '轮库Tirecool', {
 					          	confirmButtonText: '确定',
@@ -744,10 +764,12 @@
             // 清除签名
             clearSign () {
                 this.$refs.signature.clear()
+                console.log(this.$refs.signature.clear())
             },
             // 生成 签名图片 url
             saveSign () {
                 var imgUrl = this.$refs.signature.save()
+                console.log(imgUrl)
                 return imgUrl
             },
             
@@ -832,6 +854,7 @@
 
             // 使用积分
             useIntegral() {
+            	this.isLoading = true
                 this.isUseIntegral = !this.isUseIntegral
                 this.isLoading = true
                 api.useIntegralCard({
@@ -844,6 +867,9 @@
                     cardCouponUseAmount: '',
                     cardUseRemark: ''
                 }).then(res => {
+                	setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
                     this.GetOrderInfo()
                 })
 
@@ -854,27 +880,44 @@
                 this.currentKaquan = data
                 this.isChooseKaquan = !this.isChooseKaquan
             },
+            
+			
             // 使用卡券
             useKaquan () {
-                if (!this.currentKaquan.code) {
+            	let code = this.currentKaquan.code
+                if (code == null || code == "" || code == undefined) {
                     alert('卡券不能为空！')
                     return
                 }
                 
                 this.isLoading = true
-                    	
-                if (this.currentKaquan.cardTypeId + '' === '1015') {
+                let codetype = this.currentKaquan.cardTypeId 
+                if (codetype != null && codetype != "" && codetype != undefined && codetype + '' == '1015') {
+                	//1
+//              	api.GetCardCouponVerif({
+//              		code: this.currentKaquan.code,
+//                      orderId: this.query.orderId
+//              	}).then(res=>{
+//              		console.log(res)
+//              	})
+                	//2
                     api.GetCardCouponVerif({
                         code: this.currentKaquan.code,
                         orderId: this.query.orderId
                     }).then(res => {
-                        this.isLoading = false
+                        //this.isLoading = false
 //                      console.log(res.data)
                         if (res.dta.isok) {
-                            if (res.data.orderInfo) {
+                            if (res.data.orderInfo != "") {
+                            	setTimeout(() => {
+								    this.isLoading = false
+								}, 1000)
                                 this.kaquanDialog = true
                             }
                         } else {
+                        	setTimeout(() => {
+							    this.isLoading = false
+							}, 1000)
                             alert(res.data.message)
                             return
                         }
@@ -886,6 +929,9 @@
                     }).then(res => {
                     	console.log(res.data.orderInfo)
                         this.isLoading = false
+                        setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
                         if (res.data.isok) {
                             if (res.data.orderInfo != "") {
                                 this.kaquanDialog = true
@@ -894,9 +940,10 @@
                                     res.data.card.cardCouponLogs[index].createDate = new Date(item.createDate).toString("yyyy-MM-dd")
                                 })
                                 this.cardCoupon = res.data
-
+								
                             }
                             if(res.data.card.cardType == null || !res.data.card.cardType.isAllowAnyDiscount){
+                            	
                             	this.kaquanDialog = true
                                 res.data.card.cardCouponLogs.map((item, index) => {
                                     console.log(item)
@@ -910,18 +957,25 @@
                     })
                 }
             },
-
+			// 卡券赋值冲销金额
+			keyupFn(){
+				this.deductionAmount = this.cardCouponUseAmount
+			},
             // 提交使用卡券
             usePackageCard () {
-                if (!this.cardCouponUseAmount) {
+            	let cardCouponUseAmount = this.cardCouponUseAmount
+            	let deductionAmount = this.deductionAmount
+            	let carduseremark = this.carduseremark
+            	console.log(deductionAmount)
+                if (cardCouponUseAmount == null || cardCouponUseAmount == undefined || cardCouponUseAmount == "") {
                     alert('请输入使用金额!')
                     return
                 }
-                if (!this.deductionAmount) {
+                if (deductionAmount == null || deductionAmount == undefined || deductionAmount == "") {
                     alert('请输入冲抵金额!')
                     return
                 }
-                if (!this.carduseremark) {
+                if (carduseremark == null || carduseremark == undefined || carduseremark == "") {
                     alert('请输入备注!')
                     return
                 }
@@ -943,6 +997,32 @@
                 })
             },
 
+			// 使用发票
+			ticketOpening(){
+				this.isLoading = true
+				let invoice = this.invoiceNumber
+				var orderId = this.query.orderId
+		        if (invoice == "" || invoice == null || invoice.replace(/(^s*)|(s*$)/g, "").length == 0) {
+		            alert("发票号不可为空");
+		            return;
+		        }
+		        api.GetUpdateInvoice({
+		        	oids: orderId,
+		        	invoiceNo: invoice
+		        }).then(res=>{
+		        	setTimeout(() => {
+					    this.isLoading = false
+					}, 500)
+		        	console.log(res.data)
+		        	if (res.data) {
+		                alert("发票号生成成功");
+		                this.invoiceNumber = ''
+		            } else {
+		            	alert("发票号生成失败"); 
+		            }
+		        })
+			},
+			
             // 取消使用卡券
             cancelUseCard (id) {
                 this.isLoading = true
@@ -983,12 +1063,17 @@
             
             // 拆分付款
             paySplit () {
+            	this.isLoading = true
                 if (!this.paySplitNum || this.paySplitNum < 0) {
                     alert('请输入正确的金额！')
                     return
                 } else if (this.paySplitNum > this.orderInfo.total - this.orderInfo.alreadyPaymentAmount) {
                     this.paySplitNum = this.orderInfo.total - this.orderInfo.alreadyPaymentAmount
                 }
+                setTimeout(() => {
+				    this.isLoading = false
+				}, 1000)
+
                 this.paySubmit(true)
                 this.isOpenPaySplit=false
             },
@@ -997,6 +1082,7 @@
             paySubmit (isSplit) {
             	console.log(isSplit)
             	console.log(this.payInfo)
+            	this.isLoading = true
                 if (!this.payInfo) {
                     alert('请选择支付方式！')
                     return
@@ -1013,9 +1099,15 @@
                 	console.log(res.data.appId)
                     // 判断支付是否完成
                     if (!res.data.allowPayment) {
+                    	setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
                         // swal(...)
 //                      console.log(res.data.allowPayment)
                     } else {
+                    	setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
                         // 根据是否拆分 判断本次需要支付的金额
                         let amount = (isSplit ? this.paySplitNum * 1 : (this.orderInfo.total - this.orderInfo.alreadyPaymentAmount)).toFixed(2)
                         this.amount = amount

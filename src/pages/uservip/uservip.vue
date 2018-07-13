@@ -3,6 +3,7 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 		<!--内容-->
 	        <div class="content">
 	
@@ -147,6 +148,7 @@
 	            <!-- Optional controls -->
 	            <div class="swiper-pagination"  slot="pagination"></div>
 	        </swiper>
+		</div>
 	</div>
 </template>
 
@@ -178,7 +180,13 @@
         created () {
             this.query.userId = this.$route.query.uid
             this.query.cid = this.$route.query.cid
-            this.GetUserExtendInfo()
+            
+            
+            Promise.all([this.GetUserExtendInfo()]).then(res => {
+	            setTimeout(() => {
+	                this.isLoading = false
+	            }, 500)
+	        })
         },
         mounted () {
            
@@ -186,6 +194,7 @@
         },
 	    methods: {
 			GetUserExtendInfo () {
+				this.isLoading = true
                 api.GetUserExtendInfo({
                     userId: this.query.userId,
                     cid: this.query.cid
@@ -193,6 +202,10 @@
                     this.userExtendInfo = res.data
                     document.getElementById('qecode-img')
                     .setAttribute('src',`/api/car/GetBindQRCodeImg?userCarBindId=${this.userExtendInfo.userCarBindId2}&shopid=${this.userExtendInfo.shopId}`)
+                    setTimeout(() => {
+		                this.isLoading = false
+		            }, 1000)
+                    
                 })
             },
             

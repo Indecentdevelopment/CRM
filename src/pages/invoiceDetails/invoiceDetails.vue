@@ -3,6 +3,7 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
+        <div class="loading" v-loading="isLoading">
 	        <div class="voucherDetails">
 	        	<p class="vouHeder">卡券详情</p>
 	        	<ul class="clearfix">
@@ -49,6 +50,7 @@
 	        		</li>
 	        	</ul>
 	        </div>
+	    </div>
     </div>
 </template>
 <script>
@@ -73,13 +75,15 @@
 	    },
 	    methods: {
 	    	obtainInvoice(){
+	    		this.isLoading = true
 	    		api.GetCouponsDetails({
 	    			CardCouponId: this.CardCouponId
-	    			
-	    			
 	    		}).then(res => {
 	    			this.voucherData = res.data.card
 	    			this.cardCouponLogs = res.data.card.cardCouponLogs
+	    			setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
 	    		})
 	    	}
 	    },

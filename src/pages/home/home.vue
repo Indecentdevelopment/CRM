@@ -141,6 +141,25 @@
 	                </router-link>
                 </div>
             </div>
+            <div class="service">
+                <div class="service-conten">
+                	<router-link to="helpCore">
+	                    <div class="service-btn">
+	                        <img src="../../assets/images/home/Help.png" class="service-img"/>
+	                    </div>
+	                    <p class="service-p">帮助中心</p>
+	                </router-link>
+                </div>
+                <div class="service-conten" v-show="ifLnsurance">
+                    <div class="service-btn" @click="vehicleLnsurance">
+                        <img src="../../assets/images/home/vehicleLnsurance.png" class="service-img"/>
+                    </div>
+                    <p class="service-p">北京车险</p>
+                </div>
+                <div class="service-conten">
+                	
+                </div>
+            </div>
             
             <!--服务中车牌号-->
             <div class="inService">
@@ -185,7 +204,8 @@
                 serverList: [],  // 最下方 服务列表
                 inputTimer: '',   // 输入电话号码 事件节流定时器
                 isInputCarNo: false,  // 是否显示自定义键盘
-                inService: true
+                inService: true,
+                ifLnsurance: false		//车险
             }
         },
         computed: {
@@ -194,7 +214,7 @@
             })
         },
         created () {
-            Promise.all([this.getShopProv(), this.getTheService(), this.getMyApplyRequireCount()]).then(res => {
+            Promise.all([this.getShopProv(), this.getTheService(), this.getMyApplyRequireCount(),this.vehicleLnsurance ()]).then(res => {
                 setTimeout(() => {
                     this.isLoading = false
                 }, 500)
@@ -271,6 +291,20 @@
                     .catch(err => Promise.reject(err))
                 }, 500)
             },
+            // 车险
+            vehicleLnsurance () {
+            	
+            	api.getCurrentUserRegion(
+            	).then(res=>{
+            		if(res.data == '北京市'){
+            			this.ifLnsurance = true
+            			plus.runtime.openURL('http://www.cheche365.com/partner/lunkua/index')
+            		}else{
+            			this.ifLnsurance = false
+            		}
+            	})
+	            
+	        },
             // 获取最下方 服务列表
             getTheService () {
                 api.getTheService()
@@ -281,13 +315,12 @@
             },
             //服务车辆列表  显示隐藏
             serviceList (){
-            	
             	if(this.inService == true){
             		this.inService = false
-            		console.log('false')
+            		//console.log('false')
             	}else{
             		this.inService = true
-            		console.log('true')
+            		//console.log('true')
             	}
             	
             },

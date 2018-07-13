@@ -2,6 +2,7 @@
 	<div class="seekHelp">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--列表-->
 			<div class="" v-show="status === 'order'">
 				<div class="orderList clearfix" v-for="item in orderLists.applyShopModels" :key="item.id" >
@@ -123,6 +124,7 @@
 	            </div>
 	        </div>
 	</div>
+	</div>
 </template>
 
 <script>
@@ -177,12 +179,12 @@
 			}
 		},
 		created() {
-			Promise.all([]).then(res => {
+			Promise.all([this.orderList()]).then(res => {
 				setTimeout(() => {
 					this.isLoading = false
 				}, 500)
 			})
-			this.orderList()
+			
 		},
 		methods: {
 			//获取订单列表
@@ -196,6 +198,7 @@
 				})
 			},
 			showDetails(item,serial,shopId,time){
+				this.isLoading = true
                 this.status = 'form'
                 this.orderData = item
                 this.value1 = time
@@ -204,6 +207,9 @@
 					serial: serial,
 					shopId: shopId
 				}).then(res=>{
+					setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
 					this.crmData = res.data
 //					console.log(res.data)
 					this.ifState(shopId)

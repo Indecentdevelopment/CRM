@@ -25,6 +25,34 @@
         width: 70% !important
         margin-left: 15% !important
         padding: none !important
+    // 切换
+    .el-tabs__nav-wrap::after
+        background-color: #FAC800 !important
+    .is-active
+        background-color: #FAC800 !important
+        color: #696666 !important
+    .el-tabs__active-bar
+        background-color: #FAC800 !important
+    .el-tabs__item
+        width: 4rem !important
+        border-radius: 10px 10px 0 0 !important
+        padding: 0 0.6rem !important
+        text-align: center
+        background: #3a3a3a
+        color: #696666
+    .el-tabs--border-card>.el-tabs__header
+        background: none !important
+        border-color: #FAC800 !important
+    .el-tabs--border-card
+        background: none !important
+        box-shadow: none !important
+        border: none !important
+        width: 96%
+        margin-left: 2%
+    .el-tabs__content
+        padding: none !important
+    .el-tabs--border-card
+        margin-top: 1.2rem !important
     .loading
         height: calc(100%)
     .apply
@@ -101,23 +129,23 @@
             span.active
                 background: #fac800
                 display: inline-block
-        .allocation
-            width: 100%
-            height: 1.2rem
-            line-height: 1.2rem
-            span
-                width: 25%
-                text-align: center
-                background: #fac800
-                display: inline-block
-                height: 1rem
-                line-height: 1rem
-                border-radius: 4px 
-                margin: 0.5rem 0
+    .allocation
+        width: 100%
+        height: 1rem
+        line-height: 1rem
+        span
+            width: 25%
+            text-align: center
+            background: #fac800
+            display: inline-block
+            height: 1rem
+            line-height: 1rem
+            border-radius: 4px 
+            margin: 0.5rem 0
     .storeList
-        width: 96%
+        width: 100%
         height: 5.5rem
-        margin: 0.8rem 2%
+        margin-top: 1rem
         background: #3a3a3a
         border-radius: 10px
         position: relative
@@ -160,6 +188,60 @@
                 width: 95%
                 margin-left: 5%
                 color: #fac800
+    .supplierTop
+        width: 100%
+        position: relative
+        p
+            width: 100%
+            margin-top: 0.5rem
+            span
+                width: 30%
+                text-align: center
+                height: 1.2rem
+                line-height: 1.2rem
+                margin-left: 5%
+                background: #fac800
+                border-radius: 6px
+            input
+                width: 30%
+                height: 1.2rem
+                line-height: 1.2rem
+                border-radius: 6px
+                text-align: center
+    .stoLeft
+        width: 40%
+        text-align: center
+        height: 5.5rem
+        line-height: 5.5rem
+        img
+            width: 75%
+    .stoRighr
+        width: 60%
+        color: #fac800
+        margin-top: 0.5rem
+        position: relative
+        h3
+            width: 100%
+        p
+            width: 100%
+        
+        .choice-a
+            position: absolute
+            top: 0.4rem 
+            right: 0.5rem
+            width: 1rem 
+            height: 1rem
+            border-radius: 50%
+            border: 1px solid #fff
+        .choice-b
+            position: absolute
+            top: 0.4rem 
+            right: 0.5rem
+            width: 1rem 
+            height: 1rem
+            border-radius: 50%
+            border: 1px solid yellow
+            background: yellow
     .loading
         margin-top: 1.4rem
         height: calc(100% - 1.4rem)

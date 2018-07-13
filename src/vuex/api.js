@@ -111,6 +111,10 @@ export default {
             }
         })
     },
+    // 获取门店城市
+    getCurrentUserRegion() {
+        return axios.get(url + 'api/car/GetCurrentUserRegion')
+    },
     /***************************服务列表**********************************/
 
     // 获取订单列表
@@ -184,7 +188,20 @@ export default {
             params: data
         })
     },
-
+	
+	// 使用卡券2 GetCardCoupon
+    GetCardCouponVerif(data) {
+        return axios.get(url + 'api/order/GetCardCouponVerif', {
+            params: data
+        })
+    },
+	// 邀请用户评价
+	SendOrderEvaluation(data) {
+        return axios.get(url + 'api/order/SendOrderEvaluation', {
+            params: data
+        })
+    },
+   
     // 提交使用卡券
     usePackageCard(data) {
         return axios.get(url + 'api/order/usePackageCard', {
@@ -545,13 +562,9 @@ export default {
             }
         })
     },
-    //开票接口
+    // 发票接口
     GetUpdateInvoice(data) {
-        return axios.get(url + 'api/order/UpdateInvoice', {
-            params: {
-                oids: data.total,
-                invoiceNo: data.invoiceNber
-            }
+        return axios.get(url + `api/order/UpdateInvoice?oids=${data.oids}&invoiceNo=${data.invoiceNber}`, {
         })
     },
     //发票信息页

@@ -2,6 +2,7 @@
 	<div class="personal">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--头像框-->
 			<div class="headImage">
 				<!--设置按钮-->
@@ -40,6 +41,7 @@
 					<img src="../../assets/images/personal/keliuliang.png"/><span>报表</span>
 				</div>
 			</router-link>
+		</div>
 	</div>
 </template>
 <script>
@@ -55,7 +57,13 @@
             }
        },
         created () {
-        	this.GetUserInformation()
+        	
+        	Promise.all([this.GetUserInformation()]).then(res => {
+	            setTimeout(() => {
+	                this.isLoading = false
+	            }, 500)
+	        })
+
         },
         methods: {
         	//获取用户信息

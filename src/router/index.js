@@ -30,6 +30,8 @@ import Personal from '@/pages/personal/personal'
 import Wechatpay from '@/pages/wechatpay/wechatpay'
 import PersonalDataPage from '@/pages/personalDataPage/personalDataPage'
 import ReportForm from '@/pages/reportForm/reportForm'
+import HelpCore from '@/pages/helpCore/helpCore'
+import NewSupplier from '@/pages/newSupplier/newSupplier'
 
 
 Vue.use(Router)
@@ -141,6 +143,14 @@ const router = new Router({
                 {
                 	path: 'reportForm',
                 	component: ReportForm
+                },
+                {
+                	path: 'helpCore',
+                	component: HelpCore
+                },
+                {
+                	path: 'newSupplier',
+                	component: NewSupplier
                 }
             ]
         }

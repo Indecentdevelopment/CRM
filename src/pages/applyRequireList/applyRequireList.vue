@@ -2,6 +2,7 @@
 	<div class="applyRequire">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--列表-->
 			<div class="orderList clearfix"  v-for="(item,i) in orderList" :key="i" v-show="status==='order'">
 				<p class="fl">产品名称：{{item.productName}}</p>
@@ -130,6 +131,7 @@
 			<div class="seekHelp-footer" v-show="status==='order'">如需要查看更多调拨信息请在crm后台调拨列表查看</div>
 			<div v-show="orderList == ''">暂未找到相关订单！</div>
 	</div>
+	</div>
 </template>
 <script>
 	import { mapGetters } from 'vuex'
@@ -191,9 +193,9 @@
                 setTimeout(() => {
                 }, 500)
             })
-        	
         },
         mounted () {
+        	
         },
         methods: {
         	
@@ -203,23 +205,33 @@
         			
         		)
                 .then(res => {
+                	setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
                     this.orderList = res.data.applyRequires
                     this.isLoading = false
                 })
             },
             // 点击详情
             showDetail (serial) {
+            	this.isLoading = true
             	this.serial = serial
                 this.status = 'detail'
                 api.GetApplyRequireDetail({
                     serial: serial
                 }).then(res => {
+                	setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
                     this.detailList = res.data
                 })
                 //获取订单详情
                 api.GetRequireAppDetails({
             		serial: serial
             	}).then(res =>{
+            		setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
 //          		console.log(res.data)
             	})
             	
@@ -227,6 +239,7 @@
 
             // 再点击详情
             showDetail2 (item,shopId) {
+            	this.isLoading = true
                 this.status = 'form'
         		this.value1 = item
         		this.shopId = shopId
@@ -235,6 +248,9 @@
             		serial: this.serial,
             		shopId: shopId
             	}).then(res =>{
+            		setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
             		this.crmData = res.data
 //          		console.log(res.data)
             		this.ifState(shopId)
@@ -328,6 +344,7 @@
 	            }else if(this.flag == true){
         			console.log('提交')
 	        		this.flag = false
+	        		this.isLoading = true
         			api.GetReplyPriceForShop({
         				Serial: serial,
 		                ShopId: shopId,
@@ -337,6 +354,9 @@
 		                DeliverDateTime: deliverDateTime,
 		                Remark: remarks
 	        		}).then(res=>{
+	        			setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
 	        			console.log(res.data)
 	        		})
         		} else {

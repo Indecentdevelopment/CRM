@@ -2,6 +2,7 @@
     <div class="impcarinfo">
         <!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 	        <!-- 修改车型、快捷查询 -->
 	        <div class="type">
 	            <div class="edit active" data-value="edit" @click="changePage('edit')">
@@ -140,6 +141,7 @@
 	                </div>
 	            </div>
 	        </div>
+    	</div>
     </div>
 </template>
 <script>
@@ -149,6 +151,7 @@ import './impCarInfo.sass'
 export default {
     data () {
         return {
+        	isLoading: true,
             page: 'edit',           // 页面选择
             queryId: '',            // 路由参数 id
             queryOpera: '',         // 路由参数 opera
@@ -166,7 +169,7 @@ export default {
             supplement: '',         // 补充车型信息
             isTbsj: false,          // 是否同步失败
 			isLoading: true,
-            searchText: '',         // 搜索页面 输入内容
+            searchText: '',        // 搜索页面 输入内容
             getCarData: [],         // 搜索出的车辆信息
             sapId: '',              // 重新同步 id
             ubId: '',               // 重新同步 userCarBindId
@@ -176,12 +179,14 @@ export default {
     created () {
         this.queryId = this.$route.query.id
         this.queryOpera = this.$route.query.opera || 'new'
-        
         this.initData.prov = this.$route.query.carnumber
         
-        this.getQueryOperaZh()
-        this.InitializeRegister()
         
+        Promise.all([this.getQueryOperaZh(),this.InitializeRegister()]).then(res => {
+            setTimeout(() => {
+                this.isLoading = false
+            }, 500)
+        })
     },
     watch: {
         $route (to, from) {
@@ -310,9 +315,18 @@ export default {
         },
         // search 
         getCar (data) {
-            api.getCar({search: this.searchText}).then(res => {
-                this.getCarData = res.data.cars
-            })
+        	if(this.searchText == ''){
+        		alert("请输入查询信息！")
+        	}else{
+        		api.getCar({search: this.searchText}).then(res => {
+	                if(res.data.cars == "" || res.data.cars == null){
+	                	alert("未找到相关信息！")
+	                }else{
+	                	this.getCarData = res.data.cars
+	                }
+	            })
+        	}
+            
         },
         // 根据搜索的车id  获取车辆类型、型号
         GetCarTypeById (dataId) {

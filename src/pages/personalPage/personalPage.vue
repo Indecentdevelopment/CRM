@@ -3,6 +3,7 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--个人信息-->
 			<div class="personalData">
 				<div class="personal-information">
@@ -216,6 +217,7 @@
 	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
 	        <!--DOT键盘-->
 			<keyboardDot :dot="isInputDot" @dotWords="dotWords" @dotSpaces="dotSpaces"  @dotbackWord="dotbackWord"></keyboardDot>
+		</div>
 	</div>
 </template>
 
@@ -283,13 +285,14 @@
             this.uid = route.query.uid
             
             Promise.all([this.getUserInfo()]).then(res => {
-            setTimeout(() => {
-                this.isLoading = false
-            }, 500)
-        })
+	            setTimeout(() => {
+	                this.isLoading = false
+	            }, 500)
+	        })
         },
 	    methods: {
             getUserInfo () {
+            	this.isLoading = true
                 api.getUserInfo({
                     userCarBindId: this.userCarBindId,
                     uid: this.uid
@@ -299,6 +302,10 @@
                             res.data.cars[index].dotNo = ''
                         }
                     })
+                    
+                    setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
                     var str = JSON.stringify(res.data.cars[0])

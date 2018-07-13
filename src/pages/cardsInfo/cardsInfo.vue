@@ -3,6 +3,7 @@
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--收搜框-->
 			<div class="findbox">
 				<input class="sthelse" placeholder="请输入四位以上卡号查询" v-model="cardsNo"/>
@@ -50,6 +51,7 @@
 		        </div>
 		   </div>
 	</div>
+	</div>
 </template>
 <script>
 	import { mapGetters } from 'vuex'
@@ -78,20 +80,27 @@
         mounted () {
         },
         methods: {
+        	// 查询卡券
         	searchCardsList(){
+        		this.isLoading = true
         		if(this.cardsNo.length < 4){
+        			this.isLoading = false
         			alert("请输入四位以上的卡号!")
         		}else{
         			api.GetCardsList({
         				cardsNo:this.cardsNo
         			}).then(res => {
+        				setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
 	                    this.cardlist = res.data.items
 	                })
 	                .catch(err => Promise.reject(err))
         		}
         	},
+        	// 查看明细
         	showUsedRecord(index){
-        		this.detailOpend = true;
+        		this.detailOpend = true
         		api.GetCardsUsedList(
         			{
         				CardCouponId:this.cardlist[index].cardId

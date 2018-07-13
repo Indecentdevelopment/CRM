@@ -3,39 +3,39 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
-	        <!---->
-	        <div class="transactionType loading" v-loading="isLoading">
-	            <div class="tab">
-	                <div class="item" v-for="(item, i) in stateArr" :key="i" :class="{active: status===item}" @click="handleClick(item)">
-	                    {{item}}
-	                </div>
-	            </div>
-		    	<div class="noNrder" v-show="orderList == ''">暂未找到相关订单！</div> 
-		    	<div class="about">
-		    		<div class="about-conten"  v-for="(item,i) in orderList" :key="i">
-		    			<div class="about-style">
-		    				姓名：{{item.name}}
-			    		</div>
-			    		<div class="about-style">
-			    			手机号：{{item.mobile}}
-			    		</div>
-			    		<div class="about-style">
-		    				车牌号：{{item.carNo}}
-			    		</div>
-			    		<div class="about-style">
-			    			工作状态：{{item.status}}
-			    		</div>
-			    		<div class="about-style">
-		    				下单时间：{{item.preDate}}
-			    		</div>
-			    		<div class="about-style">
-			    			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
-			    				<button class="about-btn">详情</button>
-			    			</router-link>
-			    		</div>
+        <!---->
+        <div class="transactionType loading" v-loading="isLoading">
+            <div class="tab">
+                <div class="item" v-for="(item, i) in stateArr" :key="i" :class="{active: status===item}" @click="handleClick(item)">
+                    {{item}}
+                </div>
+            </div>
+	    	<div class="noNrder" v-show="orderList == ''">暂未找到相关订单！</div> 
+	    	<div class="about">
+	    		<div class="about-conten"  v-for="(item,i) in orderList" :key="i">
+	    			<div class="about-style">
+	    				姓名：{{item.name}}
 		    		</div>
-		    	</div>
-        	</div>
+		    		<div class="about-style">
+		    			手机号：{{item.mobile}}
+		    		</div>
+		    		<div class="about-style">
+	    				车牌号：{{item.carNo}}
+		    		</div>
+		    		<div class="about-style">
+		    			工作状态：{{item.status}}
+		    		</div>
+		    		<div class="about-style">
+	    				下单时间：{{item.preDate}}
+		    		</div>
+		    		<div class="about-style">
+		    			<router-link :to="{ path: '/orderDetails', query: { OrderId: item.orderId }}">
+		    				<button class="about-btn">详情</button>
+		    			</router-link>
+		    		</div>
+	    		</div>
+	    	</div>
+    	</div>
     </div>
 </template>
 <script>

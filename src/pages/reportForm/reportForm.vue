@@ -2,6 +2,7 @@
 	<div class="reportForm">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--顶部切换按钮-->
 			<div class="switch" v-show="imgControl">
 				<img src="../../assets/images/personal/liebiao.png" @click="controlImg" v-show="dataSheet" />
@@ -70,6 +71,7 @@
 		        	<p @click="gotxt">转到</p>
 				</div>
 			</div>
+		</div>
 	</div>
 </template>
 <script>
@@ -123,6 +125,11 @@
         mounted(){
 		    this.getNowFormatDate()
 		    this.getBeforeWeek()
+		    Promise.all([]).then(res => {
+	            setTimeout(() => {
+	                this.isLoading = false
+	            }, 500)
+	        })
 		},
         created () {
         	
@@ -219,6 +226,7 @@
 			},
 			// 获取当前客户信息列表
         	controlImg(){
+        		this.isLoading = true
         		let shopid = this.shopId = window.localStorage.getItem('shopId')
         		this.dataSheet = false
         		this.userList = true
@@ -230,7 +238,9 @@
 					curpage: this.curpage,
 					source: this.source
         		}).then(res=>{
-        			
+					setTimeout(() => {
+					    this.isLoading = false
+					}, 500)
 	        		this.endPage = res.data.pageCount //赋值当前总页数
         			this.reports = res.data.reports
         		})
@@ -353,6 +363,10 @@
 		        });
 		    },
         	getUserList(){
+			    this.isLoading = true     		
+				setTimeout(() => {
+				    this.isLoading = false
+				}, 500)
         		this.dataSheet = true
         		this.userList = false
         		

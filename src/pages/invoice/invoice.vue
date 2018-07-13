@@ -3,6 +3,7 @@
     	
     	<!-- 头部 顶部 -->
         <my-header></my-header>
+        <div class="loading" v-loading="isLoading">
 	        <div class="userSelection clearfix">
 	        	<p class="fl">总金额：<b>{{totalTotal}}</b></p>
 	        	<span class="fr" @click="ticketOpening">开票</span>
@@ -26,6 +27,7 @@
 	        		</p>
 	        	</div>
 	        </div>
+	    </div>
     </div>
 </template>
 <script>
@@ -51,10 +53,14 @@
 	    },
 	    methods: {
 	    	invoice(){
+	    		this.isLoading = true
                 api.GetInvoiceLis({
                     uid: this.uid
                 }).then(res => {
                 	this.userDetails = res.data.repairsModel
+                	setTimeout(() => {
+						this.isLoading = false
+					}, 1000)
                 })
 	    	},
 	    	totalTotalFn(){
@@ -68,23 +74,29 @@
 	    	},
 	    	//开票
 	    	ticketOpening(){
-	    		console.log(this.invoiceNber)
-	    		console.log(this.total.join())
-	    		if(this.invoiceNber != ''){
+		        this.isLoading = true
+	    		if(this.invoiceNber != '' || this.total != ''){
 	    			api.GetUpdateInvoice({
 	                    oids: this.total.join(),
 	                    invoiceNo: this.invoiceNber
-	                }).then(res => {
+	               }).then(res => {
+	                	setTimeout(() => {
+						    this.isLoading = false
+						}, 1000)
 	                	console.log(res.data)
-//	                	if (res.data.success) {
-//							alert("开票成功")
-//						} else {
-//							alert(res.data.msg)
-//						}
+	                	if (res.data.success) {
+							alert("开票成功")
+							window.location.reload();
+						} else {
+							alert(res.data.msg)
+						}
 	                })
 	    		}else {
 		        	alert('请填写正确的发票号！')
+					this.isLoading = false
 		      	}
+			    
+	    		
 	    	}
 	    },
 	    components:{

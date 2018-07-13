@@ -15,7 +15,7 @@ import './config/index'
 
 import echarts from 'echarts'
 
-Vue.use(vueSignature)
+Vue.use(vueSignature)             									 // 用户签名插件
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts
 

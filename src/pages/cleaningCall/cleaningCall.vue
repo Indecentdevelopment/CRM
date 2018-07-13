@@ -3,6 +3,7 @@
 		
 		<!-- 头部 顶部 -->
         <my-header></my-header>
+        <div class="loading" v-loading="isLoading">
 	        <!--功能键-->
 	        <div class="functionBtn clearfix">
 	        	<div class="callSign fl" @click="GetCleanvoice">呼号</div>
@@ -54,6 +55,7 @@
 	            </div>
 	            
 	        </div>
+        </div>
 	</div>
 </template>
 

@@ -19,8 +19,9 @@
 .orderDetails
     height: 100%
     overflow-y: auto
-    margin-top: 1.5rem
-    
+    margin-top: 1.46rem
+    .loading
+        height: auto
     .customerInfo
         width: 90%
         margin: 0 3%
@@ -125,6 +126,8 @@
             margin: 0.3rem 0
             color: #666666
             font-weight: 600
+            span
+                color:#428bca
         .orderConDetails
             width: 100%
             background: #f9f9f9
@@ -668,6 +671,25 @@
         width: 90%
         margin-left: 5%
         margin-right: 5%
+        .mySignature
+            width: 100%
+            height: 16rem
+            position: relative
+        #mySignature:after 
+            content: "请在此签字"
+            position: absolute
+            top: 0px
+            left: 0px
+            bottom: 0px
+            right: 0px
+            margin: auto
+            display: block
+            width: 100%
+            height: 20%
+            font-size: 0.8rem
+            text-align: center
+            color: #cacaca
+            z-index: 0
         .head
             color: #666
             font-weight: 600
@@ -721,9 +743,7 @@
             border-radius: 3px
             padding: 0.5rem 0
             text-align: center
-.loading
-        margin-top: 1.4rem
-        height: calc(100% - 1.4rem)
+
             
 
 

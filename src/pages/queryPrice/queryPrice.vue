@@ -2,6 +2,7 @@
 	<div class="queryPrice">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--搜索栏-->
 			<div class="search">
 				<div class="topmain clearfix">
@@ -56,6 +57,7 @@
 			<!--键盘-->
 			<keyboard-model :open="isInputCarNo" @inputWord="inputWord" @close="isInputCarNo=false" @backWord="backWord" @empty="empty"></keyboard-model>
 	</div>
+	</div>
 </template>
 
 <script>
@@ -104,9 +106,13 @@
 		            CategoryId: this.productCategoyId,
 		            Specifications: this.carNo
                 }).then(res => {
-                    this.isLoading = false
-                    console.log(res)
-                    console.log(res.data)
+                    setTimeout(() => {
+					    this.isLoading = false
+		                this.brandControl == false
+		                this.thetypeControl == false
+					}, 1000)
+//                  console.log(res)
+//                  console.log(res.data)
                     this.productList = res.data
                     if(res.data == ''){
                     	this.$alert('抱歉，您所搜索的产品不存在！', '轮库Tirecool', {
@@ -151,7 +157,7 @@
 			            ProductId: this.productId
 	                }).then(res => {
 	                    this.storeStock = res.data
-	                    console.log(res.data[0].name)
+//	                    console.log(res.data[0].name)
 	                })
         		}else{
         			this.productId = false
@@ -159,10 +165,14 @@
         	},
         	//校验按钮
         	checkBtn () {
+        		this.isLoading = true
         		api.GetCheckCode({
         			matnr: this.keyword
         		}).then(res => {
         			console.log(res)
+        			setTimeout(() => {
+					    this.isLoading = false
+					}, 1000)
         			this.$alert(res.data, '轮库Tirecool', {
 			          	confirmButtonText: '确定',
 			          	callback: action => {}

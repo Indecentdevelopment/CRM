@@ -2,6 +2,7 @@
 	<div class="personalDataPage">
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 			<!--头像框-->
 			<div class="headImage">
 				<!--头像-->
@@ -66,6 +67,7 @@
 				<div class="confirmBtn" @click="confirmModify">确认修改</div>
 				<div class="isModify" v-show="isModify">修改失败</div>
 			</div>
+		</div>
 	</div>
 </template>
 <script>
@@ -99,8 +101,12 @@
             this.name = route.query.name
             this.mobile = route.query.mobile
             this.job = route.query.job
+            Promise.all([this.GetMyShopInfo()]).then(res => {
+	            setTimeout(() => {
+	                this.isLoading = false
+	            }, 500)
+	        })
             
-            this.GetMyShopInfo()
 //          this.ifPassword()
         	
         },
