@@ -385,12 +385,12 @@
                     </div>
                 </div>
                 <div class="mySignature" id="mySignature">
-                    <vueSignature ref="signature" :sigOption="option" :w="'100%'" :h="'16rem'"></vueSignature> 
+                    <vueSignature ref="signature" :sigOption="option" :w="'100%'" :h="'100%'"></vueSignature> 
                 </div>
             </div>
 
             <!-- 顾客确认签字 -->
-            <div class="customer-sign"  v-show="orderInfo.status === '待付款' || orderInfo.status === '服务中'">
+            <div class="customer-sign"  v-if="orderInfo.status === '待付款' || orderInfo.status === '服务中'">
                 <div class="head">顾客确认签字</div>
                 <div class="wrap">
                     <img :src="'/UserSign/image/'+query.orderId+'.jpg?ra='+Math.random()" alt="">
@@ -460,6 +460,15 @@
             this.GetOrderInfo()
 	    },
         mounted () {
+            // setTimeout(() => {
+            //     let canvas = canvas = document.getElementsByClassName('canvas')[0]
+            //     let mySignature = document.getElementById('mySignature')
+            //     let width = mySignature.offsetWidth
+            //     let height = mySignature.offsetHeight
+            //     console.log(width, height)
+            //     canvas.setAttribute('width', '100%')
+            //     canvas.setAttribute('height', '100%')
+            // })
         },
 	    methods: {
             // init 获取初始数据
@@ -470,6 +479,16 @@
                     //console.log(res.data)
                     this.drawingData(res.data)
                     this.isMoLing = res.data.isMoLing
+
+                    setTimeout(() => {
+                        let canvas = canvas = document.getElementsByClassName('canvas')[0]
+                        let mySignature = document.getElementById('mySignature')
+                        let width = mySignature.offsetWidth
+                        let height = mySignature.offsetHeight
+                        console.log(width, height)
+                        canvas.setAttribute('width', width + 'px')
+                        canvas.setAttribute('height', height + 'px')
+                    })
                 })
             },
 
