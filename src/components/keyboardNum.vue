@@ -1,7 +1,7 @@
 <template>
     <div class="keyboard-num" v-show="isOpen">
         <div class="cancel-box">
-            <img src="../assets/images/keyboard/close_bg.png" alt="" @click="hide">
+            <img src="../assets/images/keyboard/close_bg.png" alt="" @click="hide();hideStyle()">
         </div>
         <div class="main">
             <!-- 1~9 数字 -->
@@ -52,6 +52,13 @@ export default {
         hide () {
             this.isOpen = false
             this.$emit('close')
+            let persona = document.getElementById('persona')
+            persona.style.top = "0rem"
+        },
+        // 改变所在页面的初始值
+        hideStyle(){
+            let persona = document.getElementById('persona')
+            persona.style.top = "0rem"
         },
         // 点击键盘 输入
         inputWord (word) {

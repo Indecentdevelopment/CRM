@@ -67,7 +67,7 @@
                     <!--车牌输入框-->
                     <input type="text" placeholder=" 请输入或扫描车牌号" class="inp-inputBrand" v-model="carNo" @click="showKeyboard($event)" />
                     <!--搜索按钮-->
-                    <div class="inp-search" @click="search">搜索</div>
+                    <div class="inp-search" @click="search('btn')">搜索</div>
 
                     <div class="carInfo" v-show="isOpencarInfo && carInfoList.length>0">
                         <router-link v-for="item in carInfoList" :to="{path: 'personalPage', query:{userCarBindId:item.id,uid:item.userId}}" class="item" :key="item.id">
@@ -214,7 +214,7 @@
             })
         },
         created () {
-            Promise.all([this.getShopProv(), this.getTheService(), this.getMyApplyRequireCount(),this.vehicleLnsurance ()]).then(res => {
+            Promise.all([this.getShopProv(), this.getTheService(), this.getMyApplyRequireCount()]).then(res => {
                 setTimeout(() => {
                     this.isLoading = false
                 }, 500)
@@ -231,40 +231,72 @@
         },
         methods: {
         	// 通过手机号获取信息列表
-        	search(){
-        		if(this.phone == ""){
-        			this.$router.push({
-        				path: 'impCarinfo',
-        				query: {
-        					opera: 'new',
-							id: '0',
-							Phone: this.phone,
-							carnumber: this.shopProv
-        				}
-        			})
-        		}else{
-        			api.getCarInfo({
-                        CarNo: this.shopProv + this.carNo + '',
-                        Phone: this.phone,
-                        cardName: this.cardName + '_储值卡',
-                        shopId: this.shopData.id
-                    })
-                    .then( res => {
-                        this.isOpencarInfo = true
-                        this.carInfoList = res.data
-                        if (this.carInfoList.length === 0) {
-                            this.$rputer.push({
-                                path: 'impCarInfo',
-                                query: {
-                                    opera: 'new',
-                                    id: '0',
-                                    Phone: this.phone,
-                                    carnumber: this.shopProv
-                                }
-                            })
-                        }
-                    })
-        		}
+        	search(type){
+        		this.isLoading = true
+        		api.getCarInfo({
+                    CarNo: this.shopProv + this.carNo + '',
+                    Phone: this.phone,
+                    cardName: this.cardName + '_储值卡',
+                    shopId: this.shopData.id
+                })
+                .then( res => {
+					let carNotest = '';
+	        		let phonetest = /(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
+//	        		console.log(type)
+//	        		console.log(res.data.length)
+//	        		console.log(res.data)
+//	        		console.log(this.phone)
+	        		setTimeout(() => {
+	                    this.isLoading = false
+	                }, 500)
+					if(type == "btn" && res.data.length == 0 && (this.phone.search(phonetest) > -1 || this.carNo.search(carNotest) > -1)){
+		    			api.getUserInfoBy({
+		                    Phone: this.phone
+		                })
+		                .then( res => {
+//		                	console.log(res.data.data.msg);
+		                    let msg = "";
+		                    let url = 1;
+		                    if (res.data.data.msg=="-1") {
+		                        msg = "该用户未找到有效车辆信息,请先维护车辆信息，或者后台恢复已删除车辆信息";
+		                        url = 2;
+		                    } else if (res.data.data.msg == "0") {
+		                        msg = "未找到客户信息，是否新增客户？"; 
+		                        url = 2;
+		                    } else {
+		                    	url = 1;
+		                        msg = "该用户未找到有效车辆信息,请先维护车辆信息，或者后台恢复已删除车辆信息";
+		                        
+		                    }
+		                    if (confirm(msg)) {
+		                    	if(url == 1){
+		                    		this.$router.push({
+					                    path: 'impCarInfo',
+					                    query: {
+					                        opera: 'add',
+					                        id: res.data.data.msg,
+					                        carnumber: this.shopProv,
+					                        Phone: this.phone
+					                    }
+					                })
+		                    	}else{
+//		                    		console.log(this.shopProv)
+		                    		this.$router.push({
+					                    path: 'impCarInfo',
+					                    query: {
+					                        Phone: this.phone,
+					                        carnumber: this.shopProv
+					                    }
+					                })
+		                    	}
+		                        
+		                    }
+		                })
+					}else{
+						this.isOpencarInfo = true
+			            this.carInfoList = res.data
+					}
+	            })
         	},
             // 获取省 简称
             getShopProv () {
@@ -276,6 +308,7 @@
             },
             // 根据输入 查询车辆信息列表
             getCarInfo () {
+            	this.isInputCarNo = false
                 clearTimeout(this.inputTimer)
                 this.inputTimer = setTimeout(() => {
                     api.getCarInfo({
@@ -285,6 +318,7 @@
                         shopId: this.shopData.id
                     })
                     .then( res => {
+//                  	console.log(res.data)
                         this.isOpencarInfo = true
                         this.carInfoList = res.data
                     })
@@ -293,7 +327,6 @@
             },
             // 车险
             vehicleLnsurance () {
-            	
             	api.getCurrentUserRegion(
             	).then(res=>{
             		if(res.data == '北京市'){
@@ -303,7 +336,6 @@
             			this.ifLnsurance = false
             		}
             	})
-	            
 	        },
             // 获取最下方 服务列表
             getTheService () {

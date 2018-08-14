@@ -1,5 +1,5 @@
 <template>
-	<div class="persona">
+	<div class="persona" id="persona">
 		
 		<!-- 头部 顶部 -->
 		<my-header></my-header>
@@ -62,13 +62,15 @@
 				
 				<h3 class="fl">当前车辆信息</h3>
 				<div class="personalInput fl">
-					<span>上次保养：</span><div class="block">
-						<el-date-picker v-model="updateInfo.lastTime" type="date" placeholder="上次保养日期" :picker-options="pickerOptions1" >
+					<span>上次保养：</span><div class="block" @click="ifMileage()">
+						
+						<el-date-picker v-model="updateInfo.lastTime" type="date" placeholder="上次保养日期" :picker-options="pickerOptions1">
 						</el-date-picker>
+						
 					</div>
 				</div>
 				<div class="personalInput fl">
-					<span>上次换胎：</span><div class="block">
+					<span>上次换胎：</span><div class="block" @click="ifMileage()">
 						<el-date-picker v-model="updateInfo.lastChangeTire" type="date" placeholder="上次换胎日期" :picker-options="pickerOptions1" >
 						</el-date-picker>
 					</div>
@@ -81,7 +83,7 @@
 				</div>
 				<h3 class="fl">下次保养 / 换胎信息</h3>
 				<div class="personalInput fl">
-					<span>保养日期：</span><div class="block">
+					<span>保养日期：</span><div class="block" @click="ifMileage()">
 						<el-date-picker v-model="updateInfo.nextTime" type="date" placeholder="下次保养日期" :picker-options="pickerOptions1" >
 						</el-date-picker>
 					</div>
@@ -90,7 +92,7 @@
 					<span>保养里程：</span><input class="pereinp" type="text" placeholder="下次保养里程" v-model="updateInfo.nextMileage" @click="showKeyboard($event, 'nextMileage')">
 				</div>
 				<div class="personalInput fl">
-					<span>换胎日期：</span><div class="block">
+					<span>换胎日期：</span><div class="block" @click="ifMileage()">
 						<el-date-picker v-model="updateInfo.nextChangeTire" type="date" placeholder="下次换胎日期" :picker-options="pickerOptions1" >
 						</el-date-picker>
 					</div>
@@ -214,7 +216,7 @@
 	        	</div>
 	        </div>
 	        <!-- 数字键盘 -->
-	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord"></keyboardNum>
+	        <keyboardNum :open="isShowKeyboard" @inputWord="inputWord" @close="isShowKeyboard=false" @backWord="backWord" ></keyboardNum>
 	        <!--DOT键盘-->
 			<keyboardDot :dot="isInputDot" @dotWords="dotWords" @dotSpaces="dotSpaces"  @dotbackWord="dotbackWord"></keyboardDot>
 		</div>
@@ -283,12 +285,8 @@
             let route = this.$route
             this.userCarBindId = route.query.userCarBindId
             this.uid = route.query.uid
+            this.getUserInfo()
             
-            Promise.all([this.getUserInfo()]).then(res => {
-	            setTimeout(() => {
-	                this.isLoading = false
-	            }, 500)
-	        })
         },
 	    methods: {
             getUserInfo () {
@@ -305,7 +303,7 @@
                     
                     setTimeout(() => {
 					    this.isLoading = false
-					}, 1000)
+					}, 500)
                     this.userInfo = res.data
                     this.carInfo = res.data.cars[0]
                     var str = JSON.stringify(res.data.cars[0])
@@ -391,7 +389,7 @@
             },
             // 发票订单
             checkInvoice () {
-            	console.log(123)
+//          	console.log(123)
             },
             // 点击换车
             changeCar (data) {
@@ -405,7 +403,8 @@
                     path: 'impCarInfo',
                     query: {
                         opera: 'add',
-                        id: this.carInfo.carId
+                        id: this.carInfo.carId,
+                        
                     }
                 })
             },
@@ -421,15 +420,24 @@
             // 检车用户信息 跳转修改车辆信息
             CheckUserInfo () {
                 api.CheckUserInfo({uid: this.userInfo.id}).then(res => {
-                    if (res.data) {
-                        this.$router.push({
+                	if (res.data) {
+	                    this.$router.push({
                             path: 'impCarInfo',
                             query: {
                                 opera: 'update',
                                 id: this.carInfo.carId
                             }
                         })
-                    }
+	                } else {
+	                    alert("您的手机号格式不正确，请先修改手机号");
+	                    this.$router.push({
+                            path: 'uservip',
+                            query: {
+                                uid: this.userInfo.id,
+                                cid: this.userCarBindId
+                            }
+                        })
+	                }
                 })
             },
             // 删除车辆
@@ -467,10 +475,10 @@
 	                alert("月平均里程不能为0");
 	                return
 	            }
-	            console.log(this.updateInfo.lastChangeTire)
-	            console.log(this.updateInfo.lastTime)
-	            console.log(this.updateInfo.nextChangeTire)
-	            console.log(this.updateInfo.nextTime)
+//	            console.log(this.updateInfo.lastChangeTire)
+//	            console.log(this.updateInfo.lastTime)
+//	            console.log(this.updateInfo.nextChangeTire)
+//	            console.log(this.updateInfo.nextTime)
                 api.UpadateUserInfo({
                 	CarId:this.updateInfo.carId,
                 	Mileage:this.updateInfo.mileage,
@@ -534,6 +542,16 @@
                 event.target.blur()
                 this.focusInp = focus
                 this.isShowKeyboard = true
+                let persona = document.getElementById('persona')
+                persona.style.top = "-6.5rem"
+            },
+            ifMileage(){
+            	let persona = document.getElementById('persona')
+                persona.style.top = "0rem"
+            	this.isShowKeyboard = false
+            	this.isInputDot = false
+//          	console.log(this.isShowKeyboard)
+//          	console.log(this.isInputDot)
             },
             // 点击键盘 开始输入
             inputWord (data) {

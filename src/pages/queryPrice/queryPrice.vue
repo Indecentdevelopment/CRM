@@ -7,7 +7,7 @@
 			<div class="search">
 				<div class="topmain clearfix">
 					<p class="collect fl"><img src="../../assets/images/queryPrice/collect.png"/></p>
-					<input type="text" placeholder="关键字查询" class="fl keywords" v-model="keyword" />
+					<input type="text" placeholder="关键字查询" class="fl keywords" v-model="keyword" @click="disableKeyboard()" />
 					<span class="seobtn fl" @click="getProducts">搜索</span>
 					<el-button type="text" @click="checkBtn" class="checkbtn fr">效验</el-button>
 				</div>
@@ -27,7 +27,7 @@
 				</div>
 				<!--产品列表-->
 				<div class="productList"  v-if="productList.length>0">
-					<div class="productExample" v-for="item in productList" :key="item.id">
+					<div class="productExample" v-for="item in productList">
 						<ul class="clearfix">
 							<li class="fl clearfix">
 								<span class="fl fontSize">{{item.name}}</span>
@@ -39,15 +39,14 @@
                                 query:{ productId:item.productId,shopId:item.shopId, ShowShopType: 1}}">
 									<span>求助</span>
 								</router-link>	
-								<span class="fl btnStyle btnStyles">星级{{item.starLevel}}</span>
-								<span class="fl btnStyle btnStyles" @click="GetStoreStock(item.productId)">存：{{item.stock}}
+								<div class="fl btnStyle btnStyles" @click="GetStoreStock(item.productId)">存：{{item.stock}} | {{item.cityStock}}
 									<div class="stock" v-show="item.productId == productId">
 										<div class="triangle"></div>
 										<p class="storeName" v-for="(items, j) in storeStock" :key="j">
-                                            {{items.name}} - {{items.stock}}
+                                            {{items.storehousename}} - {{items.sums}}
                                         </p>
 									</div>
-								</span>
+								</div>
 								<span class="fr color">{{item.categoryName}}</span>
 							</li>
 						</ul>
@@ -99,7 +98,9 @@
         methods: {
         	//搜索产品
         	getProducts () {
+        		this.isInputCarNo = false
                 this.isLoading = true
+                
         		api.GetProducts({
         			Specs: this.keyword,
 		            BrandId: this.productBrandId,
@@ -124,6 +125,7 @@
         	},
         	//获取品牌列表
         	getThebrand () {
+        		this.isInputCarNo = false
         		if(this.brandControl == false){
         			this.brandControl = true
         		}else{
@@ -136,6 +138,7 @@
         	},
         	//获取分类列表
         	getThetype(){
+        		this.isInputCarNo = false
         		if(this.thetypeControl == false){
         			this.thetypeControl = true
         		}else{
@@ -156,7 +159,13 @@
 			            Specifications: this.productSize,
 			            ProductId: this.productId
 	                }).then(res => {
-	                    this.storeStock = res.data
+	                	let dataArr = eval('(' + res.data + ')');
+	                	if(dataArr.rows == 0){
+	                		this.productId = false
+	                	}else{
+	                		this.storeStock = dataArr.rows
+	                		
+	                	}
 //	                    console.log(res.data[0].name)
 	                })
         		}else{
@@ -165,6 +174,7 @@
         	},
         	//校验按钮
         	checkBtn () {
+        		this.isInputCarNo = false
         		this.isLoading = true
         		api.GetCheckCode({
         			matnr: this.keyword
@@ -196,6 +206,8 @@
             showKeyboard (event) {
                 event.target.blur()
                 this.isInputCarNo = true
+                this.brandControl = false
+                this.thetypeControl = false
             },
             // 点击键盘
             inputWord (data) {
@@ -209,6 +221,10 @@
             // 键盘 清空
             empty(){
             	this.carNo = ''
+            },
+            // 禁用键盘
+            disableKeyboard(){
+            	this.isInputCarNo = false
             }
         },
 		components: {

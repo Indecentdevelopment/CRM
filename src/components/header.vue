@@ -41,8 +41,9 @@ export default {
         	console.log('123')
         },
         back() {
-//          this.$router.go(-1)
-            history.go(-1)
+            //this.$router.go(-1)
+            window.history.go(-1)
+//          history.go(-1)
             return false
         }
     }

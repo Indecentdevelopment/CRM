@@ -1,6 +1,7 @@
 <template>
 	<div class="confirm">
 		<my-header></my-header>
+		<div class="loading" v-loading="isLoading">
 		<!-- 车辆信息 -->
 		<div class="car-info" v-if="carInfo.carType">
 			<img class="head-img" id="head-img" :src="carInfo.carType.carSeries.seriesMinImage" onerror="this.src = 'http://act.tirecool.net/Content/img/defaultcar.jpg'">
@@ -33,12 +34,11 @@
 									<i class="item" v-for="(tires, tiresIndex) in productData.tiresSpecs" :key="tiresIndex" :class="{active: tires.value === currentTiresSpecs}" @click="checkSpecs(tires.value)">
                                             {{tires.value}}
                                             <div class="num-info" v-show="tires.selectProductNum>0">{{tires.selectProductNum}}</div>
-                                        </i>
-									<i class="otherTries">
-                                            其他规格
-                                        </i>
+                                    </i>
+                                    
+									<i class="item" @click="showPicker0">其他规格</i>
+									
 								</div>
-
 								<div class="product-box">
 									<div class="item" v-for="(goods, goodsIndex) in categorys.productList" @click="productClick(goodsIndex, proIndex, catIndex)" :key="goods.id" v-show="goods.name.includes(currentTiresSpecs)" :class="{'active check': goods.active}" :data-id="goods.id" :data-num="goods.selectQuantity">
 										<!-- 商品信息 -->
@@ -100,7 +100,7 @@
 												<button class="search-btn" @click="getProduct(proIndex,catIndex)">搜索</button>
 
 											</div>
-											<div class="hideProList">
+											<div class="hideProList" @scroll="onScrollData($event)">
 												<div class="hide-item" :class="hidePro.active?'active':''" v-for="hidePro in categorys.hideProductList" :key="hidePro.id" @click="addHideProTo(hidePro,proIndex,catIndex)">
 													<img class="imgBg" :src="'http://act.tirecool.net' + hidePro.productImg">
 													<div class="info">
@@ -236,7 +236,7 @@
 
 												</div>
 
-												<div class="hideProList">
+												<div class="hideProList" ref="viewBox" @scroll="onScrollData($event)">
 													<div class="hide-item" :class="hidePro.active?'active':''" v-for="hidePro in categorys2.hideProductList" :key="hidePro.id" @click="addHideProTo(hidePro,proIndex,catIndex,cat2Index)">
 														<img class="imgBg" :src="hidePro.productImg">
 														<div class="info">
@@ -314,23 +314,39 @@
 			</div>
 			<div class="submit" @click="submit">确定</div>
 		</div>
-	
-
+		
 		<!-- 立省  -->
 		<div class="preferentialAmount" v-show="total.preferentialAmount>0">立省{{total.preferentialAmount}}</div>
-
+		</div>
+		
+		<!--if轮胎型号选择框-->
+		<div class="isTyreModel">
+	        <awesome-picker
+		      ref="picker0"
+		      :textTitle="picker0.textTitle"
+		      :data="picker0.data"
+		      :anchor="picker0.anchor"
+		      :colorConfirm="picker0.colorConfirm"
+		      @confirm="handlePicker0Confirm">
+		    </awesome-picker>
+       </div>
 	</div>
 </template>
 
 <script>
 	import Header from '@/components/header'
 	import api from '@/vuex/api'
+	import VuePickers from 'vue-pickers'
+	import AwesomePicker from 'vue-awesome-picker'
 	import $ from 'jquery'
 	import './confirm.sass'
+	const data1 = ["145", "155", "165", "175", "185", "195", "205", "215", "225", "235", "245", "254", "255", "265", "275", "285", "295", "305", "31", "315", "325", "35", "355", "650"]
+	const data2 = ["10.5", "12.5", "15", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85"]
+	const data3 = ["0", "7", "12", "12C", "13", "13C", "14", "14C", "15", "15C", "16", "16C", "17", "18", "18寸", "19", "20", "21", "22"]
 	export default {
 		data() {
 			return {
-				isLoading: false,
+				isLoading: true,
 				isSearching: false, // 正在 搜索中
 				changeOrAdd: '', // 添加/更换商品
 				changeIndex: null, // 需要被更换的商品索引
@@ -341,7 +357,7 @@
 				productList: [], // 商品 列表
 				serviceList: [], // 服务列表
 				carInfo: {}, // 车辆信息
-
+				page: 1,		// 数据内容分页
 				search: {
 					specs: '', // 添加商品 搜索框的数据
 					brand: '0-全部', // 添加商品 下拉框的数据
@@ -354,28 +370,68 @@
 					productTotal: 0, // 商品 总价
 					serviceTotal: 0, // 服务 总价
 					subTotal: 0, // 总价
-				}
+				},
+				tobeAddedData: [],		// 待添加的规格
+				isTyreModel: true,		// if轮胎型号选择框
+				tyreModelData: {
+					
+				},						// 轮胎规格
+				value: null,
+		      	picker0: {
+			        anchor: [],
+			        textTitle: '其他规格',
+			        colorConfirm: '#1e83d3',
+			        data: [data1, data2, data3]
+		      	},
+		      	categoryId: '',
 			}
 		},
 		created() {
 			this.query.userCarBindId = this.$route.query.userCarBindId
-			// Promise.all([this.ProductPush()]).then(res => {
-			//     setTimeout(() => {
-			//         this.isLoading = false
-			//     }, 500)
-			// })
 			this.ProductPush()
 		},
-		mounted() {},
+		mounted() {
+		},
 		methods: {
+			// 联动
+			showPicker0 () {
+		      	this.$refs.picker0.show()
+		    },
+		    handlePicker0Confirm (v) {
+//		      	console.log(this.picker0.anchor = v)
+		      	this.values = v ? JSON.stringify(v) : null
+		      	let arr = JSON.parse(this.values)
+		      	
+		      	let SpecsData = {
+                	specs: arr[0].value + '/' + arr[1].value + 'R' + arr[2].value,
+                	categoryId: this.categoryId
+             	};
+             	if (SpecsData.specs.length > 1) {
+             		api.getProduct(SpecsData).then(res=>{
+             			if (res.data.length > 0) {
+							console.log(res.data)
+	                    } else {
+	                        alert("未能找到此规格产品！")
+	                    }
+             		})
+				} else {
+				    alert("未能找到此规格产品！")
+				}
+		      	console.log(SpecsData)
+//		      	console.log(this.tobeAddedData)
+		    },
 			// 获取初始数据
 			ProductPush() {
-				this.isLoading = true
 				api.ProductPush({
 					userCarBindId: this.query.userCarBindId,
 					shopId: localStorage.getItem('shopId')
 				}).then(res => {
-					this.isLoading = false
+					this.categoryId = res.data.data[0].id
+					setTimeout(() => {
+					    this.isLoading = false
+					}, 500)
+					
+					this.tobeAddedData = res.data.tiresSpec
 					this.carInfo = res.data.userCarBind.carInfo // 设置 车辆信息
 					this.currentTiresSpecs = res.data.tiresSpecs[0] // 设置 当前 轮胎规格
 					res.data.data.map((item, index) => {
@@ -416,6 +472,20 @@
 
 					this.productData = res.data // 初始 数据
 				})
+			},
+			// 滚动加载数据
+			onScrollData(event){
+				let offsetHeight = event.currentTarget.offsetHeight,// 可见高度
+				scrollHeight = event.target.scrollHeight,			// 内容高度
+				scrollTop = event.target.scrollTop,					// 滚动高度
+				scrollBottom = offsetHeight + scrollTop;
+				
+		        if (scrollBottom == scrollHeight) {
+		        	this.page++;
+		        	console.log(scrollHeight)
+		        	//this.getProduct();
+		        }
+		        
 			},
 			// 获取商品列表
 			GetCarProduct(categoryId, carTypeId, proIndex, catIndex) {
@@ -493,7 +563,7 @@
 
 			// 点击 商品 选中/取消选中 商品
 			productClick(goodsIndex, proIndex, catIndex, cat2Index) {
-				console.log(this.productData.tiresSpecs)
+//				console.log(this.productData.tiresSpecs)
 
 				// 如果是轮胎  在规格上添加  num记号
 				if(proIndex === 0 && catIndex === 0) {
@@ -605,7 +675,7 @@
 					mcid: '',
 					shopId: localStorage.getItem('shopId'),
 					categoryId: '',
-					page: 1
+					page: this.page
 				}
 				if(cat2Index !== undefined) {
 					obj.mcid = this.productData.data[proIndex]['childCategorys'][catIndex].id

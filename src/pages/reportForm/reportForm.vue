@@ -12,14 +12,14 @@
 			<div class="start">
 				<span>开始时间：</span>
 				<div class="block">
-					<el-date-picker v-model="startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+					<el-date-picker v-model="startDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1" :editable="false">
 					</el-date-picker>
 				</div>
 			</div>
 			<div class="start">
 				<span>结束时间：</span>
 				<div class="block">
-					<el-date-picker v-model="endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1">
+					<el-date-picker v-model="endDate" type="date" placeholder="选择日期" :picker-options="pickerOptions1" :editable="false">
 					</el-date-picker>
 				</div>
 			</div>
@@ -135,6 +135,9 @@
         	
         },
         methods: {
+        	dataFn(e){
+        		console.log(e)
+        	},
         	//上一页
         	before(){
         		if(this.initial == 1){

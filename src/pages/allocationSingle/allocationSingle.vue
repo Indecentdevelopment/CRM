@@ -17,7 +17,7 @@
 			<div class="allocationNber">
 				<span class="allNber-amount">调拨时间：</span>
 				<div class="block">
-					<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1" >
+					<el-date-picker v-model="value1" type="date" placeholder="选择日期" :picker-options="pickerOptions1" :editable="false">
 					</el-date-picker>
 				</div>
 			</div>
@@ -29,6 +29,7 @@
 			<el-tabs type="border-card" @tab-click="diliverApply">
 				<!--同城门店-->
 			  	<el-tab-pane label="同城门店">
+			  		<div style="color: #fac800;" v-show="supplierList == ''">无相关数据！</div>
 					<div class="allocation">
 						<span class="fr" @click="applicationApply">调拨申请</span>
 					</div>
@@ -47,7 +48,7 @@
 					</div>
 			  	</el-tab-pane>
 			  	<!--门店列表-->
-			  	<el-tab-pane label="供应商">
+		  		<el-tab-pane label="供应商">
 			  		<div class="supplierTop fl">
 			  			<p class="fl clearfix">
 			  				<span class="fr" @click="supplierApply">调拨申请</span>
@@ -123,7 +124,8 @@
                     ordernum: this.$route.query.ordernum,
                     rownum: this.$route.query.rownum
                 },
-                shopType: ''                    // 他仓求助 商品类型 
+                shopType: '',                    // 他仓求助 商品类型 
+                ifSupplier: true				 // 控制供应商显示隐藏
 			}
 		},
 		created() {
@@ -139,10 +141,14 @@
             } else {
                 this.shopType = '同城门店'
             }
+            this.diliverApply()
 		},
 		methods: {
 			// 获取供应商
 			diliverApply(){
+				if (this.query.ShowShopType == 1) {
+					$("#tab-1").css("display",'none')
+	            }
 				
 			},
 			// 点击某个供应商
@@ -242,7 +248,7 @@
 						type: '供应商',
 						applyShopName: ''
 	                }).then(res => {
-	                	this.isLoading = true
+	                	this.isLoading = false
 	               		res.data.shops.map((item, index) => {
 	                        res.data.shops[index].actives = false
 	                    })

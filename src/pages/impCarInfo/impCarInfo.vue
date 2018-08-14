@@ -84,7 +84,7 @@
 	                    <option value="琼">琼</option>
 	                    <option value="其他">其他</option>
 	                </select>
-	                <input class="carNo" v-model="initData.carNo" placeholder="车牌号">
+	                <input class="carNo" v-model="initData.carNo" placeholder="车牌号"  @click="showKeyboard($event)">
 	                <i class="fa fa-camera-retro fa-3x"></i>
 	            </div>
 	            <!-- 补充车型 -->
@@ -128,8 +128,7 @@
 	        <!-- user info -->
 	        <div class="user-info" v-if="queryOpera === 'update'" >
 	            <div>
-	                <span class="name">{{initData.name}}</span>
-	                <span class="mobile">{{initData.mobile}}</span>
+	                <span class="name">{{name}}</span>
 	            </div>
 	            
 	            <div class="user" v-for="item in carPeoples" :key="item.uid">
@@ -141,6 +140,7 @@
 	                </div>
 	            </div>
 	        </div>
+	        <keyboard-car-no :open="isInputCarNo" @inputWord="inputWord" @close="isInputCarNo=false" @backWord="backWord"></keyboard-car-no>
     	</div>
     </div>
 </template>
@@ -148,6 +148,7 @@
 import Header from '@/components/header'
 import api from '@/vuex/api'
 import './impCarInfo.sass'
+import keyboardCarNo from '@/components/keyboardCarNo'
 export default {
     data () {
         return {
@@ -158,10 +159,10 @@ export default {
             queryOperaZh: '',       // 根据路由参数 opera 得到中文信息
             initData: {},           // 初始数据
             carPeoples: [],         // 车主信息
-            // postCarInfo: {},        // 需要提交的车辆信息
+            // postCarInfo: {},     // 需要提交的车辆信息
             carInfo: {              // 所有的供选择的车辆信息
                 brand: [],          // 车牌
-                series: [],          // 车系
+                series: [],         // 车系
                 displacement: [],   // 排量
                 year: []            // 年款
             },           
@@ -169,11 +170,14 @@ export default {
             supplement: '',         // 补充车型信息
             isTbsj: false,          // 是否同步失败
 			isLoading: true,
-            searchText: '',        // 搜索页面 输入内容
+            searchText: '',        	// 搜索页面 输入内容
             getCarData: [],         // 搜索出的车辆信息
             sapId: '',              // 重新同步 id
             ubId: '',               // 重新同步 userCarBindId
             cusId: '',              // 重新同步  userId
+            isInputCarNo: false,  	// 是否显示自定义键盘
+            carNo: '', 				// 车牌号
+            name: '', 				// 车主名
         }
     },
     created () {
@@ -218,8 +222,28 @@ export default {
         // 获取初始数据
         InitializeRegister () {
             api.InitializeRegister({id: this.queryId}).then(res => {
-                this.initData = res.data
-                this.carPeoples = res.data.carPeoples
+            	
+            	let userType = this.queryOperaZh
+            	console.log(userType)
+            	if(userType == '修改车型'){
+            		this.name = res.data.carPeoples[0].name
+            		this.initData.mobile = res.data.prov
+	                this.initData = res.data
+	                this.carPeoples = res.data.carPeoples
+            	}
+            	
+            	if(userType == '添加车型'){
+            		this.name = this.$route.query.Phone
+            		this.initData.prov = res.data.prov
+            	}
+            	
+            	if(userType == '新用户'){
+            		this.initData.mobile = this.$route.query.Phone
+            		this.name = this.$route.query.Phone
+            	}
+            	
+            	
+                
                 // 根据用户基本信息 获取车辆信息
                 this.getallbrand()
                 if (this.queryOpera === 'update') {
@@ -232,8 +256,7 @@ export default {
                     this.initData.displacement = '其他'
                     this.initData.year = '其他'
                 }
-
-                this.initData.prov = this.$route.query.carnumber
+                
                 
             })
         },
@@ -412,9 +435,27 @@ export default {
                 }
             })
         },
+        // 点击车牌号输入框  显示自定义键盘
+        showKeyboard (event) {
+            event.target.blur()
+            this.isInputCarNo = true
+        },
+        // 点击键盘
+        inputWord (data) {
+        	if(this.initData.carNo == null){
+        		this.initData.carNo = ''
+        	}
+            this.initData.carNo += data
+        },
+        // 键盘 撤销
+        backWord () {
+            let length = this.initData.carNo.length
+            this.initData.carNo = this.initData.carNo.substring(0, length - 1)
+        }
     },
     components: {
-        myHeader: Header
+        myHeader: Header,
+        keyboardCarNo: keyboardCarNo
     }
 }
 </script>

@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>crm2</title>
-    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-    <script type="text/javascript">
-    	document.addEventListener("plusready", function() {
-	        // 注册返回按键事件
-	        plus.key.addEventListener('backbutton', function() {
-	            // 事件处理
-	            window.history.back();
-	        }, false);
-		  });
-		  
-		  document.addEventListener("plusready", function() {
-		        // 注册返回按键事件
-		        plus.key.addEventListener('backbutton', function() {
-		        // 事件处理
-		            plus.nativeUI.confirm("退出程序？", function(event) {
-		                if (event.index) {
-		                    plus.runtime.quit();
-		                }
-		            }, null, ["确定","取消"]);
-		        }, false);
-		    });
-		    
-//		    var first = null;
-//			  first = new Date().getTime();
-    </script>
-  </body>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<title>crm2</title>
+		<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+		<script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+		<script src="https://cdn.bootcss.com/mui/3.7.1/js/mui.min.js"></script>
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<!-- built files will be auto injected -->
+		<script type="text/javascript">
+			var first = null;
+			var btn = ["确定", "取消"];
+			mui.back = function() {
+				if(!first) {
+					first = new Date().getTime();
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+					window.history.go(-1)
+        			return false
+				} else {
+					if(new Date().getTime() - first < 1500) {
+						mui.confirm('确认关闭当前窗口？', '轮库Tirecool', btn, function(e) {
+							if(e.index == 0) {
+								mui.currentWebview.close();
+							}
+						});
+					}
+				}
+			}
+		</script>
+	</body>
+
 </html>

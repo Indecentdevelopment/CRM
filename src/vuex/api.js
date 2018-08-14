@@ -111,6 +111,14 @@ export default {
             }
         })
     },
+    // 根据点击搜索  查询车辆信息列表
+    getUserInfoBy(data) {
+        return axios.get(url + 'Api/Car/GetUserInfoBy', {
+            params: {
+                Phone: data.Phone
+            }
+        })
+    },
     // 获取门店城市
     getCurrentUserRegion() {
         return axios.get(url + 'api/car/GetCurrentUserRegion')

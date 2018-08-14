@@ -11,10 +11,13 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import vueSignature from "vue-signature"             // 用户签名插件
 
+import AwesomePicker from 'vue-awesome-picker'			// 支持单列、多列和联级数据
+
 import './config/index'
 
 import echarts from 'echarts'
 
+Vue.use(AwesomePicker)
 Vue.use(vueSignature)             									 // 用户签名插件
 Vue.use(ElementUI)
 Vue.prototype.$echarts = echarts
