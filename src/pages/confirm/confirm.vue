@@ -77,7 +77,6 @@
 											</div>
 										</div>
 									</div>
-
 									<div v-show="!categorys.isNoProduct" class="addproductbtn" @click="addProduct($event, proIndex, catIndex)">
 										<span>+ </span> 添加
 									</div>
@@ -473,7 +472,7 @@
 					this.productData = res.data // 初始 数据
 				})
 			},
-			// 滚动加载数据
+			// 添加产品   ——  滚动加载产品
 			onScrollData(event){
 				let offsetHeight = event.currentTarget.offsetHeight,// 可见高度
 				scrollHeight = event.target.scrollHeight,			// 内容高度
@@ -483,7 +482,33 @@
 		        if (scrollBottom == scrollHeight) {
 		        	this.page++;
 		        	console.log(scrollHeight)
-		        	//this.getProduct();
+		        	let pages = guowei
+		        	var obj = {
+						specs: $(".search-input").val(),
+						brandId: $("#brandlist").val(),
+						brand: $("#brandlist option:selected").text(),
+						mcid: '',
+						shopId: localStorage.getItem('shopId'),
+						categoryId: '',
+						page: pages
+					}
+					if(cat2Index !== undefined) {
+						obj.mcid = this.productData.data[proIndex]['childCategorys'][catIndex].id
+						obj.categoryId = this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].id
+					} else {
+						obj.mcid = this.productData.data[proIndex].id
+						obj.categoryId = this.productData.data[proIndex]['childCategorys'][catIndex].id
+					}
+					api.getProduct(obj).then(res => {
+						res.data.map((item, index) => {
+							res.data[index].active = false
+						})
+						if(cat2Index !== undefined) {
+							this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].hideProductList = res.data
+						} else {
+							this.productData.data[proIndex]['childCategorys'][catIndex].hideProductList = res.data
+						}
+					})
 		        }
 		        
 			},
@@ -591,7 +616,7 @@
 			// 他店求助
 			help(event, goodsIndex, proIndex, catIndex) {
 				event.stopPropagation()
-
+				
 				let productId = this.productData.data[proIndex]['childCategorys'][catIndex].productList[goodsIndex].productId
 				this.$router.push({
 					path: 'allocationSingle',
@@ -628,6 +653,14 @@
 			// 点击 添加 添加商品
 			addProduct(event, proIndex, catIndex, cat2Index) {
 				event.stopPropagation()
+				
+//				console.log(proIndex)
+//				console.log(catIndex)
+//				console.log(cat2Index)
+//				console.log(this.productData)
+//				console.log(this.search)
+//				console.log(this.currentTiresSpecs)
+				
 				this.changeOrAdd = 'add'
 				if(this.productData.data[proIndex]['childCategorys'][catIndex].id === 1) {
 					this.search.specs = this.currentTiresSpecs
@@ -699,11 +732,12 @@
 
 			// 点击 搜索出来的商品 添加到列表
 			addHideProTo(hidePro, proIndex, catIndex, cat2Index) {
+				console.log(this.productData.data)
 				// 待更换商品索引
 				let i = this.changeIndex
 				if(cat2Index !== undefined) {
 					let isInArr = false
-
+					console.log(cat2Index)
 					this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList.map((item, index) => {
 						if(item.id === hidePro.id) {
 							console.log(item.id, hidePro.id)
@@ -720,14 +754,11 @@
 							this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].productList[i] = hidePro
 						}
 					}
-
 					this.productData.data[proIndex]['childCategorys'][catIndex]['childCategorys'][cat2Index].isHideProduct = false
 				} else {
 					let isInArr = false
 					this.productData.data[proIndex]['childCategorys'][catIndex].productList.map((item, index) => {
-
 						if(item.id === hidePro.id) {
-							console.log(item.id, hidePro.id)
 							isInArr = true
 						}
 					})
@@ -740,14 +771,11 @@
 						if(!isInArr) {
 							this.productData.data[proIndex]['childCategorys'][catIndex].productList[i] = hidePro
 						}
-
 					}
-
 					this.productData.data[proIndex]['childCategorys'][catIndex].isHideProduct = false
 				}
-
+				console.log(this.productData.data)
 				this.calculateTotal(proIndex, catIndex)
-
 			},
 
 			// 点击 服务

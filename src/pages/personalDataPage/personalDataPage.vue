@@ -22,7 +22,7 @@
 					 &nbsp; &nbsp;<img src="../../assets/images/personal/position.png"/> &nbsp;&nbsp;职位：{{job}}
 				</div>
 				<div class="shopList">
-					 &nbsp; &nbsp;<img src="../../assets/images/personal/Telephone.png"/> &nbsp;&nbsp;手机号：<input class="headInp" type="text" v-model="mobile" />
+					 &nbsp; &nbsp;<img src="../../assets/images/personal/Telephone.png"/> &nbsp;&nbsp;手机号：<input class="headInp" onkeyup="this.value=this.value.replace(/\D/g,'')" type="text" v-model="mobile" />
 				</div>
 				<div class="confirmBtn" @click="confirmDeposit">确认保存</div>
 			</div>
@@ -56,13 +56,13 @@
 			<!--修改密码-->
 			<div class="shopData" v-show="ExhibitionName == '修改密码'">
 				<div class="shopList">
-					&nbsp; &nbsp;旧密码：<input type="text" placeholder="请输入旧密码" v-model="usedPassword"  /><p class="fr"v-show="usedpas">请输入旧密码</p>
+					&nbsp; &nbsp;旧密码：<input type="text" onKeyUp="value=value.replace(/[^\d|chun]/g,'')" placeholder="请输入旧密码" v-model="usedPassword"  /><p class="fr"v-show="usedpas">请输入旧密码</p>
 				</div>
 				<div class="shopList">
-					&nbsp; &nbsp;新密码：<input type="text" placeholder="请输入新密码" @input="newPas()" v-model="newPassword" /><p class="fr" v-show="newpas">请输入新密码</p>
+					&nbsp; &nbsp;新密码：<input type="text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" placeholder="请输入新密码" @input="newPas()" v-model="newPassword" /><p class="fr" v-show="newpas">请输入新密码</p>
 				</div>
 				<div class="shopList">
-					确认密码：<input type="text" placeholder="请再次输入新密码" @input="conPas()" v-model="confirmPassword" /><p class="fr" v-show="conpas">与上方密码不一致</p>
+					确认密码：<input type="text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" placeholder="请再次输入新密码" @input="conPas()" v-model="confirmPassword" /><p class="fr" v-show="conpas">与上方密码不一致</p>
 				</div>
 				<div class="confirmBtn" @click="confirmModify">确认修改</div>
 				<div class="isModify" v-show="isModify">修改失败</div>
@@ -161,6 +161,13 @@
         		let old = this.usedPassword
         		let pass = this.newPassword
         		let pass2 = this.newPassword
+        		let conPas = this.confirmPassword
+        		
+        		console.log(old)
+        		console.log(pass)
+        		console.log(pass2)
+        		console.log(conPas)
+        		
         		if ((old == null || old == '')) {
                     alert("旧密码不能为空！");
                     return;
@@ -171,15 +178,19 @@
 
                 }
                 if (old == pass) {
-                    alert("新旧密码不能一样");
+                    alert("新旧密码不能一样！");
                     return;
                 }
                 if ((pass2 == null || pass2 == '')) {
                     alert("请重新输入新密码！");                  
                     return ;
                 }
-                if (pass!= pass2) {
-                    alert("两次输入不一致");                   
+                if (conPas == '') {
+                    alert("请确认密码！");                   
+                    return;
+                }
+                if (pass!= conPas) {
+                    alert("两次输入不一致！");                   
                     return;
                 }
         		else{

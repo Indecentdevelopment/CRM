@@ -84,7 +84,7 @@
 	                    <option value="琼">琼</option>
 	                    <option value="其他">其他</option>
 	                </select>
-	                <input class="carNo" v-model="initData.carNo" placeholder="车牌号"  @click="showKeyboard($event)">
+	                <input class="carNo" v-model="carNo" placeholder="车牌号"  @click="showKeyboard($event)">
 	                <i class="fa fa-camera-retro fa-3x"></i>
 	            </div>
 	            <!-- 补充车型 -->
@@ -222,7 +222,8 @@ export default {
         // 获取初始数据
         InitializeRegister () {
             api.InitializeRegister({id: this.queryId}).then(res => {
-            	
+            	console.log(1111111111)
+            	console.log(res)
             	let userType = this.queryOperaZh
             	console.log(userType)
             	if(userType == '修改车型'){
@@ -230,16 +231,19 @@ export default {
             		this.initData.mobile = res.data.prov
 	                this.initData = res.data
 	                this.carPeoples = res.data.carPeoples
+	                this.carNo = res.data.carNo
             	}
             	
             	if(userType == '添加车型'){
             		this.name = this.$route.query.Phone
             		this.initData.prov = res.data.prov
+            		this.carNo = res.data.carNo
             	}
             	
             	if(userType == '新用户'){
             		this.initData.mobile = this.$route.query.Phone
             		this.name = this.$route.query.Phone
+            		this.carNo = res.data.carNo
             	}
             	
             	
@@ -376,7 +380,7 @@ export default {
                 Year: this.initData.year,                  // 年款
                 Displacement: this.initData.displacement,  // 排量
                 Brand: this.initData.brand,                // 品牌
-                CarNo: this.initData.carNo,               // 车牌
+                CarNo: this.carNo,               			// 车牌
                 CarImg: 'aaa',                            // 车 图片
                 IsElse: this.isSupplement,                     // 是否补充车型
                 ElseCar: this.supplement,                      // 补充车型信息
@@ -442,15 +446,15 @@ export default {
         },
         // 点击键盘
         inputWord (data) {
-        	if(this.initData.carNo == null){
-        		this.initData.carNo = ''
+        	if(this.carNo == null){
+        		this.carNo = ''
         	}
-            this.initData.carNo += data
+            this.carNo += data
         },
         // 键盘 撤销
         backWord () {
-            let length = this.initData.carNo.length
-            this.initData.carNo = this.initData.carNo.substring(0, length - 1)
+            let length = this.carNo.length
+            this.carNo = this.carNo.substring(0, length - 1)
         }
     },
     components: {

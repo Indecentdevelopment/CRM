@@ -723,7 +723,11 @@
 		                } else {
 		                	this.$alert(res.data.msg, '轮库Tirecool', {
 					          	confirmButtonText: '确定',
-					          	callback: action => {}
+					          	callback: action => {
+					          		setTimeout(() => {
+									    this.isLoading = false
+									}, 1000)
+					          	}
 					        })
 		                }
 	                })
